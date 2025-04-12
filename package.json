@@ -1,0 +1,57 @@
+{
+  "name": "k4",
+  "version": "1.0.0",
+  "description": "Web-based interface for filling out Swedish tax form K4",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "npx eslint --fix src",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ss/ui": "github:SikoSoft/ui#1.20.4",
+    "lit": "~3.3.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@lit/localize-tools": "^0.8.0",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "~8.29.1",
+    "eslint-config-prettier": "~10.1.2",
+    "eslint-plugin-eslint-comments": "~3.2.0",
+    "eslint-plugin-lit": "~2.0.0",
+    "eslint-plugin-prettier": "~5.2.6",
+    "husky": "~9.1.7",
+    "typescript": "~5.8.3",
+    "vite": "~6.2.6",
+    "vite-tsconfig-paths": "~5.1.4"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "prettier"
+    ],
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "import/no-unresolved": "off"
+    }
+  },
+  "prettier": {
+    "singleQuote": true,
+    "arrowParens": "avoid"
+  },
+  "customElements": "custom-elements.json",
+  "keywords": [
+    "Sweden",
+    "Sverige",
+    "skatteverket"
+  ],
+  "author": "Aaron",
+  "license": "ISC"
+}
