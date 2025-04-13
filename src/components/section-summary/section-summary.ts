@@ -29,6 +29,14 @@ export class SectionSummary extends LitElement {
       display: flex;
       flex-direction: row;
       gap: 1rem;
+
+      & > * {
+        flex-grow: 1;
+      }
+
+      .layout-filler {
+        visibility: hidden;
+      }
     }
   `;
 
@@ -61,6 +69,8 @@ export class SectionSummary extends LitElement {
 
   render() {
     return html`<div class="section-summary">
+      <ss-input class="layout-filler"></ss-input>
+      <ss-input class="layout-filler"></ss-input>
       ${repeat(
         Object.values(SectionSummaryProp),
         field => field,

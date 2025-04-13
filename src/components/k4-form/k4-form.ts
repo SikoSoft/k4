@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import '@/components/meta-info/meta-info';
@@ -96,8 +96,9 @@ export class K4Form extends LitElement {
                   loss="0"
                 ></asset-record>`,
             )}
-
-            <section-summary></section-summary>
+            ${sectionConfig.numRecords > 0
+              ? html` <section-summary></section-summary> `
+              : nothing}
           </section> `;
         },
       )}
