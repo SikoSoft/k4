@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-input';
@@ -11,6 +11,28 @@ import {
 
 @customElement('meta-info')
 export class MetaInfo extends LitElement {
+  static styles = css`
+    :host {
+      display: block;
+    }
+
+    .meta-info {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+
+      .year {
+        flex-grow: 1;
+      }
+      .date {
+        flex-grow: 1;
+      }
+      .page-number {
+        flex-grow: 1;
+      }
+    }
+  `;
+
   @property()
   [MetaInfoProp.YEAR]: MetaInfoProps[MetaInfoProp.YEAR] =
     metaInfoProps[MetaInfoProp.YEAR].default;
@@ -52,7 +74,7 @@ export class MetaInfo extends LitElement {
   }
 
   render() {
-    return html`<div>
+    return html`<div class="meta-info">
       <ss-input
         placeholder="Year"
         @input-changed=${this.handleYearChanged}

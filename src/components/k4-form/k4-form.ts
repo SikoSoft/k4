@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import '@/components/meta-info/meta-info';
@@ -12,6 +12,18 @@ import { repeat } from 'lit/directives/repeat.js';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
+  static styles = [
+    css`
+      section {
+        margin-bottom: 1rem;
+
+        asset-record {
+          margin-bottom: 1rem;
+        }
+      }
+    `,
+  ];
+
   @state()
   year = '';
 
@@ -44,17 +56,22 @@ export class K4Form extends LitElement {
 
   render() {
     return html`<div class="k4">
-      <meta-info
-        @meta-info-changed=${this.updateMetaInfo}
-        year=${this.year}
-        date=${this.date}
-        pageNumber=${this.pageNumber}
-      ></meta-info
-      ><person-info
-        @person-info-changed=${this.updatePersonInfo}
-        name=${this.name}
-        personNumber=${this.personNumber}
-      ></person-info>
+      <section>
+        <meta-info
+          @meta-info-changed=${this.updateMetaInfo}
+          year=${this.year}
+          date=${this.date}
+          pageNumber=${this.pageNumber}
+        ></meta-info>
+      </section>
+
+      <section>
+        <person-info
+          @person-info-changed=${this.updatePersonInfo}
+          name=${this.name}
+          personNumber=${this.personNumber}
+        ></person-info>
+      </section>
 
       ${repeat(
         Object.keys(sectionConfigMap),

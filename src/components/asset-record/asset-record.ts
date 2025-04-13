@@ -21,10 +21,14 @@ import {
 @customElement('asset-record')
 export class AssetRecord extends LitElement {
   static styles = css`
+    :host {
+      display: block;
+    }
+
     .asset-record {
       display: flex;
       flex-direction: row;
-      gap: 10px;
+      gap: 1rem;
     }
   `;
 
