@@ -4,6 +4,7 @@ import { customElement, state } from 'lit/decorators.js';
 import '@/components/meta-info/meta-info';
 import '@/components/person-info/person-info';
 import '@/components/asset-record/asset-record';
+import '@/components/section-summary/section-summary';
 
 import { PersonInfoChangedEvent } from '../person-info/person-info.events';
 import { MetaInfoChangedEvent } from '../meta-info/meta-info.events';
@@ -95,6 +96,8 @@ export class K4Form extends LitElement {
                   loss="0"
                 ></asset-record>`,
             )}
+
+            <section-summary></section-summary>
           </section> `;
         },
       )}

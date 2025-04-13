@@ -16,11 +16,18 @@ export interface AssetRecord {
   [AssetRecordField.LOSS]: number;
 }
 
+export enum SectionSummaryField {
+  TOTAL_SELL_PRICE = 'totalSellPrice',
+  TOTAL_BUY_PRICE = 'totalBuyPrice',
+  TOTAL_GAIN = 'totalGain',
+  TOTAL_LOSS = 'totalLoss',
+}
+
 export interface SectionSummary {
-  totalSellPrice: number;
-  totalBuyPrice: number;
-  totalGain: number;
-  totalLoss: number;
+  [SectionSummaryField.TOTAL_SELL_PRICE]: number;
+  [SectionSummaryField.TOTAL_BUY_PRICE]: number;
+  [SectionSummaryField.TOTAL_GAIN]: number;
+  [SectionSummaryField.TOTAL_LOSS]: number;
 }
 
 export enum SectionType {
