@@ -7,6 +7,8 @@ import '@/components/asset-record/asset-record';
 
 import { PersonInfoChangedEvent } from '../person-info/person-info.events';
 import { MetaInfoChangedEvent } from '../meta-info/meta-info.events';
+import { SectionConfigMap, sectionConfigMap } from '@/models/K4';
+import { repeat } from 'lit/directives/repeat.js';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -54,14 +56,31 @@ export class K4Form extends LitElement {
         personNumber=${this.personNumber}
       ></person-info>
 
-      <asset-record
-        total="3"
-        asset="BTC"
-        sellPrice="1000"
-        buyPrice="500"
-        gain="500"
-        loss="0"
-      ></asset-record>
+      ${repeat(
+        Object.keys(sectionConfigMap),
+        sectionKey => sectionKey,
+        sectionKey => {
+          const sectionConfig =
+            sectionConfigMap[sectionKey as keyof SectionConfigMap];
+          return html`<section>
+            <h3>${sectionConfig.type}</h3>
+
+            ${repeat(
+              [...new Array(sectionConfig.numRecords)].map(() => {}),
+              index => index,
+              index =>
+                html` <asset-record
+                  total="3"
+                  asset="BTC"
+                  sellPrice="1000"
+                  buyPrice="500"
+                  gain="500"
+                  loss="0"
+                ></asset-record>`,
+            )}
+          </section> `;
+        },
+      )}
     </div>`;
   }
 }
