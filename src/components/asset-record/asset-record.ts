@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html, css, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 
@@ -20,6 +20,14 @@ import {
 
 @customElement('asset-record')
 export class AssetRecord extends LitElement {
+  static styles = css`
+    .asset-record {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+    }
+  `;
+
   @property({ type: Number })
   [AssetRecordProp.TOTAL]: AssetRecordProps[AssetRecordProp.TOTAL] =
     assetRecordProps[AssetRecordProp.TOTAL].default;
@@ -53,7 +61,7 @@ export class AssetRecord extends LitElement {
   }
 
   render() {
-    return html`<div>
+    return html`<div class="asset-record">
       ${repeat(
         Object.values(AssetRecordProp),
         field => field,
