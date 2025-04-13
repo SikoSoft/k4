@@ -1,22 +1,9 @@
-import { PropConfigMap, PropTypes } from '@/models/Prop';
+import { PropConfigMap } from '@/models/Prop';
+import { AssetRecord, AssetRecordField as AssetRecordProp } from '@/models/K4';
 
-export enum AssetRecordProp {
-  TOTAL = 'total',
-  ASSET = 'asset',
-  SELL_PRICE = 'sellPrice',
-  BUY_PRICE = 'buyPrice',
-  GAIN = 'gain',
-  LOSS = 'loss',
-}
+export { AssetRecordProp };
 
-export interface AssetRecordProps extends PropTypes {
-  [AssetRecordProp.TOTAL]: number;
-  [AssetRecordProp.ASSET]: string;
-  [AssetRecordProp.SELL_PRICE]: number;
-  [AssetRecordProp.BUY_PRICE]: number;
-  [AssetRecordProp.GAIN]: number;
-  [AssetRecordProp.LOSS]: number;
-}
+export interface AssetRecordProps extends AssetRecord {}
 
 export const assetRecordProps: PropConfigMap<AssetRecordProps> = {
   [AssetRecordProp.TOTAL]: {
