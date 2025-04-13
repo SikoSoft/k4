@@ -3,6 +3,7 @@ import { customElement, state } from 'lit/decorators.js';
 
 import '@/components/meta-info/meta-info';
 import '@/components/person-info/person-info';
+import '@/components/asset-record/asset-record';
 
 import { PersonInfoChangedEvent } from '../person-info/person-info.events';
 import { MetaInfoChangedEvent } from '../meta-info/meta-info.events';
@@ -52,6 +53,15 @@ export class K4Form extends LitElement {
         name=${this.name}
         personNumber=${this.personNumber}
       ></person-info>
+
+      <asset-record
+        total="3"
+        asset="BTC"
+        sellPrice="1000"
+        buyPrice="500"
+        gain="500"
+        loss="0"
+      ></asset-record>
     </div>`;
   }
 }
