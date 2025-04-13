@@ -68,3 +68,5 @@ export const sectionConfigMap: SectionConfigMap = {
     numRecords: 7,
   },
 };
+
+export type RecordMatrix = Record<string, AssetRecord[]>;

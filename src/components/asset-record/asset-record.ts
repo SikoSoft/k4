@@ -17,6 +17,7 @@ import {
   AssetRecordChangedEvent,
   AssetRecordChangedEventPayload,
 } from './asset-record.events';
+import { AssetRecordField } from '@/models/K4';
 
 @customElement('asset-record')
 export class AssetRecord extends LitElement {
@@ -58,10 +59,23 @@ export class AssetRecord extends LitElement {
 
   handleFieldChanged(field: AssetRecordProp, event: InputChangedEvent) {
     console.log('handleFieldChanged', field, event);
+
+    const value: string | number =
+      assetRecordProps[field].control === 'number'
+        ? parseInt(event.detail.value)
+        : event.detail.value;
+
+    this.sendChangedEvent({
+      ...(Object.fromEntries(
+        Object.values(AssetRecordField).map(key => [key, this[key]]),
+      ) as unknown as AssetRecordProps),
+      [field]: value,
+    });
   }
 
-  sendChangedEvent(field: AssetRecordProp, payload: InputChangedEventPayload) {
-    console.log();
+  sendChangedEvent(payload: AssetRecordChangedEventPayload) {
+    console.log('sendChangedEvent', payload);
+    this.dispatchEvent(new AssetRecordChangedEvent(payload));
   }
 
   render() {

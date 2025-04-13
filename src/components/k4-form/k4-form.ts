@@ -8,8 +8,18 @@ import '@/components/section-summary/section-summary';
 
 import { PersonInfoChangedEvent } from '../person-info/person-info.events';
 import { MetaInfoChangedEvent } from '../meta-info/meta-info.events';
-import { SectionConfigMap, sectionConfigMap } from '@/models/K4';
+import {
+  AssetRecord,
+  RecordMatrix,
+  SectionConfigMap,
+  sectionConfigMap,
+  SectionType,
+} from '@/models/K4';
 import { repeat } from 'lit/directives/repeat.js';
+import {
+  AssetRecordChangedEvent,
+  AssetRecordChangedEventPayload,
+} from '../asset-record/asset-record.events';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -24,6 +34,8 @@ export class K4Form extends LitElement {
       }
     `,
   ];
+
+  private recordMatrix: RecordMatrix = {};
 
   @state()
   year = '';
@@ -40,6 +52,35 @@ export class K4Form extends LitElement {
   @state()
   personNumber = '';
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.recordMatrix = this.prepareRecordMatrix();
+  }
+
+  prepareRecordMatrix() {
+    const recordMatrix = Object.keys(sectionConfigMap).reduce(
+      (acc, sectionKey) => {
+        const sectionConfig =
+          sectionConfigMap[sectionKey as keyof SectionConfigMap];
+        const records = [...new Array(sectionConfig.numRecords)].map(() => {
+          return {
+            total: 0,
+            asset: '',
+            buyPrice: 0,
+            sellPrice: 0,
+            gain: 0,
+            loss: 0,
+          };
+        });
+        acc[sectionKey] = records;
+        return acc;
+      },
+      {} as Record<string, AssetRecord[]>,
+    );
+    console.log('recordMatrix', recordMatrix);
+    return recordMatrix;
+  }
+
   updateMetaInfo(event: MetaInfoChangedEvent) {
     const { year, date, pageNumber } = event.detail;
     console.log('updateMetaInfo', event.detail);
@@ -53,6 +94,11 @@ export class K4Form extends LitElement {
     console.log('updatePersonInfo', event.detail);
     this.name = name;
     this.personNumber = personNumber;
+  }
+
+  updateAssetRecord(section: SectionType, index: number, record: AssetRecord) {
+    console.log('updateAssetRecord', section, index, record);
+    this.recordMatrix[section][index] = record;
   }
 
   render() {
@@ -84,16 +130,23 @@ export class K4Form extends LitElement {
             <h3>${sectionConfig.type}</h3>
 
             ${repeat(
-              [...new Array(sectionConfig.numRecords)].map(() => {}),
+              [...new Array(sectionConfig.numRecords)].map((_, index) => index),
               index => index,
               index =>
                 html` <asset-record
-                  total="3"
-                  asset="BTC"
-                  sellPrice="1000"
-                  buyPrice="500"
-                  gain="500"
-                  loss="0"
+                  @asset-record-changed=${(event: AssetRecordChangedEvent) => {
+                    this.updateAssetRecord(
+                      sectionConfig.type,
+                      index,
+                      event.detail,
+                    );
+                  }}
+                  total=${this.recordMatrix[sectionKey][index].total}
+                  asset=${this.recordMatrix[sectionKey][index].asset}
+                  sellPrice=${this.recordMatrix[sectionKey][index].sellPrice}
+                  buyPrice=${this.recordMatrix[sectionKey][index].buyPrice}
+                  gain=${this.recordMatrix[sectionKey][index].gain}
+                  loss=${this.recordMatrix[sectionKey][index].loss}
                 ></asset-record>`,
             )}
             ${sectionConfig.numRecords > 0
