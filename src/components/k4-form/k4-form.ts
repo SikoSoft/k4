@@ -35,6 +35,7 @@ export class K4Form extends LitElement {
     `,
   ];
 
+  @state()
   private recordMatrix: RecordMatrix = {};
 
   @state()
@@ -99,6 +100,7 @@ export class K4Form extends LitElement {
   updateAssetRecord(section: SectionType, index: number, record: AssetRecord) {
     console.log('updateAssetRecord', section, index, record);
     this.recordMatrix[section][index] = record;
+    this.requestUpdate();
   }
 
   render() {

@@ -58,7 +58,7 @@ export class AssetRecord extends LitElement {
     assetRecordProps[AssetRecordProp.LOSS].default;
 
   handleFieldChanged(field: AssetRecordProp, event: InputChangedEvent) {
-    console.log('handleFieldChanged', field, event);
+    //console.log('handleFieldChanged', field, event);
 
     const value: string | number =
       assetRecordProps[field].control === 'number'
@@ -74,7 +74,7 @@ export class AssetRecord extends LitElement {
   }
 
   sendChangedEvent(payload: AssetRecordChangedEventPayload) {
-    console.log('sendChangedEvent', payload);
+    //console.log('sendChangedEvent', payload);
     this.dispatchEvent(new AssetRecordChangedEvent(payload));
   }
 
