@@ -1,5 +1,5 @@
 import { html, css, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 
 import '@ss/ui/components/ss-input';
@@ -57,13 +57,19 @@ export class AssetRecord extends LitElement {
   [AssetRecordProp.LOSS]: AssetRecordProps[AssetRecordProp.LOSS] =
     assetRecordProps[AssetRecordProp.LOSS].default;
 
+  fieldValue(field: AssetRecordField): string {
+    return this[field] === 0 ? '' : this[field].toString();
+  }
+
   handleFieldChanged(field: AssetRecordProp, event: InputChangedEvent) {
-    //console.log('handleFieldChanged', field, event);
+    console.log('handleFieldChanged', field, event.detail.value);
 
     const value: string | number =
-      assetRecordProps[field].control === 'number'
-        ? parseInt(event.detail.value)
-        : event.detail.value;
+      assetRecordProps[field].control === 'text'
+        ? event.detail.value
+        : isNaN(parseInt(event.detail.value || '0'))
+          ? 0
+          : parseInt(event.detail.value || '0');
 
     this.sendChangedEvent({
       ...(Object.fromEntries(
@@ -86,7 +92,7 @@ export class AssetRecord extends LitElement {
         field => html`
           <ss-input
             placeholder=${field}
-            value=${this[field]}
+            value=${this.fieldValue(field)}
             @input-changed=${(event: InputChangedEvent) => {
               this.handleFieldChanged(field, event);
             }}
