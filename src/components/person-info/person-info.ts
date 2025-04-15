@@ -43,10 +43,20 @@ export class PersonInfo extends LitElement {
   [PersonInfoProp.PERSON_NUMBER]: PersonInfoProps[PersonInfoProp.PERSON_NUMBER] =
     personInfoProps[PersonInfoProp.PERSON_NUMBER].default;
 
+  @property({ type: String })
+  [PersonInfoProp.CITY]: PersonInfoProps[PersonInfoProp.CITY] =
+    personInfoProps[PersonInfoProp.CITY].default;
+
+  @property({ type: String })
+  [PersonInfoProp.POST_CODE]: PersonInfoProps[PersonInfoProp.POST_CODE] =
+    personInfoProps[PersonInfoProp.POST_CODE].default;
+
   handleNameChanged(event: InputChangedEvent) {
     this.sendChangedEvent({
       name: event.detail.value,
       personNumber: this[PersonInfoProp.PERSON_NUMBER],
+      city: this[PersonInfoProp.CITY],
+      postCode: this[PersonInfoProp.POST_CODE],
     });
   }
 
@@ -54,6 +64,26 @@ export class PersonInfo extends LitElement {
     this.sendChangedEvent({
       name: this[PersonInfoProp.NAME],
       personNumber: event.detail.value,
+      city: this[PersonInfoProp.CITY],
+      postCode: this[PersonInfoProp.POST_CODE],
+    });
+  }
+
+  handleCityChanged(event: InputChangedEvent) {
+    this.sendChangedEvent({
+      name: this[PersonInfoProp.NAME],
+      personNumber: this[PersonInfoProp.PERSON_NUMBER],
+      city: event.detail.value,
+      postCode: this[PersonInfoProp.POST_CODE],
+    });
+  }
+
+  handlePostCodeChanged(event: InputChangedEvent) {
+    this.sendChangedEvent({
+      name: this[PersonInfoProp.NAME],
+      personNumber: this[PersonInfoProp.PERSON_NUMBER],
+      city: this[PersonInfoProp.CITY],
+      postCode: event.detail.value,
     });
   }
 
@@ -73,6 +103,18 @@ export class PersonInfo extends LitElement {
         <ss-input
           placeholder="Person Number"
           @input-changed=${this.handlePersonNumberChanged}
+        ></ss-input>
+      </div>
+      <div class="city">
+        <ss-input
+          placeholder="City"
+          @input-changed=${this.handleCityChanged}
+        ></ss-input>
+      </div>
+      <div class="post-code">
+        <ss-input
+          placeholder="Post code"
+          @input-changed=${this.handlePostCodeChanged}
         ></ss-input>
       </div>
     </div> `;
