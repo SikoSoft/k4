@@ -48,10 +48,12 @@ export class K4Form extends LitElement {
   pageNumber = '';
 
   @state()
-  name = '';
-
-  @state()
-  personNumber = '';
+  personInfo = {
+    name: '',
+    personNumber: '',
+    city: '',
+    postCode: '',
+  };
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -91,10 +93,8 @@ export class K4Form extends LitElement {
   }
 
   updatePersonInfo(event: PersonInfoChangedEvent) {
-    const { name, personNumber } = event.detail;
     console.log('updatePersonInfo', event.detail);
-    this.name = name;
-    this.personNumber = personNumber;
+    this.personInfo = event.detail;
   }
 
   updateAssetRecord(section: SectionType, index: number, record: AssetRecord) {
@@ -117,8 +117,10 @@ export class K4Form extends LitElement {
       <section>
         <person-info
           @person-info-changed=${this.updatePersonInfo}
-          name=${this.name}
-          personNumber=${this.personNumber}
+          name=${this.personInfo.name}
+          personNumber=${this.personInfo.personNumber}
+          city=${this.personInfo.city}
+          postCode=${this.personInfo.postCode}
         ></person-info>
       </section>
 
