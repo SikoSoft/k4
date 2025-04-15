@@ -1,18 +1,9 @@
-import { PropConfigMap, PropTypes } from '@/models/Prop';
+import { PropConfigMap } from '@/models/Prop';
+import { PersonInfo, PersonInfoField as PersonInfoProp } from '@/models/K4';
 
-export enum PersonInfoProp {
-  NAME = 'name',
-  PERSON_NUMBER = 'personNumber',
-  CITY = 'city',
-  POST_CODE = 'postCode',
-}
+export { PersonInfoProp };
 
-export interface PersonInfoProps extends PropTypes {
-  [PersonInfoProp.NAME]: string;
-  [PersonInfoProp.PERSON_NUMBER]: string;
-  [PersonInfoProp.CITY]: string;
-  [PersonInfoProp.POST_CODE]: string;
-}
+export interface PersonInfoProps extends PersonInfo {}
 
 export const personInfoProps: PropConfigMap<PersonInfoProps> = {
   [PersonInfoProp.NAME]: {

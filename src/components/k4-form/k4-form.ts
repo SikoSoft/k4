@@ -1,25 +1,23 @@
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { repeat } from 'lit/directives/repeat.js';
 
 import '@/components/meta-info/meta-info';
 import '@/components/person-info/person-info';
 import '@/components/asset-record/asset-record';
 import '@/components/section-summary/section-summary';
 
-import { PersonInfoChangedEvent } from '../person-info/person-info.events';
-import { MetaInfoChangedEvent } from '../meta-info/meta-info.events';
+import { AssetRecordChangedEvent } from '@/components/asset-record/asset-record.events';
+import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
+import { MetaInfoChangedEvent } from '@/components/meta-info/meta-info.events';
 import {
   AssetRecord,
+  PersonInfo,
   RecordMatrix,
   SectionConfigMap,
   sectionConfigMap,
   SectionType,
 } from '@/models/K4';
-import { repeat } from 'lit/directives/repeat.js';
-import {
-  AssetRecordChangedEvent,
-  AssetRecordChangedEventPayload,
-} from '../asset-record/asset-record.events';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -48,7 +46,7 @@ export class K4Form extends LitElement {
   pageNumber = '';
 
   @state()
-  personInfo = {
+  personInfo: PersonInfo = {
     name: '',
     personNumber: '',
     city: '',

@@ -1,11 +1,8 @@
+import { PersonInfo } from '@/models/K4';
+
 export const personInfoChangedEventName = 'person-info-changed';
 
-export interface PersonInfoChangedEventPayload {
-  name: string;
-  personNumber: string;
-  city: string;
-  postCode: string;
-}
+export interface PersonInfoChangedEventPayload extends PersonInfo {}
 
 export class PersonInfoChangedEvent extends CustomEvent<PersonInfoChangedEventPayload> {
   constructor(payload: PersonInfoChangedEventPayload) {

@@ -1,3 +1,17 @@
+export enum PersonInfoField {
+  NAME = 'name',
+  PERSON_NUMBER = 'personNumber',
+  CITY = 'city',
+  POST_CODE = 'postCode',
+}
+
+export interface PersonInfo {
+  [PersonInfoField.NAME]: string;
+  [PersonInfoField.PERSON_NUMBER]: string;
+  [PersonInfoField.CITY]: string;
+  [PersonInfoField.POST_CODE]: string;
+}
+
 export enum AssetRecordField {
   TOTAL = 'total',
   ASSET = 'asset',
