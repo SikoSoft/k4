@@ -93,7 +93,11 @@ export class K4Form extends LitElement {
 
   @state()
   get data(): string {
-    let data = '';
+    let data = `#BLANKETT K4-2024P4
+#IDENTITET ${this.personInfo.personNumber} ${this.createdDate}
+#NAMN ${this.personInfo.name}
+#SYSTEMINFO klarmarkerad u. a.
+`;
     Object.keys(this.recordMatrix).forEach(key => {
       const sectionKey = key as SectionType;
       const records = this.recordMatrix[sectionKey];
@@ -108,11 +112,14 @@ export class K4Form extends LitElement {
 
           if (fieldEntry) {
             const fieldValue = record[field];
-            data += `#Uppgift ${fieldEntry.id} ${fieldValue}\n`;
+            data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
           }
         });
       });
     });
+
+    data += `#BLANKETTSLUT
+#FIL_SLUT`;
 
     return data;
   }
