@@ -12,7 +12,10 @@ import { AssetRecordChangedEvent } from '@/components/asset-record/asset-record.
 import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
 import { MetaInfoChangedEvent } from '@/components/meta-info/meta-info.events';
 import {
+  AssetFieldConfig,
+  assetFieldMap,
   AssetRecord,
+  AssetRecordField,
   MetaInfo,
   PersonInfo,
   RecordMatrix,
@@ -36,7 +39,12 @@ export class K4Form extends LitElement {
   ];
 
   @state()
-  private recordMatrix: RecordMatrix = {};
+  private recordMatrix: RecordMatrix = {
+    [SectionType.A]: [],
+    [SectionType.B]: [],
+    [SectionType.C]: [],
+    [SectionType.D]: [],
+  };
 
   @state()
   metaInfo: MetaInfo = {
@@ -85,7 +93,28 @@ export class K4Form extends LitElement {
 
   @state()
   get data(): string {
-    return JSON.stringify(this.recordMatrix);
+    let data = '';
+    Object.keys(this.recordMatrix).forEach(key => {
+      const sectionKey = key as SectionType;
+      const records = this.recordMatrix[sectionKey];
+      records.forEach((record, index) => {
+        Object.values(AssetRecordField).forEach(field => {
+          const fieldEntry = assetFieldMap.find(
+            (entry: AssetFieldConfig) =>
+              entry.location[0] === sectionKey &&
+              entry.location[1] === index &&
+              entry.location[2] === field,
+          );
+
+          if (fieldEntry) {
+            const fieldValue = record[field];
+            data += `#Uppgift ${fieldEntry.id} ${fieldValue}\n`;
+          }
+        });
+      });
+    });
+
+    return data;
   }
 
   connectedCallback(): void {
@@ -93,11 +122,11 @@ export class K4Form extends LitElement {
     this.recordMatrix = this.prepareRecordMatrix();
   }
 
-  prepareRecordMatrix() {
+  prepareRecordMatrix(): RecordMatrix {
     const recordMatrix = Object.keys(sectionConfigMap).reduce(
-      (acc, sectionKey) => {
-        const sectionConfig =
-          sectionConfigMap[sectionKey as keyof SectionConfigMap];
+      (acc, key) => {
+        const sectionKey = key as SectionType;
+        const sectionConfig = sectionConfigMap[sectionKey];
         const records = [...new Array(sectionConfig.numRecords)].map(() => {
           return {
             total: 0,
@@ -111,7 +140,7 @@ export class K4Form extends LitElement {
         acc[sectionKey] = records;
         return acc;
       },
-      {} as Record<string, AssetRecord[]>,
+      {} as Record<SectionType, AssetRecord[]>,
     );
     console.log('recordMatrix', recordMatrix);
     return recordMatrix;
@@ -157,9 +186,9 @@ export class K4Form extends LitElement {
       ${repeat(
         Object.keys(sectionConfigMap),
         sectionKey => sectionKey,
-        sectionKey => {
-          const sectionConfig =
-            sectionConfigMap[sectionKey as keyof SectionConfigMap];
+        key => {
+          const sectionKey = key as SectionType;
+          const sectionConfig = sectionConfigMap[sectionKey];
           return html`<section>
             <h3>${sectionConfig.type}</h3>
 
