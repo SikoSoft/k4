@@ -30,6 +30,11 @@ export class AssetRecord extends LitElement {
       display: flex;
       flex-direction: row;
       gap: 1rem;
+      justify-content: space-between;
+
+      & > * {
+        flex-grow: 1;
+      }
     }
   `;
 
