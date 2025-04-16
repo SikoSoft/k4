@@ -21,8 +21,11 @@ import {
   RecordMatrix,
   SectionConfigMap,
   sectionConfigMap,
+  SectionSummary,
+  SectionSummaryMatrix,
   SectionType,
 } from '@/models/K4';
+import { SectionSummaryChangedEvent } from '../section-summary/section-summary.events';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -44,6 +47,34 @@ export class K4Form extends LitElement {
     [SectionType.B]: [],
     [SectionType.C]: [],
     [SectionType.D]: [],
+  };
+
+  @state()
+  private summaryMatrix: SectionSummaryMatrix = {
+    [SectionType.A]: {
+      totalSellPrice: 0,
+      totalBuyPrice: 0,
+      totalGain: 0,
+      totalLoss: 0,
+    },
+    [SectionType.B]: {
+      totalSellPrice: 0,
+      totalBuyPrice: 0,
+      totalGain: 0,
+      totalLoss: 0,
+    },
+    [SectionType.C]: {
+      totalSellPrice: 0,
+      totalBuyPrice: 0,
+      totalGain: 0,
+      totalLoss: 0,
+    },
+    [SectionType.D]: {
+      totalSellPrice: 0,
+      totalBuyPrice: 0,
+      totalGain: 0,
+      totalLoss: 0,
+    },
   };
 
   @state()
@@ -163,6 +194,12 @@ export class K4Form extends LitElement {
     this.personInfo = event.detail;
   }
 
+  updateSectionSummary(section: SectionType, summary: SectionSummary) {
+    console.log('updateSectionSummary', summary);
+    this.summaryMatrix[section] = summary;
+    this.requestUpdate();
+  }
+
   updateAssetRecord(section: SectionType, index: number, record: AssetRecord) {
     console.log('updateAssetRecord', section, index, record);
     this.recordMatrix[section][index] = record;
@@ -220,7 +257,24 @@ export class K4Form extends LitElement {
                 ></asset-record>`,
             )}
             ${sectionConfig.numRecords > 0
-              ? html` <section-summary></section-summary> `
+              ? html`
+                  <section-summary
+                    @section-summary-changed=${(
+                      event: SectionSummaryChangedEvent,
+                    ) => {
+                      this.updateSectionSummary(
+                        sectionConfig.type,
+                        event.detail,
+                      );
+                    }}
+                    totalSellPrice=${this.summaryMatrix[sectionKey]
+                      .totalSellPrice}
+                    totalBuyPrice=${this.summaryMatrix[sectionKey]
+                      .totalBuyPrice}
+                    totalGain=${this.summaryMatrix[sectionKey].totalGain}
+                    totalLoss=${this.summaryMatrix[sectionKey].totalLoss}
+                  ></section-summary>
+                `
               : nothing}
           </section> `;
         },

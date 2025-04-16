@@ -63,6 +63,8 @@ export enum SectionType {
   D = 'D',
 }
 
+export type SectionSummaryMatrix = Record<SectionType, SectionSummary>;
+
 export interface Section {
   type: SectionType;
   records: AssetRecord[];

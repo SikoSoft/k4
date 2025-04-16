@@ -58,15 +58,28 @@ export class SectionSummary extends LitElement {
   [SectionSummaryProp.TOTAL_LOSS]: SectionSummaryProps[SectionSummaryProp.TOTAL_LOSS] =
     sectionSummaryProps[SectionSummaryProp.TOTAL_LOSS].default;
 
-  handleFieldChanged(field: SectionSummaryProp, event: InputChangedEvent) {
-    console.log('handleFieldChanged', field, event);
+  get fields(): SectionSummaryProps {
+    return {
+      [SectionSummaryProp.TOTAL_SELL_PRICE]:
+        this[SectionSummaryProp.TOTAL_SELL_PRICE],
+      [SectionSummaryProp.TOTAL_BUY_PRICE]:
+        this[SectionSummaryProp.TOTAL_BUY_PRICE],
+      [SectionSummaryProp.TOTAL_GAIN]: this[SectionSummaryProp.TOTAL_GAIN],
+      [SectionSummaryProp.TOTAL_LOSS]: this[SectionSummaryProp.TOTAL_LOSS],
+    };
   }
 
-  sendChangedEvent(
-    field: SectionSummaryProp,
-    payload: InputChangedEventPayload,
-  ) {
-    console.log();
+  handleFieldChanged(field: SectionSummaryProp, event: InputChangedEvent) {
+    console.log('handleFieldChanged', field, event);
+    this.sendChangedEvent({
+      ...this.fields,
+      [field]: parseInt(event.detail.value),
+    });
+  }
+
+  sendChangedEvent(fields: SectionSummaryProps) {
+    console.log('sendChangedEvent', fields);
+    this.dispatchEvent(new SectionSummaryChangedEvent(fields));
   }
 
   fieldValue(field: SectionSummaryField): string {
