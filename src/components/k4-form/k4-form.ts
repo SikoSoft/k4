@@ -6,6 +6,7 @@ import '@/components/meta-info/meta-info';
 import '@/components/person-info/person-info';
 import '@/components/asset-record/asset-record';
 import '@/components/section-summary/section-summary';
+import '@/components/file-preview/file-preview';
 
 import { AssetRecordChangedEvent } from '@/components/asset-record/asset-record.events';
 import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
@@ -51,6 +52,41 @@ export class K4Form extends LitElement {
     city: '',
     postCode: '',
   };
+
+  @state()
+  programName = 'SikoSoft K4';
+
+  get createdDate(): string {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+    const second = date.getSeconds().toString().padStart(2, '0');
+    return `${year}${month}${day} ${hour}${minute}${second}`;
+  }
+
+  @state()
+  get manifest(): string {
+    return `#DATABESKRIVNING_START
+#PRODUKT SRU
+#SKAPAD ${this.createdDate}
+#PROGRAM ${this.programName}
+#FILNAMN BLANKETTER.SRU
+#DATABESKRIVNING_SLUT
+#MEDIELEV_START
+#ORGNR ${this.personInfo.personNumber}
+#NAMN ${this.personInfo.name}
+#POSTNR ${this.personInfo.postCode}
+#POSTORT ${this.personInfo.city}
+#MEDIELEV_SLUT`;
+  }
+
+  @state()
+  get data(): string {
+    return JSON.stringify(this.recordMatrix);
+  }
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -153,6 +189,13 @@ export class K4Form extends LitElement {
           </section> `;
         },
       )}
+
+      <section>
+        <file-preview>
+          <div slot="manifest">${this.manifest}</div>
+          <div slot="data">${this.data}</div>
+        </file-preview>
+      </section>
     </div>`;
   }
 }

@@ -96,3 +96,13 @@ export const sectionConfigMap: SectionConfigMap = {
 };
 
 export type RecordMatrix = Record<string, AssetRecord[]>;
+
+export enum FileName {
+  MANIFEST = 'info.sru',
+  DATA = 'blanketter.sru',
+}
+
+export interface File {
+  name: FileName;
+  content: string;
+}
