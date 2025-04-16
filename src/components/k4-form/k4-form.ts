@@ -22,8 +22,11 @@ import {
   SectionConfigMap,
   sectionConfigMap,
   SectionSummary,
+  SectionSummaryField,
   SectionSummaryMatrix,
   SectionType,
+  SummaryFieldConfig,
+  summaryFieldMap,
 } from '@/models/K4';
 import { SectionSummaryChangedEvent } from '../section-summary/section-summary.events';
 
@@ -146,6 +149,19 @@ export class K4Form extends LitElement {
             data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
           }
         });
+      });
+
+      //const summary = this.summaryMatrix[sectionKey];
+      Object.values(SectionSummaryField).forEach(field => {
+        const fieldEntry = summaryFieldMap.find(
+          (entry: SummaryFieldConfig) =>
+            entry.location[0] === sectionKey && entry.location[1] === field,
+        );
+
+        if (fieldEntry) {
+          const fieldValue = this.summaryMatrix[sectionKey][field];
+          data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
+        }
       });
     });
 

@@ -171,7 +171,6 @@ export const assetFieldMap: AssetFieldConfig[] = [
   { id: 3183, location: [SectionType.A, 8, AssetRecordField.BUY_PRICE] },
   { id: 3184, location: [SectionType.A, 8, AssetRecordField.GAIN] },
   { id: 3185, location: [SectionType.A, 8, AssetRecordField.LOSS] },
-
   { id: 3310, location: [SectionType.C, 0, AssetRecordField.TOTAL] },
   { id: 3311, location: [SectionType.C, 0, AssetRecordField.ASSET] },
   { id: 3312, location: [SectionType.C, 0, AssetRecordField.SELL_PRICE] },
@@ -214,7 +213,6 @@ export const assetFieldMap: AssetFieldConfig[] = [
   { id: 3373, location: [SectionType.C, 6, AssetRecordField.BUY_PRICE] },
   { id: 3374, location: [SectionType.C, 6, AssetRecordField.GAIN] },
   { id: 3375, location: [SectionType.C, 6, AssetRecordField.LOSS] },
-
   { id: 3410, location: [SectionType.D, 0, AssetRecordField.TOTAL] },
   { id: 3411, location: [SectionType.D, 0, AssetRecordField.ASSET] },
   { id: 3412, location: [SectionType.D, 0, AssetRecordField.SELL_PRICE] },
@@ -257,4 +255,26 @@ export const assetFieldMap: AssetFieldConfig[] = [
   { id: 3473, location: [SectionType.D, 6, AssetRecordField.BUY_PRICE] },
   { id: 3474, location: [SectionType.D, 6, AssetRecordField.GAIN] },
   { id: 3475, location: [SectionType.D, 6, AssetRecordField.LOSS] },
+];
+
+export type SummaryFieldMapping = [SectionType, SectionSummaryField];
+
+export interface SummaryFieldConfig {
+  id: number;
+  location: SummaryFieldMapping;
+}
+
+export const summaryFieldMap: SummaryFieldConfig[] = [
+  { id: 3300, location: [SectionType.A, SectionSummaryField.TOTAL_SELL_PRICE] },
+  { id: 3301, location: [SectionType.A, SectionSummaryField.TOTAL_BUY_PRICE] },
+  { id: 3304, location: [SectionType.A, SectionSummaryField.TOTAL_GAIN] },
+  { id: 3305, location: [SectionType.A, SectionSummaryField.TOTAL_LOSS] },
+  { id: 3400, location: [SectionType.C, SectionSummaryField.TOTAL_SELL_PRICE] },
+  { id: 3401, location: [SectionType.C, SectionSummaryField.TOTAL_BUY_PRICE] },
+  { id: 3303, location: [SectionType.C, SectionSummaryField.TOTAL_GAIN] },
+  { id: 3304, location: [SectionType.C, SectionSummaryField.TOTAL_LOSS] },
+  { id: 3500, location: [SectionType.D, SectionSummaryField.TOTAL_SELL_PRICE] },
+  { id: 3501, location: [SectionType.D, SectionSummaryField.TOTAL_BUY_PRICE] },
+  { id: 3503, location: [SectionType.D, SectionSummaryField.TOTAL_GAIN] },
+  { id: 3504, location: [SectionType.D, SectionSummaryField.TOTAL_LOSS] },
 ];
