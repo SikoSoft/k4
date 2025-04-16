@@ -17,6 +17,7 @@ import {
   SectionSummaryChangedEvent,
   SectionSummaryChangedEventPayload,
 } from './section-summary.events';
+import { SectionSummaryField } from '@/models/K4';
 
 @customElement('section-summary')
 export class SectionSummary extends LitElement {
@@ -68,6 +69,10 @@ export class SectionSummary extends LitElement {
     console.log();
   }
 
+  fieldValue(field: SectionSummaryField): string {
+    return this[field] === 0 ? '' : this[field].toString();
+  }
+
   render() {
     return html`<div class="section-summary">
       <ss-input class="layout-filler"></ss-input>
@@ -78,7 +83,7 @@ export class SectionSummary extends LitElement {
         field => html`
           <ss-input
             placeholder=${field}
-            value=${this[field]}
+            value=${this.fieldValue(field)}
             @input-changed=${(event: InputChangedEvent) => {
               this.handleFieldChanged(field, event);
             }}
