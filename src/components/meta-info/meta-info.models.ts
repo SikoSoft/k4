@@ -1,16 +1,9 @@
-import { PropConfigMap, PropTypes } from '@/models/Prop';
+import { PropConfigMap } from '@/models/Prop';
+import { MetaInfo, MetaInfoField as MetaInfoProp } from '@/models/K4';
 
-export enum MetaInfoProp {
-  YEAR = 'year',
-  DATE = 'date',
-  PAGE_NUMBER = 'pageNumber',
-}
+export { MetaInfoProp };
 
-export interface MetaInfoProps extends PropTypes {
-  [MetaInfoProp.YEAR]: string;
-  [MetaInfoProp.DATE]: string;
-  [MetaInfoProp.PAGE_NUMBER]: string;
-}
+export interface MetaInfoProps extends MetaInfo {}
 
 export const metaInfoProps: PropConfigMap<MetaInfoProps> = {
   [MetaInfoProp.YEAR]: {

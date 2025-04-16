@@ -12,6 +12,7 @@ import { PersonInfoChangedEvent } from '@/components/person-info/person-info.eve
 import { MetaInfoChangedEvent } from '@/components/meta-info/meta-info.events';
 import {
   AssetRecord,
+  MetaInfo,
   PersonInfo,
   RecordMatrix,
   SectionConfigMap,
@@ -37,13 +38,11 @@ export class K4Form extends LitElement {
   private recordMatrix: RecordMatrix = {};
 
   @state()
-  year = '';
-
-  @state()
-  date = '';
-
-  @state()
-  pageNumber = '';
+  metaInfo: MetaInfo = {
+    year: '',
+    date: '',
+    pageNumber: '',
+  };
 
   @state()
   personInfo: PersonInfo = {
@@ -83,11 +82,8 @@ export class K4Form extends LitElement {
   }
 
   updateMetaInfo(event: MetaInfoChangedEvent) {
-    const { year, date, pageNumber } = event.detail;
     console.log('updateMetaInfo', event.detail);
-    this.year = year;
-    this.date = date;
-    this.pageNumber = pageNumber;
+    this.metaInfo = event.detail;
   }
 
   updatePersonInfo(event: PersonInfoChangedEvent) {
@@ -106,9 +102,9 @@ export class K4Form extends LitElement {
       <section>
         <meta-info
           @meta-info-changed=${this.updateMetaInfo}
-          year=${this.year}
-          date=${this.date}
-          pageNumber=${this.pageNumber}
+          year=${this.metaInfo.year}
+          date=${this.metaInfo.date}
+          pageNumber=${this.metaInfo.pageNumber}
         ></meta-info>
       </section>
 

@@ -1,3 +1,15 @@
+export enum MetaInfoField {
+  YEAR = 'year',
+  DATE = 'date',
+  PAGE_NUMBER = 'pageNumber',
+}
+
+export interface MetaInfo {
+  [MetaInfoField.YEAR]: string;
+  [MetaInfoField.DATE]: string;
+  [MetaInfoField.PAGE_NUMBER]: string;
+}
+
 export enum PersonInfoField {
   NAME = 'name',
   PERSON_NUMBER = 'personNumber',

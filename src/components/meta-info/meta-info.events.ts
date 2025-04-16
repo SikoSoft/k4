@@ -1,10 +1,8 @@
+import { MetaInfo } from '@/models/K4';
+
 export const metaInfoChangedEventName = 'meta-info-changed';
 
-export interface MetaInfoChangedEventPayload {
-  year: string;
-  date: string;
-  pageNumber: string;
-}
+export interface MetaInfoChangedEventPayload extends MetaInfo {}
 
 export class MetaInfoChangedEvent extends CustomEvent<MetaInfoChangedEventPayload> {
   constructor(payload: MetaInfoChangedEventPayload) {
