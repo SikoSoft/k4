@@ -135,34 +135,39 @@ export class K4Form extends LitElement {
     Object.keys(this.recordMatrix).forEach(key => {
       const sectionKey = key as SectionType;
       const records = this.recordMatrix[sectionKey];
-      records.forEach((record, index) => {
-        Object.values(AssetRecordField).forEach(field => {
-          const fieldEntry = assetFieldMap.find(
-            (entry: AssetFieldConfig) =>
-              entry.location[0] === sectionKey &&
-              entry.location[1] === index &&
-              entry.location[2] === field,
-          );
 
-          if (fieldEntry) {
-            const fieldValue = record[field];
-            data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
-          }
-        });
+      records.forEach((record, index) => {
+        if (this.sectionRowIsValid(sectionKey, index)) {
+          Object.values(AssetRecordField).forEach(field => {
+            const fieldEntry = assetFieldMap.find(
+              (entry: AssetFieldConfig) =>
+                entry.location[0] === sectionKey &&
+                entry.location[1] === index &&
+                entry.location[2] === field,
+            );
+
+            if (fieldEntry) {
+              const fieldValue = record[field];
+              data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
+            }
+          });
+        }
       });
 
       //const summary = this.summaryMatrix[sectionKey];
-      Object.values(SectionSummaryField).forEach(field => {
-        const fieldEntry = summaryFieldMap.find(
-          (entry: SummaryFieldConfig) =>
-            entry.location[0] === sectionKey && entry.location[1] === field,
-        );
+      if (this.sectionSummaryIsValid(sectionKey)) {
+        Object.values(SectionSummaryField).forEach(field => {
+          const fieldEntry = summaryFieldMap.find(
+            (entry: SummaryFieldConfig) =>
+              entry.location[0] === sectionKey && entry.location[1] === field,
+          );
 
-        if (fieldEntry) {
-          const fieldValue = this.summaryMatrix[sectionKey][field];
-          data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
-        }
-      });
+          if (fieldEntry) {
+            const fieldValue = this.summaryMatrix[sectionKey][field];
+            data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
+          }
+        });
+      }
     });
 
     data += `#BLANKETTSLUT
@@ -220,6 +225,25 @@ export class K4Form extends LitElement {
     console.log('updateAssetRecord', section, index, record);
     this.recordMatrix[section][index] = record;
     this.requestUpdate();
+  }
+
+  sectionRowIsValid(section: SectionType, index: number): boolean {
+    const record = this.recordMatrix[section][index];
+    return (
+      record.asset !== '' &&
+      record.buyPrice !== 0 &&
+      record.sellPrice !== 0 &&
+      (record.gain > 0 || record.loss > 0)
+    );
+  }
+
+  sectionSummaryIsValid(section: SectionType): boolean {
+    const summary = this.summaryMatrix[section];
+    return (
+      summary.totalSellPrice !== 0 &&
+      summary.totalBuyPrice !== 0 &&
+      (summary.totalGain > 0 || summary.totalLoss > 0)
+    );
   }
 
   render() {
