@@ -2,6 +2,8 @@ import { css, html, LitElement, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 
+import '@ss/ui/components/ss-button';
+
 import '@/components/meta-info/meta-info';
 import '@/components/person-info/person-info';
 import '@/components/asset-record/asset-record';
@@ -97,6 +99,12 @@ export class K4Form extends LitElement {
 
   @state()
   programName = 'SikoSoft K4';
+
+  @state()
+  isValid = false;
+
+  @state()
+  lastValidationHash = '';
 
   get createdDate(): string {
     const date = new Date();
@@ -246,6 +254,46 @@ export class K4Form extends LitElement {
     );
   }
 
+  validate(): boolean {
+    console.log('validate');
+
+    let isValid = false;
+
+    if (!this.allFieldsUseCorrectFormat()) {
+      isValid = false;
+    }
+
+    if (!this.allRequiredFieldsAreFilled()) {
+      isValid = false;
+    }
+
+    this.isValid = isValid;
+    return this.isValid;
+    /*
+    const isValid = Object.keys(this.recordMatrix).every(key => {
+      const sectionKey = key as SectionType;
+      const records = this.recordMatrix[sectionKey];
+      return records.every((record, index) =>
+        this.sectionRowIsValid(sectionKey, index),
+      );
+    });
+
+    if (isValid) {
+      console.log('All sections are valid');
+    } else {
+      console.error('Some sections are invalid');
+    }
+      */
+  }
+
+  allRequiredFieldsAreFilled(): boolean {
+    return false;
+  }
+
+  allFieldsUseCorrectFormat(): boolean {
+    return false;
+  }
+
   render() {
     return html`<div class="k4">
       <section>
@@ -319,6 +367,14 @@ export class K4Form extends LitElement {
           </section> `;
         },
       )}
+
+      <ss-button @click=${this.validate}>Validate</ss-button>
+
+      <div class="validation">
+        ${this.isValid
+          ? html`<p>All fields are valid</p>`
+          : html`<p>Some fields are invalid</p>`}
+      </div>
 
       <section>
         <file-preview>
