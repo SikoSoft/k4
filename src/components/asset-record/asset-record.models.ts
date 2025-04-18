@@ -1,9 +1,18 @@
 import { PropConfigMap } from '@/models/Prop';
-import { AssetRecord, AssetRecordField as AssetRecordProp } from '@/models/K4';
+import { AssetRecord, AssetRecordField, SectionType } from '@/models/K4';
 
-export { AssetRecordProp };
-
-export interface AssetRecordProps extends AssetRecord {}
+export enum AssetRecordProp {
+  TOTAL = AssetRecordField.TOTAL,
+  ASSET = AssetRecordField.ASSET,
+  SELL_PRICE = AssetRecordField.SELL_PRICE,
+  BUY_PRICE = AssetRecordField.BUY_PRICE,
+  GAIN = AssetRecordField.GAIN,
+  LOSS = AssetRecordField.LOSS,
+  SECTION = 'section',
+}
+export interface AssetRecordProps extends AssetRecord {
+  [AssetRecordProp.SECTION]: SectionType;
+}
 
 export const assetRecordProps: PropConfigMap<AssetRecordProps> = {
   [AssetRecordProp.TOTAL]: {
@@ -35,5 +44,10 @@ export const assetRecordProps: PropConfigMap<AssetRecordProps> = {
     default: 0,
     control: 'number',
     description: 'Loss from the asset',
+  },
+  [AssetRecordProp.SECTION]: {
+    default: SectionType.A,
+    control: 'text',
+    description: 'Section of the asset',
   },
 };

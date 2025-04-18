@@ -22,11 +22,8 @@ export class Localization {
 
   translate(key: string): string {
     if (this.languageMap[this.language][key]) {
-      console.log('string exists', key);
       return this.languageMap[this.language][key];
     }
-
-    console.log('string does not exist', key, this.languageMap[this.language]);
 
     return key;
   }

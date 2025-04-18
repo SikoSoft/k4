@@ -18,6 +18,7 @@ import {
   AssetRecordChangedEventPayload,
 } from './asset-record.events';
 import { AssetRecordField } from '@/models/K4';
+import { translate } from '@/lib/Localization';
 
 @customElement('asset-record')
 export class AssetRecord extends LitElement {
@@ -62,11 +63,15 @@ export class AssetRecord extends LitElement {
   [AssetRecordProp.LOSS]: AssetRecordProps[AssetRecordProp.LOSS] =
     assetRecordProps[AssetRecordProp.LOSS].default;
 
+  @property({ type: String })
+  [AssetRecordProp.SECTION]: AssetRecordProps[AssetRecordProp.SECTION] =
+    assetRecordProps[AssetRecordProp.SECTION].default;
+
   fieldValue(field: AssetRecordField): string {
     return this[field] === 0 ? '' : this[field].toString();
   }
 
-  handleFieldChanged(field: AssetRecordProp, event: InputChangedEvent) {
+  handleFieldChanged(field: AssetRecordField, event: InputChangedEvent) {
     console.log('handleFieldChanged', field, event.detail.value);
 
     const value: string | number =
@@ -92,11 +97,13 @@ export class AssetRecord extends LitElement {
   render() {
     return html`<div class="asset-record">
       ${repeat(
-        Object.values(AssetRecordProp),
+        Object.values(AssetRecordField),
         field => field,
         field => html`
           <ss-input
-            placeholder=${field}
+            placeholder=${translate(
+              `fieldPlaceholder.${this.section}.${field}`,
+            )}
             value=${this.fieldValue(field)}
             @input-changed=${(event: InputChangedEvent) => {
               this.handleFieldChanged(field, event);
