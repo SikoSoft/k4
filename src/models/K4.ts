@@ -278,3 +278,22 @@ export const summaryFieldMap: SummaryFieldConfig[] = [
   { id: 3503, location: [SectionType.D, SectionSummaryField.TOTAL_GAIN] },
   { id: 3504, location: [SectionType.D, SectionSummaryField.TOTAL_LOSS] },
 ];
+
+export interface ValidationError {
+  field: string;
+  message: string;
+}
+
+export interface SuccessfulValidation {
+  isValid: true;
+}
+
+export interface FailedValidation {
+  isValid: false;
+  errors: ValidationError[];
+}
+
+export type ValidationResult = {
+  isValid: boolean;
+  errors: ValidationError[];
+};

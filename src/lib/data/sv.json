@@ -27,5 +27,9 @@
   "fieldPlaceholder.D.buyPrice": "Inköpspris",
   "fieldPlaceholder.D.gain": "Vinst",
   "fieldPlaceholder.D.loss": "Förlust",
-  "download": "Ladda ner"
+  "download": "Ladda ner",
+  "missingFieldError.personInfo.name": "Namn krävs",
+  "missingFieldError.personInfo.personNumber": "Personnummer krävs",
+  "missingFieldError.personInfo.city": "Stad krävs",
+  "missingFieldError.personInfo.postCode": "Postnummer krävs"
 }

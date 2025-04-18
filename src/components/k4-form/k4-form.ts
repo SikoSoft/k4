@@ -22,6 +22,7 @@ import {
   AssetRecordField,
   MetaInfo,
   PersonInfo,
+  PersonInfoField,
   RecordMatrix,
   SectionConfigMap,
   sectionConfigMap,
@@ -31,6 +32,8 @@ import {
   SectionType,
   SummaryFieldConfig,
   summaryFieldMap,
+  ValidationError,
+  ValidationResult,
 } from '@/models/K4';
 import { SectionSummaryChangedEvent } from '../section-summary/section-summary.events';
 import { translate } from '@/lib/Localization';
@@ -104,10 +107,10 @@ export class K4Form extends LitElement {
   programName = 'SikoSoft K4';
 
   @state()
-  isValid = false;
-
-  @state()
-  lastValidationHash = '';
+  validationResult: ValidationResult = {
+    isValid: false,
+    errors: [],
+  };
 
   get createdDate(): string {
     const date = new Date();
@@ -257,21 +260,32 @@ export class K4Form extends LitElement {
     );
   }
 
-  validate(): boolean {
+  validate(): ValidationResult {
     console.log('validate');
 
-    let isValid = false;
+    let validationResult: ValidationResult = {
+      isValid: true,
+      errors: [],
+    };
 
+    const missingFieldErrors = this.getMissingFieldErrors();
+    if (missingFieldErrors.length > 0) {
+      validationResult.isValid = false;
+      validationResult.errors.push(...missingFieldErrors);
+    }
+
+    /*
     if (!this.allFieldsUseCorrectFormat()) {
-      isValid = false;
+      validationResult.isValid = false;
     }
 
     if (!this.allRequiredFieldsAreFilled()) {
-      isValid = false;
+      validationResult.isValid = false;
     }
+      */
 
-    this.isValid = isValid;
-    return this.isValid;
+    this.validationResult = validationResult;
+    return this.validationResult;
     /*
     const isValid = Object.keys(this.recordMatrix).every(key => {
       const sectionKey = key as SectionType;
@@ -287,6 +301,21 @@ export class K4Form extends LitElement {
       console.error('Some sections are invalid');
     }
       */
+  }
+
+  getMissingFieldErrors(): ValidationError[] {
+    const errors: ValidationError[] = [];
+
+    Object.values(PersonInfoField).forEach(field => {
+      if (!this.personInfo[field]) {
+        errors.push({
+          field,
+          message: translate(`missingFieldError.personInfo.${field}`),
+        });
+      }
+    });
+
+    return errors;
   }
 
   allRequiredFieldsAreFilled(): boolean {
@@ -398,13 +427,24 @@ export class K4Form extends LitElement {
       <ss-button @click=${this.validate}>${translate('validate')}</ss-button>
 
       <div class="validation">
-        ${this.isValid
+        ${this.validationResult.isValid
           ? html`<p>${translate('formIsValid')}</p>`
-          : html`<p>${translate('formIsInvalid')}</p>`}
+          : html`<p>${translate('formIsInvalid')}</p>
+              <ul>
+                ${repeat(
+                  this.validationResult.errors,
+                  error => error.field,
+                  error => html`<li>${error.message}</li>`,
+                )}
+              </ul>`}
       </div>
 
       <div class="download">
-        <ss-button @click=${this.download}>${translate('download')}</ss-button>
+        <ss-button
+          @click=${this.download}
+          ?disabled=${!this.validationResult.isValid}
+          >${translate('download')}</ss-button
+        >
       </div>
 
       <section>
