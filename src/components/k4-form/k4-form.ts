@@ -90,9 +90,9 @@ export class K4Form extends LitElement {
 
   @state()
   metaInfo: MetaInfo = {
-    year: '',
+    year: `2024`,
     date: '',
-    pageNumber: '',
+    pageNumber: '1',
   };
 
   @state()

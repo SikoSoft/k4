@@ -12,6 +12,7 @@ import {
   PersonInfoChangedEvent,
   PersonInfoChangedEventPayload,
 } from './person-info.events';
+import { translate } from '@/lib/Localization';
 
 @customElement('person-info')
 export class PersonInfo extends LitElement {
@@ -95,25 +96,25 @@ export class PersonInfo extends LitElement {
     return html`<div class="person-info">
       <div class="name">
         <ss-input
-          placeholder="Name"
+          placeholder=${translate('fieldPlaceholder.personInfo.name')}
           @input-changed=${this.handleNameChanged}
         ></ss-input>
       </div>
       <div class="person-number">
         <ss-input
-          placeholder="Person Number"
+          placeholder=${translate('fieldPlaceholder.personInfo.personNumber')}
           @input-changed=${this.handlePersonNumberChanged}
         ></ss-input>
       </div>
       <div class="city">
         <ss-input
-          placeholder="City"
+          placeholder=${translate('fieldPlaceholder.personInfo.city')}
           @input-changed=${this.handleCityChanged}
         ></ss-input>
       </div>
       <div class="post-code">
         <ss-input
-          placeholder="Post code"
+          placeholder=${translate('fieldPlaceholder.personInfo.postCode')}
           @input-changed=${this.handlePostCodeChanged}
         ></ss-input>
       </div>

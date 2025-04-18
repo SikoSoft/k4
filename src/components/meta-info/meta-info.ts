@@ -8,6 +8,7 @@ import {
   MetaInfoChangedEvent,
   MetaInfoChangedEventPayload,
 } from './meta-info.events';
+import { translate } from '@/lib/Localization';
 
 @customElement('meta-info')
 export class MetaInfo extends LitElement {
@@ -76,15 +77,18 @@ export class MetaInfo extends LitElement {
   render() {
     return html`<div class="meta-info">
       <ss-input
-        placeholder="Year"
+        placeholder=${translate('fieldPlaceholder.metaInfo.year')}
+        value=${this[MetaInfoProp.YEAR]}
         @input-changed=${this.handleYearChanged}
       ></ss-input>
       <ss-input
-        placeholder="Date"
+        placeholder=${translate('fieldPlaceholder.metaInfo.date')}
+        value=${this[MetaInfoProp.DATE]}
         @input-changed=${this.handleDateChanged}
       ></ss-input>
       <ss-input
-        placeholder="Page Number"
+        placeholder=${translate('fieldPlaceholder.metaInfo.pageNumber')}
+        value=${this[MetaInfoProp.PAGE_NUMBER]}
         @input-changed=${this.handlePageNumberChanged}
       ></ss-input>
     </div> `;
