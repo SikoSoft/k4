@@ -26,5 +26,6 @@
   "fieldPlaceholder.D.sellPrice": "Försäljningspris",
   "fieldPlaceholder.D.buyPrice": "Inköpspris",
   "fieldPlaceholder.D.gain": "Vinst",
-  "fieldPlaceholder.D.loss": "Förlust"
+  "fieldPlaceholder.D.loss": "Förlust",
+  "download": "Ladda ner"
 }

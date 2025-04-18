@@ -1,6 +1,8 @@
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 import '@ss/ui/components/ss-button';
 
@@ -295,6 +297,27 @@ export class K4Form extends LitElement {
     return false;
   }
 
+  async download(): Promise<void> {
+    try {
+      const zip = new JSZip();
+
+      zip.file('BLANKETTER.SRU', this.data);
+      zip.file('INFO.SRU', this.manifest);
+
+      const content = await zip.generateAsync({
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: {
+          level: 9,
+        },
+      });
+
+      saveAs(content, `${this.personInfo.name}-K4-${this.metaInfo.year}.zip`);
+    } catch (error) {
+      console.error('Error creating ZIP file:', error);
+    }
+  }
+
   render() {
     return html`<div class="k4">
       <section>
@@ -378,6 +401,10 @@ export class K4Form extends LitElement {
         ${this.isValid
           ? html`<p>${translate('formIsValid')}</p>`
           : html`<p>${translate('formIsInvalid')}</p>`}
+      </div>
+
+      <div class="download">
+        <ss-button @click=${this.download}>${translate('download')}</ss-button>
       </div>
 
       <section>
