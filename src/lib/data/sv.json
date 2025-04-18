@@ -1,7 +1,12 @@
 {
   "formIsValid": "Formuläret är giltigt",
   "formIsInvalid": "Formuläret är ogiltigt",
+  "validate": "Validera",
   "name": "Namn",
   "address": "Adress",
-  "city": "Stad"
+  "city": "Stad",
+  "sectionHeading.A": "Marknadsnoterade aktier, aktieindexobligationer, aktieoptioner m.m.",
+  "sectionHeading.B": "Återföring av uppskovsbelopp",
+  "sectionHeading.C": "Marknadsnoterade obligationer, valuta m.m.",
+  "sectionHeading.D": "Övriga värdepapper, andra tillgångar (kapitalplaceringar t.ex. råvaror, kryptovalutor) m.m."
 }

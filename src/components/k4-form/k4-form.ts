@@ -323,7 +323,10 @@ export class K4Form extends LitElement {
           const sectionKey = key as SectionType;
           const sectionConfig = sectionConfigMap[sectionKey];
           return html`<section>
-            <h3>${sectionConfig.type}</h3>
+            <h3>
+              ${sectionConfig.type}.
+              ${translate(`sectionHeading.${sectionConfig.type}`)}
+            </h3>
 
             ${repeat(
               [...new Array(sectionConfig.numRecords)].map((_, index) => index),
@@ -369,7 +372,7 @@ export class K4Form extends LitElement {
         },
       )}
 
-      <ss-button @click=${this.validate}>Validate</ss-button>
+      <ss-button @click=${this.validate}>${translate('validate')}</ss-button>
 
       <div class="validation">
         ${this.isValid
