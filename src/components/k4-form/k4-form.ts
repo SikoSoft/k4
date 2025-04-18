@@ -31,6 +31,7 @@ import {
   summaryFieldMap,
 } from '@/models/K4';
 import { SectionSummaryChangedEvent } from '../section-summary/section-summary.events';
+import { translate } from '@/lib/Localization';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -372,8 +373,8 @@ export class K4Form extends LitElement {
 
       <div class="validation">
         ${this.isValid
-          ? html`<p>All fields are valid</p>`
-          : html`<p>Some fields are invalid</p>`}
+          ? html`<p>${translate('formIsValid')}</p>`
+          : html`<p>${translate('formIsInvalid')}</p>`}
       </div>
 
       <section>
