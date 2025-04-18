@@ -11,3 +11,9 @@ I said to myself, what is so special or complicated about what's involved here t
 So that's what I am doing here, re-creating this stupid tax form so I don't have to pay some other jack-ass 500 kronor to use their form.
 
 It's a bit undecided at the moment whether I will completely open source this or be another jack-ass to charge people to use what Skatteverket should just provide for free.
+
+### tests to add:
+
+count number of columns in every single row
+count number of rows in every section
+check mapping
