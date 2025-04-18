@@ -1,4 +1,7 @@
 {
   "formIsValid": "Formuläret är giltigt",
-  "formIsInvalid": "Formuläret är ogiltigt"
+  "formIsInvalid": "Formuläret är ogiltigt",
+  "name": "Namn",
+  "address": "Adress",
+  "city": "Stad"
 }
