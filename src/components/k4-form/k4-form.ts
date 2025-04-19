@@ -216,6 +216,7 @@ export class K4Form extends LitElement {
     super.connectedCallback();
     this.recordMatrix = this.prepareRecordMatrix();
     this.loadFromStorage();
+    this.validate();
   }
 
   prepareRecordMatrix(): RecordMatrix {
