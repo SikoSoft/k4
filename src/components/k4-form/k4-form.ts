@@ -41,6 +41,8 @@ import { SectionSummaryChangedEvent } from '../section-summary/section-summary.e
 import { translate } from '@/lib/Localization';
 import { DeferredShareChangedEvent } from '../deferred-share/deferred-share.events';
 import { Validation } from '@/lib/Validation';
+import { addNotification } from '@/lib/Notification';
+import { NotificationType } from '@ss/ui/components/notification-provider.models';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -297,6 +299,11 @@ export class K4Form extends LitElement {
 
   validate(): ValidationResult {
     this.validationResult = Validation.validate(this.data);
+    if (this.validationResult.isValid) {
+      addNotification(translate('formIsValid'), NotificationType.SUCCESS);
+    } else {
+      addNotification(translate('formIsInvalid'), NotificationType.ERROR);
+    }
     return this.validationResult;
   }
 
@@ -439,7 +446,7 @@ export class K4Form extends LitElement {
 
       <ss-button @click=${this.validate}>${translate('validate')}</ss-button>
 
-      <div class="validation">
+      <section class="validation">
         ${this.validationResult.isValid
           ? html`<p>${translate('formIsValid')}</p>`
           : html`<p>${translate('formIsInvalid')}</p>
@@ -450,20 +457,20 @@ export class K4Form extends LitElement {
                   error => html`<li>${error.message}</li>`,
                 )}
               </ul>`}
-      </div>
+      </section>
 
-      <div class="download">
+      <section class="download">
         <ss-button
           @click=${this.download}
           ?disabled=${!this.validationResult.isValid}
           >${translate('download')}</ss-button
         >
-      </div>
+      </section>
 
       <section>
         <file-preview>
-          <div slot="manifest">${this.info}</div>
-          <div slot="data">${this.blanketter}</div>
+          <div slot="info">${this.info}</div>
+          <div slot="blanketter">${this.blanketter}</div>
         </file-preview>
       </section>
     </div>`;

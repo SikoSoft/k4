@@ -15,6 +15,7 @@
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
     "lit": "~3.3.0",
+    "personnummer": "^3.2.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

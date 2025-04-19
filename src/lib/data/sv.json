@@ -34,6 +34,11 @@
   "fieldPlaceholder.D.buyPrice": "Inköpspris",
   "fieldPlaceholder.D.gain": "Vinst",
   "fieldPlaceholder.D.loss": "Förlust",
+
+  "field.validationError.personInfo.personNumber": "Personnummer är ogiltigt",
+  "field.validationError.personInfo.city": "Stad är ogiltig",
+  "field.validationError.personInfo.postCode": "Postnummer är ogiltigt",
+
   "download": "Ladda ner",
   "missingFieldError.personInfo.name": "Namn krävs",
   "missingFieldError.personInfo.personNumber": "Personnummer krävs",

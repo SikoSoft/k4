@@ -1,3 +1,4 @@
+import Personnummer from 'personnummer';
 import {
   ValidationResult,
   ValidationError,
@@ -10,15 +11,31 @@ export class Validation {
   static validate(data: K4Data): ValidationResult {
     console.log('validate');
 
-    let validationResult: ValidationResult = {
-      isValid: true,
-      errors: [],
-    };
+    const errors: ValidationError[] = [];
 
     const missingFieldErrors = Validation.getMissingFieldErrors(data);
     if (missingFieldErrors.length > 0) {
-      validationResult.isValid = false;
-      validationResult.errors.push(...missingFieldErrors);
+      errors.push(...missingFieldErrors);
+    }
+
+    if (
+      data.personInfo.personNumber &&
+      !Validation.validatePersonNumber(data.personInfo.personNumber)
+    ) {
+      errors.push({
+        field: PersonInfoField.PERSON_NUMBER,
+        message: translate('field.validationError.personInfo.personNumber'),
+      });
+    }
+
+    if (
+      data.personInfo.postCode &&
+      !data.personInfo.postCode.match(/^\d{3} ?\d{2}$/)
+    ) {
+      errors.push({
+        field: PersonInfoField.POST_CODE,
+        message: translate('field.validationError.personInfo.postCode'),
+      });
     }
 
     /*
@@ -31,7 +48,10 @@ export class Validation {
         }
           */
 
-    return validationResult;
+    return {
+      isValid: errors.length === 0,
+      errors,
+    };
   }
 
   static getMissingFieldErrors(data: K4Data): ValidationError[] {
@@ -55,5 +75,9 @@ export class Validation {
 
   allFieldsUseCorrectFormat(): boolean {
     return false;
+  }
+
+  static validatePersonNumber(personNumber: string): boolean {
+    return Personnummer.valid(personNumber);
   }
 }

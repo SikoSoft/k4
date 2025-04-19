@@ -20,31 +20,32 @@ export class FilePreview extends LitElement {
       flex-direction: row;
       gap: 1rem;
 
-      .year {
-        flex-grow: 1;
-      }
-      .date {
-        flex-grow: 1;
-      }
-      .page-number {
-        flex-grow: 1;
+      .info,
+      .blanketter {
+        flex: 1;
+        background-color: var(--ss-color-background);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+        overflow: auto;
+        max-height: 400px;
       }
     }
   `;
 
   render() {
     return html`<div class="file-preview">
-      <div class="manifest">
+      <div class="info">
         <pre>
           <code>
-            <slot name="manifest"></slot>
+            <slot name="info"></slot>
           </code>
         </pre>
       </div>
-      <div class="data">
+      <div class="blanketter">
         <pre>
           <code>
-            <slot name="data"></slot>
+            <slot name="blanketter"></slot>
           </code>
         </pre>
       </div>
