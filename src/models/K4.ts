@@ -13,6 +13,12 @@ export interface MetaInfo {
   [MetaInfoField.PAGE_NUMBER]: string;
 }
 
+export const DEFAULT_META_INFO: MetaInfo = {
+  [MetaInfoField.YEAR]: '2024',
+  [MetaInfoField.DATE]: '',
+  [MetaInfoField.PAGE_NUMBER]: '1',
+};
+
 export enum PersonInfoField {
   NAME = 'name',
   PERSON_NUMBER = 'personNumber',
@@ -26,6 +32,13 @@ export interface PersonInfo {
   [PersonInfoField.CITY]: string;
   [PersonInfoField.POST_CODE]: string;
 }
+
+export const DEFAULT_PERSON_INFO: PersonInfo = {
+  [PersonInfoField.NAME]: '',
+  [PersonInfoField.PERSON_NUMBER]: '',
+  [PersonInfoField.CITY]: '',
+  [PersonInfoField.POST_CODE]: '',
+};
 
 export enum AssetRecordField {
   TOTAL = 'total',
@@ -67,6 +80,33 @@ export enum SectionType {
 }
 
 export type SectionSummaryMatrix = Record<SectionType, SectionSummary>;
+
+export const DEFAULT_SECTION_SUMMARY: SectionSummaryMatrix = {
+  [SectionType.A]: {
+    totalSellPrice: 0,
+    totalBuyPrice: 0,
+    totalGain: 0,
+    totalLoss: 0,
+  },
+  [SectionType.B]: {
+    totalSellPrice: 0,
+    totalBuyPrice: 0,
+    totalGain: 0,
+    totalLoss: 0,
+  },
+  [SectionType.C]: {
+    totalSellPrice: 0,
+    totalBuyPrice: 0,
+    totalGain: 0,
+    totalLoss: 0,
+  },
+  [SectionType.D]: {
+    totalSellPrice: 0,
+    totalBuyPrice: 0,
+    totalGain: 0,
+    totalLoss: 0,
+  },
+};
 
 export interface Section {
   type: SectionType;
@@ -111,6 +151,11 @@ export interface DeferredShare {
   [DeferredShareField.DEFERRED_SHARE_DESIGNATION]: string;
   [DeferredShareField.DEFERRED_SHARE_AMOUNT]: number;
 }
+
+export const DEFAULT_DEFERRED_SHARE: DeferredShare = {
+  [DeferredShareField.DEFERRED_SHARE_DESIGNATION]: '',
+  [DeferredShareField.DEFERRED_SHARE_AMOUNT]: 0,
+};
 
 export enum FileName {
   MANIFEST = 'info.sru',

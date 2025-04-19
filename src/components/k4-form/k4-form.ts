@@ -5,6 +5,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 import '@ss/ui/components/ss-button';
+import '@ss/ui/components/pop-up';
 
 import '@/components/meta-info/meta-info';
 import '@/components/person-info/person-info';
@@ -22,6 +23,10 @@ import {
   assetFieldMap,
   AssetRecord,
   AssetRecordField,
+  DEFAULT_DEFERRED_SHARE,
+  DEFAULT_META_INFO,
+  DEFAULT_PERSON_INFO,
+  DEFAULT_SECTION_SUMMARY,
   DeferredShare,
   K4Data,
   MetaInfo,
@@ -73,59 +78,25 @@ export class K4Form extends LitElement {
   };
 
   @state()
-  private summaryMatrix: SectionSummaryMatrix = {
-    [SectionType.A]: {
-      totalSellPrice: 0,
-      totalBuyPrice: 0,
-      totalGain: 0,
-      totalLoss: 0,
-    },
-    [SectionType.B]: {
-      totalSellPrice: 0,
-      totalBuyPrice: 0,
-      totalGain: 0,
-      totalLoss: 0,
-    },
-    [SectionType.C]: {
-      totalSellPrice: 0,
-      totalBuyPrice: 0,
-      totalGain: 0,
-      totalLoss: 0,
-    },
-    [SectionType.D]: {
-      totalSellPrice: 0,
-      totalBuyPrice: 0,
-      totalGain: 0,
-      totalLoss: 0,
-    },
-  };
+  private summaryMatrix: SectionSummaryMatrix = { ...DEFAULT_SECTION_SUMMARY };
 
   @state()
-  deferredShare: DeferredShare = {
-    deferredShareDesignation: '',
-    deferredShareAmount: 0,
-  };
+  deferredShare: DeferredShare = { ...DEFAULT_DEFERRED_SHARE };
 
   @state()
-  metaInfo: MetaInfo = {
-    year: `2024`,
-    date: '',
-    pageNumber: '1',
-  };
+  metaInfo: MetaInfo = { ...DEFAULT_META_INFO };
 
   @state()
-  personInfo: PersonInfo = {
-    name: '',
-    personNumber: '',
-    city: '',
-    postCode: '',
-  };
+  personInfo: PersonInfo = { ...DEFAULT_PERSON_INFO };
 
   @state()
   validationResult: ValidationResult = {
     isValid: false,
     errors: [],
   };
+
+  @state()
+  confirmResetPopUpIsOpen = false;
 
   get data(): K4Data {
     return {
@@ -352,8 +323,49 @@ export class K4Form extends LitElement {
     this.requestUpdate();
   }
 
+  showConfirmResetPopUp() {
+    this.confirmResetPopUpIsOpen = true;
+  }
+
+  hideConfirmResetPopUp() {
+    this.confirmResetPopUpIsOpen = false;
+  }
+
+  reset() {
+    this.metaInfo = { ...DEFAULT_META_INFO };
+    this.personInfo = { ...DEFAULT_PERSON_INFO };
+    this.recordMatrix = this.prepareRecordMatrix();
+    this.summaryMatrix = { ...DEFAULT_SECTION_SUMMARY };
+    this.deferredShare = { ...DEFAULT_DEFERRED_SHARE };
+    localStorage.removeItem(STORAGE_KEY);
+    this.hideConfirmResetPopUp();
+    this.requestUpdate();
+  }
+
   render() {
     return html`<div class="k4">
+      <ss-button @click=${this.showConfirmResetPopUp}>
+        ${translate('resetForm')}
+      </ss-button>
+
+      <pop-up
+        ?open=${this.confirmResetPopUpIsOpen}
+        closeButton
+        closeOnOutsideClick
+        closeOnEsc
+        @pop-up-closed=${this.hideConfirmResetPopUp}
+      >
+        ${translate('confirmResetForm')}
+
+        <div class="pop-up-buttons">
+          <ss-button @click=${this.reset}> ${translate('yes')} </ss-button>
+
+          <ss-button @click=${this.hideConfirmResetPopUp}>
+            ${translate('no')}
+          </ss-button>
+        </div>
+      </pop-up>
+
       <section>
         <meta-info
           @meta-info-changed=${this.updateMetaInfo}

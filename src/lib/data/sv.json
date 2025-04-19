@@ -43,5 +43,10 @@
   "missingFieldError.personInfo.name": "Namn krävs",
   "missingFieldError.personInfo.personNumber": "Personnummer krävs",
   "missingFieldError.personInfo.city": "Stad krävs",
-  "missingFieldError.personInfo.postCode": "Postnummer krävs"
+  "missingFieldError.personInfo.postCode": "Postnummer krävs",
+
+  "formHasBeenReset": "Formuläret har återställts",
+  "confirmResetForm": "Är du säker på att du vill återställa formuläret? All information kommer att raderas.",
+  "yes": "Ja",
+  "no": "Nej"
 }
