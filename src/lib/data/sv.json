@@ -20,6 +20,8 @@
   "fieldPlaceholder.A.buyPrice": "Inköpspris",
   "fieldPlaceholder.A.gain": "Vinst",
   "fieldPlaceholder.A.loss": "Förlust",
+  "fieldPlaceholder.B.deferredShareDesignation": "Beteckning på uppskovsaktie",
+  "fieldPlaceholder.B.deferredShareAmount": "Antal",
   "fieldPlaceholder.C.total": "Antal",
   "fieldPlaceholder.C.asset": "Beteckning/Valutakod",
   "fieldPlaceholder.C.sellPrice": "Försäljningspris",

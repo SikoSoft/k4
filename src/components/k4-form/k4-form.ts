@@ -11,6 +11,7 @@ import '@/components/person-info/person-info';
 import '@/components/asset-record/asset-record';
 import '@/components/section-summary/section-summary';
 import '@/components/file-preview/file-preview';
+import '@/components/deferred-share/deferred-share';
 
 import { AssetRecordChangedEvent } from '@/components/asset-record/asset-record.events';
 import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
@@ -21,6 +22,7 @@ import {
   assetFieldMap,
   AssetRecord,
   AssetRecordField,
+  DeferredShare,
   MetaInfo,
   PersonInfo,
   PersonInfoField,
@@ -38,6 +40,7 @@ import {
 } from '@/models/K4';
 import { SectionSummaryChangedEvent } from '../section-summary/section-summary.events';
 import { translate } from '@/lib/Localization';
+import { DeferredShareChangedEvent } from '../deferred-share/deferred-share.events';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -93,6 +96,12 @@ export class K4Form extends LitElement {
       totalGain: 0,
       totalLoss: 0,
     },
+  };
+
+  @state()
+  deferredShare: DeferredShare = {
+    deferredShareDesignation: '',
+    deferredShareAmount: 0,
   };
 
   @state()
@@ -259,6 +268,12 @@ export class K4Form extends LitElement {
     this.saveToStorage();
   }
 
+  updateDeferredShare(event: DeferredShareChangedEvent) {
+    console.log('updateDeferredShare', event.detail);
+    this.deferredShare = event.detail;
+    this.saveToStorage();
+  }
+
   sectionRowIsValid(section: SectionType, index: number): boolean {
     const record = this.recordMatrix[section][index];
     return (
@@ -371,6 +386,7 @@ export class K4Form extends LitElement {
       personInfo: this.personInfo,
       recordMatrix: this.recordMatrix,
       summaryMatrix: this.summaryMatrix,
+      deferredShare: this.deferredShare,
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
@@ -385,6 +401,7 @@ export class K4Form extends LitElement {
       this.personInfo = parsedData.personInfo as PersonInfo;
       this.recordMatrix = parsedData.recordMatrix as RecordMatrix;
       this.summaryMatrix = parsedData.summaryMatrix as SectionSummaryMatrix;
+      this.deferredShare = parsedData.deferredShare as DeferredShare;
     }
     console.log('personInfo', this.personInfo);
     this.requestUpdate();
@@ -423,26 +440,41 @@ export class K4Form extends LitElement {
               ${translate(`sectionHeading.${sectionConfig.type}`)}
             </legend>
 
-            ${repeat(
-              [...new Array(sectionConfig.numRecords)].map((_, index) => index),
-              index => index,
-              index =>
-                html` <asset-record
-                  @asset-record-changed=${(event: AssetRecordChangedEvent) => {
-                    this.updateAssetRecord(
-                      sectionConfig.type,
-                      index,
-                      event.detail,
-                    );
-                  }}
-                  total=${this.recordMatrix[sectionKey][index].total}
-                  asset=${this.recordMatrix[sectionKey][index].asset}
-                  sellPrice=${this.recordMatrix[sectionKey][index].sellPrice}
-                  buyPrice=${this.recordMatrix[sectionKey][index].buyPrice}
-                  gain=${this.recordMatrix[sectionKey][index].gain}
-                  loss=${this.recordMatrix[sectionKey][index].loss}
-                ></asset-record>`,
-            )}
+            ${sectionConfig.type === SectionType.B
+              ? html`
+                  <deferred-share
+                    @deferred-share-changed=${this.updateDeferredShare}
+                    deferredShareDesignation=${this.deferredShare
+                      .deferredShareDesignation}
+                    deferredShareAmount=${this.deferredShare
+                      .deferredShareAmount}
+                  ></deferred-share>
+                `
+              : repeat(
+                  [...new Array(sectionConfig.numRecords)].map(
+                    (_, index) => index,
+                  ),
+                  index => index,
+                  index =>
+                    html` <asset-record
+                      @asset-record-changed=${(
+                        event: AssetRecordChangedEvent,
+                      ) => {
+                        this.updateAssetRecord(
+                          sectionConfig.type,
+                          index,
+                          event.detail,
+                        );
+                      }}
+                      total=${this.recordMatrix[sectionKey][index].total}
+                      asset=${this.recordMatrix[sectionKey][index].asset}
+                      sellPrice=${this.recordMatrix[sectionKey][index]
+                        .sellPrice}
+                      buyPrice=${this.recordMatrix[sectionKey][index].buyPrice}
+                      gain=${this.recordMatrix[sectionKey][index].gain}
+                      loss=${this.recordMatrix[sectionKey][index].loss}
+                    ></asset-record>`,
+                )}
             ${sectionConfig.numRecords > 0
               ? html`
                   <section-summary

@@ -102,6 +102,16 @@ export const sectionConfigMap: SectionConfigMap = {
 
 export type RecordMatrix = Record<SectionType, AssetRecord[]>;
 
+export enum DeferredShareField {
+  DEFERRED_SHARE_DESIGNATION = 'deferredShareDesignation',
+  DEFERRED_SHARE_AMOUNT = 'deferredShareAmount',
+}
+
+export interface DeferredShare {
+  [DeferredShareField.DEFERRED_SHARE_DESIGNATION]: string;
+  [DeferredShareField.DEFERRED_SHARE_AMOUNT]: number;
+}
+
 export enum FileName {
   MANIFEST = 'info.sru',
   DATA = 'blanketter.sru',
