@@ -16,6 +16,7 @@ import { AssetRecordChangedEvent } from '@/components/asset-record/asset-record.
 import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
 import { MetaInfoChangedEvent } from '@/components/meta-info/meta-info.events';
 import {
+  APP_NAME,
   AssetFieldConfig,
   assetFieldMap,
   AssetRecord,
@@ -29,6 +30,7 @@ import {
   SectionSummaryField,
   SectionSummaryMatrix,
   SectionType,
+  STORAGE_KEY,
   SummaryFieldConfig,
   summaryFieldMap,
   ValidationError,
@@ -109,9 +111,6 @@ export class K4Form extends LitElement {
   };
 
   @state()
-  programName = 'SikoSoft K4';
-
-  @state()
   validationResult: ValidationResult = {
     isValid: false,
     errors: [],
@@ -133,7 +132,7 @@ export class K4Form extends LitElement {
     return `#DATABESKRIVNING_START
 #PRODUKT SRU
 #SKAPAD ${this.createdDate}
-#PROGRAM ${this.programName}
+#PROGRAM ${APP_NAME}
 #FILNAMN BLANKETTER.SRU
 #DATABESKRIVNING_SLUT
 #MEDIELEV_START
@@ -207,6 +206,7 @@ export class K4Form extends LitElement {
   connectedCallback(): void {
     super.connectedCallback();
     this.recordMatrix = this.prepareRecordMatrix();
+    this.loadFromStorage();
   }
 
   prepareRecordMatrix(): RecordMatrix {
@@ -236,23 +236,27 @@ export class K4Form extends LitElement {
   updateMetaInfo(event: MetaInfoChangedEvent) {
     console.log('updateMetaInfo', event.detail);
     this.metaInfo = event.detail;
+    this.saveToStorage();
   }
 
   updatePersonInfo(event: PersonInfoChangedEvent) {
     console.log('updatePersonInfo', event.detail);
     this.personInfo = event.detail;
+    this.saveToStorage();
   }
 
   updateSectionSummary(section: SectionType, summary: SectionSummary) {
     console.log('updateSectionSummary', summary);
     this.summaryMatrix[section] = summary;
     this.requestUpdate();
+    this.saveToStorage();
   }
 
   updateAssetRecord(section: SectionType, index: number, record: AssetRecord) {
     console.log('updateAssetRecord', section, index, record);
     this.recordMatrix[section][index] = record;
     this.requestUpdate();
+    this.saveToStorage();
   }
 
   sectionRowIsValid(section: SectionType, index: number): boolean {
@@ -359,6 +363,31 @@ export class K4Form extends LitElement {
     } catch (error) {
       console.error('Error creating ZIP file:', error);
     }
+  }
+
+  saveToStorage() {
+    const data = {
+      metaInfo: this.metaInfo,
+      personInfo: this.personInfo,
+      recordMatrix: this.recordMatrix,
+      summaryMatrix: this.summaryMatrix,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  loadFromStorage() {
+    console.log('loadFromStorage');
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (data) {
+      console.log('data', data);
+      const parsedData = JSON.parse(data);
+      this.metaInfo = parsedData.metaInfo as MetaInfo;
+      this.personInfo = parsedData.personInfo as PersonInfo;
+      this.recordMatrix = parsedData.recordMatrix as RecordMatrix;
+      this.summaryMatrix = parsedData.summaryMatrix as SectionSummaryMatrix;
+    }
+    console.log('personInfo', this.personInfo);
+    this.requestUpdate();
   }
 
   render() {

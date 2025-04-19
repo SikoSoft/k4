@@ -1,3 +1,6 @@
+export const APP_NAME = 'ss-k4-form';
+export const STORAGE_KEY = 'k4-data';
+
 export enum MetaInfoField {
   YEAR = 'year',
   DATE = 'date',
