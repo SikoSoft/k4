@@ -162,13 +162,14 @@ export class K4Form extends LitElement {
 
             if (fieldEntry) {
               const fieldValue = record[field];
-              data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
+              if (fieldValue !== 0 || field === AssetRecordField.TOTAL) {
+                data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
+              }
             }
           });
         }
       });
 
-      //const summary = this.summaryMatrix[sectionKey];
       if (this.sectionSummaryIsValid(sectionKey)) {
         Object.values(SectionSummaryField).forEach(field => {
           const fieldEntry = summaryFieldMap.find(
@@ -178,7 +179,15 @@ export class K4Form extends LitElement {
 
           if (fieldEntry) {
             const fieldValue = this.summaryMatrix[sectionKey][field];
-            data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
+            if (
+              fieldValue !== 0 ||
+              [
+                SectionSummaryField.TOTAL_SELL_PRICE,
+                SectionSummaryField.TOTAL_BUY_PRICE,
+              ].includes(field)
+            ) {
+              data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
+            }
           }
         });
       }

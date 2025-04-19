@@ -3,20 +3,14 @@ import { customElement, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 
 import '@ss/ui/components/ss-input';
-import {
-  InputChangedEvent,
-  InputChangedEventPayload,
-} from '@ss/ui/events/input-changed';
+import { InputChangedEvent } from '@ss/ui/events/input-changed';
 
 import {
   SectionSummaryProp,
   sectionSummaryProps,
   SectionSummaryProps,
 } from './section-summary.models';
-import {
-  SectionSummaryChangedEvent,
-  SectionSummaryChangedEventPayload,
-} from './section-summary.events';
+import { SectionSummaryChangedEvent } from './section-summary.events';
 import { SectionSummaryField } from '@/models/K4';
 
 @customElement('section-summary')
