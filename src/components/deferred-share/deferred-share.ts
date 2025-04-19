@@ -70,8 +70,6 @@ export class DeferredShare extends LitElement {
   }
 
   handleFieldChanged(field: DeferredShareProp, event: InputChangedEvent) {
-    console.log('handleFieldChanged', field, event);
-
     const value: string | number =
       deferredShareProps[field].control === 'text'
         ? event.detail.value
@@ -86,7 +84,6 @@ export class DeferredShare extends LitElement {
   }
 
   sendChangedEvent(fields: DeferredShareProps) {
-    console.log('sendChangedEvent', fields);
     this.dispatchEvent(new DeferredShareChangedEvent(fields));
   }
 

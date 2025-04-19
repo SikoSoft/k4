@@ -26,7 +26,6 @@ import {
   K4Data,
   MetaInfo,
   PersonInfo,
-  PersonInfoField,
   RecordMatrix,
   sectionConfigMap,
   SectionSummary,
@@ -36,7 +35,6 @@ import {
   STORAGE_KEY,
   SummaryFieldConfig,
   summaryFieldMap,
-  ValidationError,
   ValidationResult,
 } from '@/models/K4';
 import { SectionSummaryChangedEvent } from '../section-summary/section-summary.events';
@@ -232,57 +230,48 @@ export class K4Form extends LitElement {
   }
 
   prepareRecordMatrix(): RecordMatrix {
-    const recordMatrix = Object.keys(sectionConfigMap).reduce(
-      (acc, key) => {
-        const sectionKey = key as SectionType;
-        const sectionConfig = sectionConfigMap[sectionKey];
-        const records = [...new Array(sectionConfig.numRecords)].map(() => {
-          return {
-            total: 0,
-            asset: '',
-            buyPrice: 0,
-            sellPrice: 0,
-            gain: 0,
-            loss: 0,
-          };
-        });
-        acc[sectionKey] = records;
-        return acc;
-      },
-      {} as Record<SectionType, AssetRecord[]>,
-    );
-    console.log('recordMatrix', recordMatrix);
+    const recordMatrix = Object.keys(sectionConfigMap).reduce((acc, key) => {
+      const sectionKey = key as SectionType;
+      const sectionConfig = sectionConfigMap[sectionKey];
+      const records = [...new Array(sectionConfig.numRecords)].map(() => {
+        return {
+          total: 0,
+          asset: '',
+          buyPrice: 0,
+          sellPrice: 0,
+          gain: 0,
+          loss: 0,
+        };
+      });
+      acc[sectionKey] = records;
+      return acc;
+    }, {} as RecordMatrix);
     return recordMatrix;
   }
 
   updateMetaInfo(event: MetaInfoChangedEvent) {
-    console.log('updateMetaInfo', event.detail);
     this.metaInfo = event.detail;
     this.saveToStorage();
   }
 
   updatePersonInfo(event: PersonInfoChangedEvent) {
-    console.log('updatePersonInfo', event.detail);
     this.personInfo = event.detail;
     this.saveToStorage();
   }
 
   updateSectionSummary(section: SectionType, summary: SectionSummary) {
-    console.log('updateSectionSummary', summary);
     this.summaryMatrix[section] = summary;
     this.requestUpdate();
     this.saveToStorage();
   }
 
   updateAssetRecord(section: SectionType, index: number, record: AssetRecord) {
-    console.log('updateAssetRecord', section, index, record);
     this.recordMatrix[section][index] = record;
     this.requestUpdate();
     this.saveToStorage();
   }
 
   updateDeferredShare(event: DeferredShareChangedEvent) {
-    console.log('updateDeferredShare', event.detail);
     this.deferredShare = event.detail;
     this.saveToStorage();
   }

@@ -64,7 +64,6 @@ export class SectionSummary extends LitElement {
   }
 
   handleFieldChanged(field: SectionSummaryProp, event: InputChangedEvent) {
-    console.log('handleFieldChanged', field, event);
     this.sendChangedEvent({
       ...this.fields,
       [field]: parseInt(event.detail.value),
@@ -72,7 +71,6 @@ export class SectionSummary extends LitElement {
   }
 
   sendChangedEvent(fields: SectionSummaryProps) {
-    console.log('sendChangedEvent', fields);
     this.dispatchEvent(new SectionSummaryChangedEvent(fields));
   }
 

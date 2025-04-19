@@ -72,8 +72,6 @@ export class AssetRecord extends LitElement {
   }
 
   handleFieldChanged(field: AssetRecordField, event: InputChangedEvent) {
-    console.log('handleFieldChanged', field, event.detail.value);
-
     const value: string | number =
       assetRecordProps[field].control === 'text'
         ? event.detail.value
@@ -90,7 +88,6 @@ export class AssetRecord extends LitElement {
   }
 
   sendChangedEvent(payload: AssetRecordChangedEventPayload) {
-    //console.log('sendChangedEvent', payload);
     this.dispatchEvent(new AssetRecordChangedEvent(payload));
   }
 
