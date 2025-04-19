@@ -96,24 +96,28 @@ export class PersonInfo extends LitElement {
     return html`<div class="person-info">
       <div class="name">
         <ss-input
+          value=${this[PersonInfoProp.NAME]}
           placeholder=${translate('fieldPlaceholder.personInfo.name')}
           @input-changed=${this.handleNameChanged}
         ></ss-input>
       </div>
       <div class="person-number">
         <ss-input
+          value=${this[PersonInfoProp.PERSON_NUMBER]}
           placeholder=${translate('fieldPlaceholder.personInfo.personNumber')}
           @input-changed=${this.handlePersonNumberChanged}
         ></ss-input>
       </div>
       <div class="city">
         <ss-input
+          value=${this[PersonInfoProp.CITY]}
           placeholder=${translate('fieldPlaceholder.personInfo.city')}
           @input-changed=${this.handleCityChanged}
         ></ss-input>
       </div>
       <div class="post-code">
         <ss-input
+          value=${this[PersonInfoProp.POST_CODE]}
           placeholder=${translate('fieldPlaceholder.personInfo.postCode')}
           @input-changed=${this.handlePostCodeChanged}
         ></ss-input>
