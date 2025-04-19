@@ -24,7 +24,6 @@ import {
   PersonInfo,
   PersonInfoField,
   RecordMatrix,
-  SectionConfigMap,
   sectionConfigMap,
   SectionSummary,
   SectionSummaryField,
@@ -42,8 +41,14 @@ import { translate } from '@/lib/Localization';
 export class K4Form extends LitElement {
   static styles = [
     css`
+      fieldset,
       section {
         margin-bottom: 1rem;
+        border-radius: 0.5rem;
+
+        legend {
+          font-weight: bold;
+        }
 
         asset-record {
           margin-bottom: 1rem;
@@ -383,11 +388,11 @@ export class K4Form extends LitElement {
         key => {
           const sectionKey = key as SectionType;
           const sectionConfig = sectionConfigMap[sectionKey];
-          return html`<section>
-            <h3>
+          return html`<fieldset>
+            <legend>
               ${sectionConfig.type}.
               ${translate(`sectionHeading.${sectionConfig.type}`)}
-            </h3>
+            </legend>
 
             ${repeat(
               [...new Array(sectionConfig.numRecords)].map((_, index) => index),
@@ -429,7 +434,7 @@ export class K4Form extends LitElement {
                   ></section-summary>
                 `
               : nothing}
-          </section> `;
+          </fieldset> `;
         },
       )}
 
