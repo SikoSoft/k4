@@ -310,3 +310,11 @@ export type ValidationResult = {
   isValid: boolean;
   errors: ValidationError[];
 };
+
+export interface K4Data {
+  metaInfo: MetaInfo;
+  personInfo: PersonInfo;
+  recordMatrix: RecordMatrix;
+  summaryMatrix: SectionSummaryMatrix;
+  deferredShare: DeferredShare;
+}

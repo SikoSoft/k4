@@ -23,6 +23,7 @@ import {
   AssetRecord,
   AssetRecordField,
   DeferredShare,
+  K4Data,
   MetaInfo,
   PersonInfo,
   PersonInfoField,
@@ -41,6 +42,7 @@ import {
 import { SectionSummaryChangedEvent } from '../section-summary/section-summary.events';
 import { translate } from '@/lib/Localization';
 import { DeferredShareChangedEvent } from '../deferred-share/deferred-share.events';
+import { Validation } from '@/lib/Validation';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -125,6 +127,16 @@ export class K4Form extends LitElement {
     errors: [],
   };
 
+  get data(): K4Data {
+    return {
+      metaInfo: this.metaInfo,
+      personInfo: this.personInfo,
+      recordMatrix: this.recordMatrix,
+      summaryMatrix: this.summaryMatrix,
+      deferredShare: this.deferredShare,
+    };
+  }
+
   get createdDate(): string {
     const date = new Date();
     const year = date.getFullYear();
@@ -137,7 +149,7 @@ export class K4Form extends LitElement {
   }
 
   @state()
-  get manifest(): string {
+  get info(): string {
     return `#DATABESKRIVNING_START
 #PRODUKT SRU
 #SKAPAD ${this.createdDate}
@@ -153,7 +165,7 @@ export class K4Form extends LitElement {
   }
 
   @state()
-  get data(): string {
+  get blanketter(): string {
     let data = `#BLANKETT K4-2024P4
 #IDENTITET ${this.personInfo.personNumber} ${this.createdDate}
 #NAMN ${this.personInfo.name}
@@ -295,77 +307,16 @@ export class K4Form extends LitElement {
   }
 
   validate(): ValidationResult {
-    console.log('validate');
-
-    let validationResult: ValidationResult = {
-      isValid: true,
-      errors: [],
-    };
-
-    const missingFieldErrors = this.getMissingFieldErrors();
-    if (missingFieldErrors.length > 0) {
-      validationResult.isValid = false;
-      validationResult.errors.push(...missingFieldErrors);
-    }
-
-    /*
-    if (!this.allFieldsUseCorrectFormat()) {
-      validationResult.isValid = false;
-    }
-
-    if (!this.allRequiredFieldsAreFilled()) {
-      validationResult.isValid = false;
-    }
-      */
-
-    this.validationResult = validationResult;
+    this.validationResult = Validation.validate(this.data);
     return this.validationResult;
-    /*
-    const isValid = Object.keys(this.recordMatrix).every(key => {
-      const sectionKey = key as SectionType;
-      const records = this.recordMatrix[sectionKey];
-      return records.every((record, index) =>
-        this.sectionRowIsValid(sectionKey, index),
-      );
-    });
-
-    if (isValid) {
-      console.log('All sections are valid');
-    } else {
-      console.error('Some sections are invalid');
-    }
-      */
-  }
-
-  getMissingFieldErrors(): ValidationError[] {
-    const errors: ValidationError[] = [];
-
-    Object.values(PersonInfoField).forEach(field => {
-      if (!this.personInfo[field]) {
-        errors.push({
-          field,
-          message: translate(`missingFieldError.personInfo.${field}`),
-        });
-      }
-    });
-
-    return errors;
-  }
-
-  allRequiredFieldsAreFilled(): boolean {
-    return false;
-  }
-
-  allFieldsUseCorrectFormat(): boolean {
-    return false;
   }
 
   async download(): Promise<void> {
     try {
       const zip = new JSZip();
 
-      zip.file('BLANKETTER.SRU', this.data);
-      zip.file('INFO.SRU', this.manifest);
+      zip.file('BLANKETTER.SRU', this.blanketter);
+      zip.file('INFO.SRU', this.info);
 
       const content = await zip.generateAsync({
         type: 'blob',
@@ -382,7 +333,7 @@ export class K4Form extends LitElement {
   }
 
   saveToStorage() {
-    const data = {
+    const data: K4Data = {
       metaInfo: this.metaInfo,
       personInfo: this.personInfo,
       recordMatrix: this.recordMatrix,
@@ -393,18 +344,15 @@ export class K4Form extends LitElement {
   }
 
   loadFromStorage() {
-    console.log('loadFromStorage');
     const data = localStorage.getItem(STORAGE_KEY);
     if (data) {
-      console.log('data', data);
-      const parsedData = JSON.parse(data);
-      this.metaInfo = parsedData.metaInfo as MetaInfo;
-      this.personInfo = parsedData.personInfo as PersonInfo;
-      this.recordMatrix = parsedData.recordMatrix as RecordMatrix;
-      this.summaryMatrix = parsedData.summaryMatrix as SectionSummaryMatrix;
-      this.deferredShare = parsedData.deferredShare as DeferredShare;
+      const parsedData = JSON.parse(data) as K4Data;
+      this.metaInfo = parsedData.metaInfo;
+      this.personInfo = parsedData.personInfo;
+      this.recordMatrix = parsedData.recordMatrix;
+      this.summaryMatrix = parsedData.summaryMatrix;
+      this.deferredShare = parsedData.deferredShare;
     }
-    console.log('personInfo', this.personInfo);
     this.requestUpdate();
   }
 
@@ -525,8 +473,8 @@ export class K4Form extends LitElement {
 
       <section>
         <file-preview>
-          <div slot="manifest">${this.manifest}</div>
-          <div slot="data">${this.data}</div>
+          <div slot="manifest">${this.info}</div>
+          <div slot="data">${this.blanketter}</div>
         </file-preview>
       </section>
     </div>`;
