@@ -4,6 +4,9 @@ import {
   ValidationError,
   PersonInfoField,
   K4Data,
+  SectionType,
+  sectionConfigMap,
+  AssetRecordField,
 } from '@/models/K4';
 import { translate } from './Localization';
 
@@ -66,6 +69,41 @@ export class Validation {
       }
     });
 
+    Object.values(SectionType).forEach(sectionType => {
+      const sectionConfig = sectionConfigMap[sectionType];
+      const numRecords = sectionConfig.numRecords;
+
+      for (let i = 0; i < numRecords; i++) {
+        if (Validation.sectionRowHasData(data, sectionType, i)) {
+          const gainIsSet =
+            data.recordMatrix[sectionType][i][AssetRecordField.GAIN] !== 0;
+
+          const lossIsSet =
+            data.recordMatrix[sectionType][i][AssetRecordField.LOSS] !== 0;
+
+          Object.keys(data.recordMatrix[sectionType][i]).forEach(f => {
+            const field = f as AssetRecordField;
+            const fieldValue = data.recordMatrix[sectionType][i][field];
+            if (field === AssetRecordField.TOTAL) {
+              return;
+            }
+            if (!fieldValue) {
+              if (
+                (field === AssetRecordField.GAIN && lossIsSet) ||
+                (field === AssetRecordField.LOSS && gainIsSet)
+              ) {
+                return;
+              }
+              errors.push({
+                field: field as AssetRecordField,
+                message: translate(`missingFieldError.${sectionType}.${field}`),
+              });
+            }
+          });
+        }
+      }
+    });
+
     return errors;
   }
 
@@ -79,5 +117,37 @@ export class Validation {
 
   static validatePersonNumber(personNumber: string): boolean {
     return Personnummer.valid(personNumber);
+  }
+
+  /*
+  static sectionRowFieldIsRequired(
+    data: K4Data,
+    sectionType: SectionType,
+    field: string,
+    row: number,
+  ): boolean {
+    
+  }
+  */
+
+  static sectionRowHasData(
+    data: K4Data,
+    sectionType: SectionType,
+    row: number,
+  ): boolean {
+    return Object.keys(data.recordMatrix[sectionType][row]).some(field => {
+      const fieldValue =
+        data.recordMatrix[sectionType][row][field as AssetRecordField];
+      return fieldValue !== 0 && fieldValue !== '';
+    });
+  }
+
+  static sectionSummaryIsRequired(
+    data: K4Data,
+    sectionType: SectionType,
+  ): boolean {
+    return [...new Array(sectionConfigMap[sectionType].numRecords)]
+      .map((_, index) => index)
+      .some(index => Validation.sectionRowHasData(data, sectionType, index));
   }
 }
