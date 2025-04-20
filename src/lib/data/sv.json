@@ -45,6 +45,7 @@
   "missingFieldError.personInfo.city": "Stad krävs",
   "missingFieldError.personInfo.postCode": "Postnummer krävs",
 
+  "resetForm": "Återställ formulär",
   "formHasBeenReset": "Formuläret har återställts",
   "confirmResetForm": "Är du säker på att du vill återställa formuläret? All information kommer att raderas.",
   "yes": "Ja",
