@@ -197,7 +197,7 @@ export class K4Form extends LitElement {
     super.connectedCallback();
     this.recordMatrix = this.prepareRecordMatrix();
     this.loadFromStorage();
-    this.validate();
+    this.validate(false);
   }
 
   prepareRecordMatrix(): RecordMatrix {
@@ -266,12 +266,14 @@ export class K4Form extends LitElement {
     );
   }
 
-  validate(): ValidationResult {
+  validate(showNotification = true): ValidationResult {
     this.validationResult = Validation.validate(this.data);
-    if (this.validationResult.isValid) {
-      addNotification(translate('formIsValid'), NotificationType.SUCCESS);
-    } else {
-      addNotification(translate('formIsInvalid'), NotificationType.ERROR);
+    if (showNotification) {
+      if (this.validationResult.isValid) {
+        addNotification(translate('formIsValid'), NotificationType.SUCCESS);
+      } else {
+        addNotification(translate('formIsInvalid'), NotificationType.ERROR);
+      }
     }
     return this.validationResult;
   }
