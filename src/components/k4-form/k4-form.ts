@@ -13,6 +13,7 @@ import '@/components/asset-record/asset-record';
 import '@/components/section-summary/section-summary';
 import '@/components/file-preview/file-preview';
 import '@/components/deferred-share/deferred-share';
+import '@/components/page-header/page-header';
 
 import { AssetRecordChangedEvent } from '@/components/asset-record/asset-record.events';
 import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
@@ -94,9 +95,6 @@ export class K4Form extends LitElement {
     isValid: false,
     errors: [],
   };
-
-  @state()
-  confirmResetPopUpIsOpen = false;
 
   get data(): K4Data {
     return {
@@ -323,14 +321,6 @@ export class K4Form extends LitElement {
     this.requestUpdate();
   }
 
-  showConfirmResetPopUp() {
-    this.confirmResetPopUpIsOpen = true;
-  }
-
-  hideConfirmResetPopUp() {
-    this.confirmResetPopUpIsOpen = false;
-  }
-
   reset() {
     this.metaInfo = { ...DEFAULT_META_INFO };
     this.personInfo = { ...DEFAULT_PERSON_INFO };
@@ -338,34 +328,13 @@ export class K4Form extends LitElement {
     this.summaryMatrix = { ...DEFAULT_SECTION_SUMMARY };
     this.deferredShare = { ...DEFAULT_DEFERRED_SHARE };
     localStorage.removeItem(STORAGE_KEY);
-    this.hideConfirmResetPopUp();
     addNotification(translate('formHasBeenReset'), NotificationType.INFO);
     this.requestUpdate();
   }
 
   render() {
     return html`<div class="k4">
-      <ss-button @click=${this.showConfirmResetPopUp}>
-        ${translate('resetForm')}
-      </ss-button>
-
-      <pop-up
-        ?open=${this.confirmResetPopUpIsOpen}
-        closeButton
-        closeOnOutsideClick
-        closeOnEsc
-        @pop-up-closed=${this.hideConfirmResetPopUp}
-      >
-        ${translate('confirmResetForm')}
-
-        <div class="pop-up-buttons">
-          <ss-button @click=${this.reset}> ${translate('yes')} </ss-button>
-
-          <ss-button @click=${this.hideConfirmResetPopUp}>
-            ${translate('no')}
-          </ss-button>
-        </div>
-      </pop-up>
+      <page-header @form-reset=${this.reset}></page-header>
 
       <section>
         <meta-info
