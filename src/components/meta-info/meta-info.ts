@@ -39,17 +39,12 @@ export class MetaInfo extends LitElement {
     metaInfoProps[MetaInfoProp.YEAR].default;
 
   @property()
-  [MetaInfoProp.DATE]: MetaInfoProps[MetaInfoProp.DATE] =
-    metaInfoProps[MetaInfoProp.DATE].default;
-
-  @property()
   [MetaInfoProp.PAGE_NUMBER]: MetaInfoProps[MetaInfoProp.PAGE_NUMBER] =
     metaInfoProps[MetaInfoProp.PAGE_NUMBER].default;
 
   handleYearChanged(event: InputChangedEvent) {
     this.sendChangedEvent({
       year: event.detail.value,
-      date: this[MetaInfoProp.DATE],
       pageNumber: this[MetaInfoProp.PAGE_NUMBER],
     });
   }
@@ -57,7 +52,6 @@ export class MetaInfo extends LitElement {
   handleDateChanged(event: InputChangedEvent) {
     this.sendChangedEvent({
       year: this[MetaInfoProp.YEAR],
-      date: event.detail.value,
       pageNumber: this[MetaInfoProp.PAGE_NUMBER],
     });
   }
@@ -65,7 +59,6 @@ export class MetaInfo extends LitElement {
   handlePageNumberChanged(event: InputChangedEvent) {
     this.sendChangedEvent({
       year: this[MetaInfoProp.YEAR],
-      date: this[MetaInfoProp.DATE],
       pageNumber: event.detail.value,
     });
   }
@@ -80,11 +73,6 @@ export class MetaInfo extends LitElement {
         placeholder=${translate('fieldPlaceholder.metaInfo.year')}
         value=${this[MetaInfoProp.YEAR]}
         @input-changed=${this.handleYearChanged}
-      ></ss-input>
-      <ss-input
-        placeholder=${translate('fieldPlaceholder.metaInfo.date')}
-        value=${this[MetaInfoProp.DATE]}
-        @input-changed=${this.handleDateChanged}
       ></ss-input>
       <ss-input
         placeholder=${translate('fieldPlaceholder.metaInfo.pageNumber')}

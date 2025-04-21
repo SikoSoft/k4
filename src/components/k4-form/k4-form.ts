@@ -371,7 +371,6 @@ export class K4Form extends LitElement {
         <meta-info
           @meta-info-changed=${this.updateMetaInfo}
           year=${this.metaInfo.year}
-          date=${this.metaInfo.date}
           pageNumber=${this.metaInfo.pageNumber}
         ></meta-info>
       </section>

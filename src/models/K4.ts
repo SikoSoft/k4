@@ -3,19 +3,16 @@ export const STORAGE_KEY = 'k4-data';
 
 export enum MetaInfoField {
   YEAR = 'year',
-  DATE = 'date',
   PAGE_NUMBER = 'pageNumber',
 }
 
 export interface MetaInfo {
   [MetaInfoField.YEAR]: string;
-  [MetaInfoField.DATE]: string;
   [MetaInfoField.PAGE_NUMBER]: string;
 }
 
 export const DEFAULT_META_INFO: MetaInfo = {
   [MetaInfoField.YEAR]: '2024',
-  [MetaInfoField.DATE]: '',
   [MetaInfoField.PAGE_NUMBER]: '1',
 };
 

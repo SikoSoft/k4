@@ -11,11 +11,6 @@ export const metaInfoProps: PropConfigMap<MetaInfoProps> = {
     control: 'text',
     description: 'Tax year in which this information is for',
   },
-  [MetaInfoProp.DATE]: {
-    default: '',
-    control: 'text',
-    description: 'Date this form was filled in',
-  },
   [MetaInfoProp.PAGE_NUMBER]: {
     default: `1`,
     control: 'text',
