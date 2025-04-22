@@ -64,9 +64,13 @@ export class SectionSummary extends LitElement {
   }
 
   handleFieldChanged(field: SectionSummaryProp, event: InputChangedEvent) {
+    const value = isNaN(parseInt(event.detail.value || '0'))
+      ? 0
+      : parseInt(event.detail.value || '0');
+
     this.sendChangedEvent({
       ...this.fields,
-      [field]: parseInt(event.detail.value),
+      [field]: value,
     });
   }
 
