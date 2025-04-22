@@ -155,7 +155,7 @@ export const DEFAULT_DEFERRED_SHARE: DeferredShare = {
 };
 
 export enum FileName {
-  MANIFEST = 'info.sru',
+  MANIFEST = 'INFO.SRU',
   DATA = 'BLANKETTER.SRU',
 }
 
