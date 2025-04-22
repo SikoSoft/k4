@@ -294,6 +294,7 @@ export class K4Form extends LitElement {
       });
 
       saveAs(content, `${this.personInfo.name}-K4-${this.metaInfo.year}.zip`);
+      addNotification(translate('fileDownloaded'), NotificationType.SUCCESS);
     } catch (error) {
       console.error('Error creating ZIP file:', error);
     }
@@ -336,7 +337,10 @@ export class K4Form extends LitElement {
 
   render() {
     return html`<div class="k4">
-      <page-header @form-reset=${this.reset}></page-header>
+      <page-header
+        @form-reset=${this.reset}
+        @download-bundle=${this.download}
+      ></page-header>
 
       <section>
         <meta-info

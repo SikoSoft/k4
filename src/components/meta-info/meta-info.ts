@@ -21,13 +21,12 @@ export class MetaInfo extends LitElement {
       display: flex;
       flex-direction: row;
       gap: 1rem;
+      justify-content: end;
 
       .year {
         flex-grow: 1;
       }
-      .date {
-        flex-grow: 1;
-      }
+
       .page-number {
         flex-grow: 1;
       }

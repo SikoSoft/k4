@@ -49,5 +49,6 @@
   "formHasBeenReset": "Formuläret har återställts",
   "confirmResetForm": "Är du säker på att du vill återställa formuläret? All information kommer att raderas.",
   "yes": "Ja",
-  "no": "Nej"
+  "no": "Nej",
+  "fileDownloaded": "Nedladdning av fil skapad"
 }

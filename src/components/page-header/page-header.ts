@@ -8,7 +8,7 @@ import {
   PageHeaderProps,
 } from './page-header.models';
 import { translate } from '@/lib/Localization';
-import { FormResetEvent } from './page-header.events';
+import { DownloadBundleEvent, FormResetEvent } from './page-header.events';
 import { APP_NAME } from '@/models/K4';
 
 @customElement('page-header')
@@ -20,6 +20,7 @@ export class PageHeader extends LitElement {
       margin: -2rem;
       margin-bottom: 2rem;
       width: 100vw;
+      height: 10rem;
       top: 0;
       padding-bottom: 2rem;
       border-bottom: 1px #ccc solid;
@@ -69,6 +70,10 @@ export class PageHeader extends LitElement {
     this.dispatchEvent(new FormResetEvent({}));
   }
 
+  downloadBundle() {
+    this.dispatchEvent(new DownloadBundleEvent({}));
+  }
+
   render() {
     return html`<header class="page-header">
       <div class="inner">
@@ -77,6 +82,12 @@ export class PageHeader extends LitElement {
         <ss-button @click=${this.showConfirmResetPopUp}>
           ${translate('resetForm')}
         </ss-button>
+
+        <ss-button
+          @click=${this.downloadBundle}
+          ?disabled=${!this.validationResult.isValid}
+          >${translate('download')}</ss-button
+        >
       </div>
 
       <pop-up
@@ -87,6 +98,24 @@ export class PageHeader extends LitElement {
         @pop-up-closed=${this.hideConfirmResetPopUp}
       >
         ${translate('confirmResetForm')}
+
+        <style>
+          .pop-up-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2rem;
+            padding: 0 2rem;
+            gap: 1rem;
+          }
+
+          ss-button {
+          }
+
+          ss-button::part(button) {
+            padding: 0.5rem 2rem;
+            display: inline-block;
+          }
+        </style>
 
         <div class="pop-up-buttons">
           <ss-button @click=${this.resetForm}> ${translate('yes')} </ss-button>
