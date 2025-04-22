@@ -156,7 +156,7 @@ export const DEFAULT_DEFERRED_SHARE: DeferredShare = {
 
 export enum FileName {
   MANIFEST = 'info.sru',
-  DATA = 'blanketter.sru',
+  DATA = 'BLANKETTER.SRU',
 }
 
 export interface File {

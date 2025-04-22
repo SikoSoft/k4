@@ -29,6 +29,7 @@ import {
   DEFAULT_PERSON_INFO,
   DEFAULT_SECTION_SUMMARY,
   DeferredShare,
+  FileName,
   K4Data,
   MetaInfo,
   PersonInfo,
@@ -222,29 +223,33 @@ export class K4Form extends LitElement {
 
   updateMetaInfo(event: MetaInfoChangedEvent) {
     this.metaInfo = event.detail;
-    this.saveToStorage();
+    this.handleUpdate();
   }
 
   updatePersonInfo(event: PersonInfoChangedEvent) {
     this.personInfo = event.detail;
-    this.saveToStorage();
+    this.handleUpdate();
   }
 
   updateSectionSummary(section: SectionType, summary: SectionSummary) {
     this.summaryMatrix[section] = summary;
-    this.requestUpdate();
-    this.saveToStorage();
+    this.handleUpdate();
   }
 
   updateAssetRecord(section: SectionType, index: number, record: AssetRecord) {
     this.recordMatrix[section][index] = record;
     this.requestUpdate();
-    this.saveToStorage();
+    this.handleUpdate();
   }
 
   updateDeferredShare(event: DeferredShareChangedEvent) {
     this.deferredShare = event.detail;
+    this.handleUpdate();
+  }
+
+  handleUpdate() {
     this.saveToStorage();
+    this.validate(false);
   }
 
   sectionRowIsValid(section: SectionType, index: number): boolean {
@@ -282,8 +287,8 @@ export class K4Form extends LitElement {
     try {
       const zip = new JSZip();
 
-      zip.file('BLANKETTER.SRU', this.blanketter);
-      zip.file('INFO.SRU', this.info);
+      zip.file(FileName.DATA, this.blanketter);
+      zip.file(FileName.MANIFEST, this.info);
 
       const content = await zip.generateAsync({
         type: 'blob',
@@ -432,8 +437,6 @@ export class K4Form extends LitElement {
         },
       )}
 
-      <ss-button @click=${this.validate}>${translate('validate')}</ss-button>
-
       <section class="validation">
         ${this.validationResult.isValid
           ? html`<p>${translate('formIsValid')}</p>`
@@ -445,14 +448,6 @@ export class K4Form extends LitElement {
                   error => html`<li>${error.message}</li>`,
                 )}
               </ul>`}
-      </section>
-
-      <section class="download">
-        <ss-button
-          @click=${this.download}
-          ?disabled=${!this.validationResult.isValid}
-          >${translate('download')}</ss-button
-        >
       </section>
 
       <section>

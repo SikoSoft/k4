@@ -12,8 +12,6 @@ import { translate } from './Localization';
 
 export class Validation {
   static validate(data: K4Data): ValidationResult {
-    console.log('validate');
-
     const errors: ValidationError[] = [];
 
     const missingFieldErrors = Validation.getMissingFieldErrors(data);
