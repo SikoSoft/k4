@@ -340,6 +340,7 @@ export class K4Form extends LitElement {
       <page-header
         @form-reset=${this.reset}
         @download-bundle=${this.download}
+        .validationResult=${this.validationResult}
       ></page-header>
 
       <section>
