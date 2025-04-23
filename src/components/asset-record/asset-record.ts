@@ -99,7 +99,7 @@ export class AssetRecord extends LitElement {
         field => html`
           <ss-input
             placeholder=${translate(
-              `fieldPlaceholder.${this.section}.${field}`,
+              `fieldPlaceholder.${this.section}.record.${field}`,
             )}
             value=${this.fieldValue(field)}
             @input-changed=${(event: InputChangedEvent) => {
