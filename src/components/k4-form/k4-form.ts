@@ -1,5 +1,5 @@
 import { css, html, LitElement, nothing } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
@@ -50,6 +50,7 @@ import { DeferredShareChangedEvent } from '../deferred-share/deferred-share.even
 import { Validation } from '@/lib/Validation';
 import { addNotification } from '@/lib/Notification';
 import { NotificationType } from '@ss/ui/components/notification-provider.models';
+import { assetRecordProps } from '../asset-record/asset-record.models';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -57,7 +58,7 @@ export class K4Form extends LitElement {
     css`
       fieldset,
       section {
-        margin-bottom: 1rem;
+        margin-bottom: 3rem;
         border-radius: 0.5rem;
 
         legend {
@@ -68,8 +69,19 @@ export class K4Form extends LitElement {
           margin-bottom: 1rem;
         }
       }
+
+      .import {
+        textarea {
+          width: 100%;
+          height: 10rem;
+          margin-bottom: 1rem;
+        }
+      }
     `,
   ];
+
+  @query('#import-data')
+  private importDataField!: HTMLTextAreaElement;
 
   @state()
   private recordMatrix: RecordMatrix = {
@@ -340,6 +352,50 @@ export class K4Form extends LitElement {
     this.requestUpdate();
   }
 
+  import() {
+    const importDataLines = this.importDataField.value.split('\n');
+    for (const line of importDataLines) {
+      if (line.match(/^#UPPGIFT /)) {
+        //console.log(line, 'matches');
+        const fieldId = parseInt(line.replace(/^#UPPGIFT ([0-9]{4}).*/, '$1'));
+        const fieldValue = line.replace(/^#UPPGIFT [0-9]{4} (.*)/, '$1');
+
+        const fieldEntry = assetFieldMap.find(
+          (entry: AssetFieldConfig) => entry.id === fieldId,
+        );
+        if (fieldEntry) {
+          const sectionKey = fieldEntry.location[0];
+          const index = fieldEntry.location[1];
+          const field = fieldEntry.location[2];
+
+          const value =
+            assetRecordProps[field].control === 'text'
+              ? fieldValue
+              : isNaN(parseInt(fieldValue || '0'))
+                ? 0
+                : parseInt(fieldValue || '0');
+
+          this.recordMatrix[sectionKey][index] = {
+            ...this.recordMatrix[sectionKey][index],
+            [field]: value,
+          }; //
+          // [field] =
+          /*
+            assetRecordProps[field].control === 'number'
+              ? parseInt(fieldValue)
+              : fieldValue;
+              */
+          //console.log('value', this.recordMatrix[sectionKey][index][field]);
+          // = value;
+        }
+
+        //console.log(fieldId, fieldValue);
+      }
+    }
+    this.requestUpdate();
+    addNotification(translate('dataImported'), NotificationType.INFO);
+  }
+
   render() {
     return html`<div class="k4">
       <page-header
@@ -448,6 +504,12 @@ export class K4Form extends LitElement {
                   error => html`<li>${error.message}</li>`,
                 )}
               </ul>`}
+      </section>
+
+      <section class="import">
+        <textarea id="import-data"></textarea>
+
+        <ss-button @click=${this.import}>${translate('import')}</ss-button>
       </section>
 
       <section>
