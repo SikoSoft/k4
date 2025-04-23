@@ -10,6 +10,7 @@ import {
 import { translate } from '@/lib/Localization';
 import { DownloadBundleEvent, FormResetEvent } from './page-header.events';
 import { APP_NAME } from '@/models/K4';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 @customElement('page-header')
 export class PageHeader extends LitElement {
@@ -43,6 +44,23 @@ export class PageHeader extends LitElement {
     }
 
     .page-header {
+    }
+
+    ss-button::part(button) {
+      padding: 1rem 2rem;
+      display: inline-block;
+      font-weight: bold;
+      border-width: 1px;
+
+      text-transform: uppercase;
+    }
+
+    ss-button:not([disabled])::part(button) {
+      cursor: pointer;
+    }
+
+    .download-button::part(button) {
+      font-size: 1.125rem;
     }
   `;
 
@@ -84,8 +102,15 @@ export class PageHeader extends LitElement {
         </ss-button>
 
         <ss-button
+          class="download-button"
           @click=${this.downloadBundle}
           ?disabled=${!this.validationResult.isValid}
+          ?positive=${this.validationResult.isValid}
+          title=${ifDefined(
+            !this.validationResult.isValid
+              ? translate('cannotDownloadWhenInvalid')
+              : undefined,
+          )}
           >${translate('download')}</ss-button
         >
       </div>
