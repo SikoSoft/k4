@@ -9,6 +9,7 @@ import {
   AssetRecordField,
   SectionSummaryField,
   sectionSummaryFieldAssetFieldMap,
+  MetaInfoField,
 } from '@/models/K4';
 import { translate } from './Localization';
 import { SectionSummary } from '@/components/section-summary/section-summary';
@@ -67,6 +68,15 @@ export class Validation {
   static getMissingFieldErrors(data: K4Data): ValidationError[] {
     const errors: ValidationError[] = [];
 
+    Object.values(MetaInfoField).forEach(field => {
+      if (!data.metaInfo[field]) {
+        errors.push({
+          field,
+          message: translate(`missingFieldError.metaInfo.${field}`),
+        });
+      }
+    });
+
     Object.values(PersonInfoField).forEach(field => {
       if (!data.personInfo[field]) {
         errors.push({
@@ -104,7 +114,7 @@ export class Validation {
               errors.push({
                 field: field as AssetRecordField,
                 message: translate(
-                  `missingFieldError.${sectionType}.summary.${field}`,
+                  `missingFieldError.${sectionType}.record.${field}`,
                 ),
               });
             }
