@@ -11,7 +11,11 @@ import {
   SectionSummaryProps,
 } from './section-summary.models';
 import { SectionSummaryChangedEvent } from './section-summary.events';
-import { SectionSummaryField } from '@/models/K4';
+import {
+  SectionSummaryField,
+  SectionSummary as SectionSummaryModel,
+} from '@/models/K4';
+import { translate } from '@/lib/Localization';
 
 @customElement('section-summary')
 export class SectionSummary extends LitElement {
@@ -52,7 +56,11 @@ export class SectionSummary extends LitElement {
   [SectionSummaryProp.TOTAL_LOSS]: SectionSummaryProps[SectionSummaryProp.TOTAL_LOSS] =
     sectionSummaryProps[SectionSummaryProp.TOTAL_LOSS].default;
 
-  get fields(): SectionSummaryProps {
+  @property({ type: String })
+  [SectionSummaryProp.SECTION]: SectionSummaryProps[SectionSummaryProp.SECTION] =
+    sectionSummaryProps[SectionSummaryProp.SECTION].default;
+
+  get fields(): SectionSummaryModel {
     return {
       [SectionSummaryProp.TOTAL_SELL_PRICE]:
         this[SectionSummaryProp.TOTAL_SELL_PRICE],
@@ -63,7 +71,7 @@ export class SectionSummary extends LitElement {
     };
   }
 
-  handleFieldChanged(field: SectionSummaryProp, event: InputChangedEvent) {
+  handleFieldChanged(field: SectionSummaryField, event: InputChangedEvent) {
     const value = isNaN(parseInt(event.detail.value || '0'))
       ? 0
       : parseInt(event.detail.value || '0');
@@ -74,7 +82,7 @@ export class SectionSummary extends LitElement {
     });
   }
 
-  sendChangedEvent(fields: SectionSummaryProps) {
+  sendChangedEvent(fields: SectionSummaryModel) {
     this.dispatchEvent(new SectionSummaryChangedEvent(fields));
   }
 
@@ -87,11 +95,13 @@ export class SectionSummary extends LitElement {
       <ss-input class="layout-filler"></ss-input>
       <ss-input class="layout-filler"></ss-input>
       ${repeat(
-        Object.values(SectionSummaryProp),
+        Object.values(SectionSummaryField),
         field => field,
         field => html`
           <ss-input
-            placeholder=${field}
+            placeholder=${translate(
+              `fieldPlaceholder.${this.section}.summary.${field}`,
+            )}
             value=${this.fieldValue(field)}
             @input-changed=${(event: InputChangedEvent) => {
               this.handleFieldChanged(field, event);

@@ -1,12 +1,16 @@
 import { PropConfigMap } from '@/models/Prop';
-import {
-  SectionSummary,
-  SectionSummaryField as SectionSummaryProp,
-} from '@/models/K4';
+import { SectionSummary, SectionSummaryField, SectionType } from '@/models/K4';
 
-export { SectionSummaryProp };
-
-export interface SectionSummaryProps extends SectionSummary {}
+export enum SectionSummaryProp {
+  TOTAL_SELL_PRICE = SectionSummaryField.TOTAL_SELL_PRICE,
+  TOTAL_BUY_PRICE = SectionSummaryField.TOTAL_BUY_PRICE,
+  TOTAL_GAIN = SectionSummaryField.TOTAL_GAIN,
+  TOTAL_LOSS = SectionSummaryField.TOTAL_LOSS,
+  SECTION = 'section',
+}
+export interface SectionSummaryProps extends SectionSummary {
+  [SectionSummaryProp.SECTION]: SectionType;
+}
 
 export const sectionSummaryProps: PropConfigMap<SectionSummaryProps> = {
   [SectionSummaryProp.TOTAL_SELL_PRICE]: {
@@ -28,5 +32,10 @@ export const sectionSummaryProps: PropConfigMap<SectionSummaryProps> = {
     default: 0,
     control: 'number',
     description: 'Total loss from all assets',
+  },
+  [SectionSummaryProp.SECTION]: {
+    default: SectionType.A,
+    control: 'text',
+    description: 'Section of the summary',
   },
 };
