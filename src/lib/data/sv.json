@@ -73,10 +73,10 @@
   "missingFieldError.A.record.gain": "Vinst krävs",
   "missingFieldError.A.record.loss": "Förlust krävs",
 
-  "missingFieldError.A.summary.sellPrice": "Totalt försäljningspris krävs",
-  "missingFieldError.A.summary.buyPrice": "Totalt inköpspris krävs",
-  "missingFieldError.A.summary.gain": "Totalt vinst krävs",
-  "missingFieldError.A.summary.loss": "Totalt förlust krävs",
+  "missingFieldError.A.summary.totalSellPrice": "Totalt försäljningspris krävs",
+  "missingFieldError.A.summary.totalBuyPrice": "Totalt inköpspris krävs",
+  "missingFieldError.A.summary.totalGain": "Totalt vinst krävs",
+  "missingFieldError.A.summary.totalLoss": "Totalt förlust krävs",
 
   "missingFieldError.C.record.total": "Antal krävs",
   "missingFieldError.C.record.asset": "Beteckning krävs",
@@ -85,10 +85,10 @@
   "missingFieldError.C.record.gain": "Vinst krävs",
   "missingFieldError.C.record.loss": "Förlust krävs",
 
-  "missingFieldError.C.summary.sellPrice": "Totalt försäljningspris krävs",
-  "missingFieldError.C.summary.buyPrice": "Totalt inköpspris krävs",
-  "missingFieldError.C.summary.gain": "Totalt vinst krävs",
-  "missingFieldError.C.summary.loss": "Totalt förlust krävs",
+  "missingFieldError.C.summary.totalSellPrice": "Totalt försäljningspris krävs",
+  "missingFieldError.C.summary.totalBuyPrice": "Totalt inköpspris krävs",
+  "missingFieldError.C.summary.totalGain": "Totalt vinst krävs",
+  "missingFieldError.C.summary.totalLoss": "Totalt förlust krävs",
 
   "missingFieldError.D.record.total": "Antal krävs",
   "missingFieldError.D.record.asset": "Beteckning krävs",
@@ -97,10 +97,10 @@
   "missingFieldError.D.record.gain": "Vinst krävs",
   "missingFieldError.D.record.loss": "Förlust krävs",
 
-  "missingFieldError.D.summary.sellPrice": "Totalt försäljningspris krävs",
-  "missingFieldError.D.summary.buyPrice": "Totalt inköpspris krävs",
-  "missingFieldError.D.summary.gain": "Totalt vinst krävs",
-  "missingFieldError.D.summary.loss": "Totalt förlust krävs",
+  "missingFieldError.D.summary.totalSellPrice": "Totalt försäljningspris krävs",
+  "missingFieldError.D.summary.totalBuyPrice": "Totalt inköpspris krävs",
+  "missingFieldError.D.summary.totalGain": "Totalt vinst krävs",
+  "missingFieldError.D.summary.totalLoss": "Totalt förlust krävs",
 
   "inconsistentTotalError.A.sellPrice": "Försäljningspriserna stämmer inte överens med det totala försäljningspriset",
   "inconsistentTotalError.A.buyPrice": "Inköpspriserna stämmer inte överens med det totala inköpspriset",
