@@ -22,24 +22,9 @@ export class Validation {
       errors.push(...missingFieldErrors);
     }
 
-    if (
-      data.personInfo.personNumber &&
-      !Validation.validatePersonNumber(data.personInfo.personNumber)
-    ) {
-      errors.push({
-        field: PersonInfoField.PERSON_NUMBER,
-        message: translate('field.validationError.personInfo.personNumber'),
-      });
-    }
-
-    if (
-      data.personInfo.postCode &&
-      !data.personInfo.postCode.match(/^\d{3} ?\d{2}$/)
-    ) {
-      errors.push({
-        field: PersonInfoField.POST_CODE,
-        message: translate('field.validationError.personInfo.postCode'),
-      });
+    const invalidFieldErrors = Validation.getInvalidFieldErrors(data);
+    if (invalidFieldErrors.length > 0) {
+      errors.push(...invalidFieldErrors);
     }
 
     const invalidSummaryErrors =
@@ -111,6 +96,49 @@ export class Validation {
         }
       }
     });
+
+    return errors;
+  }
+
+  static getInvalidFieldErrors(data: K4Data): ValidationError[] {
+    const errors: ValidationError[] = [];
+
+    if (data.metaInfo.year && !data.metaInfo.year.match(/^20[0-9]{2}$/)) {
+      errors.push({
+        field: MetaInfoField.YEAR,
+        message: translate('field.validationError.metaInfo.year'),
+      });
+    }
+
+    if (
+      data.metaInfo.pageNumber &&
+      !data.metaInfo.pageNumber.match(/^[0-9]{1,2}$/)
+    ) {
+      errors.push({
+        field: MetaInfoField.PAGE_NUMBER,
+        message: translate('field.validationError.metaInfo.pageNumber'),
+      });
+    }
+
+    if (
+      data.personInfo.personNumber &&
+      !Validation.validatePersonNumber(data.personInfo.personNumber)
+    ) {
+      errors.push({
+        field: PersonInfoField.PERSON_NUMBER,
+        message: translate('field.validationError.personInfo.personNumber'),
+      });
+    }
+
+    if (
+      data.personInfo.postCode &&
+      !data.personInfo.postCode.match(/^\d{3} ?\d{2}$/)
+    ) {
+      errors.push({
+        field: PersonInfoField.POST_CODE,
+        message: translate('field.validationError.personInfo.postCode'),
+      });
+    }
 
     return errors;
   }

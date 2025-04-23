@@ -48,6 +48,9 @@
   "fieldPlaceholder.D.summary.totalGain": "Totalt vinst",
   "fieldPlaceholder.D.summary.totalLoss": "Totalt förlust",
 
+  "field.validationError.metaInfo.year": "Inkomstår är ogiltigt",
+  "field.validationError.metaInfo.pageNumber": "Numrering vid flera K4 är ogiltig",
+
   "field.validationError.personInfo.personNumber": "Personnummer är ogiltigt",
   "field.validationError.personInfo.city": "Stad är ogiltig",
   "field.validationError.personInfo.postCode": "Postnummer är ogiltigt",
