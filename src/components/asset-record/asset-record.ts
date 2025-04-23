@@ -67,7 +67,21 @@ export class AssetRecord extends LitElement {
   [AssetRecordProp.SECTION]: AssetRecordProps[AssetRecordProp.SECTION] =
     assetRecordProps[AssetRecordProp.SECTION].default;
 
+  get rowHasData(): boolean {
+    return Object.values(AssetRecordField).some(
+      field => this[field] !== 0 && this[field] !== '',
+    );
+  }
+
   fieldValue(field: AssetRecordField): string {
+    if (
+      field === AssetRecordField.TOTAL &&
+      this[AssetRecordField.TOTAL] === 0 &&
+      this.rowHasData
+    ) {
+      return this[field].toString();
+    }
+
     return this[field] === 0 ? '' : this[field].toString();
   }
 
