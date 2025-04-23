@@ -73,6 +73,7 @@ export class MetaInfo extends LitElement {
         value=${this[MetaInfoProp.YEAR]}
         @input-changed=${this.handleYearChanged}
       ></ss-input>
+
       <ss-input
         placeholder=${translate('fieldPlaceholder.metaInfo.pageNumber')}
         value=${this[MetaInfoProp.PAGE_NUMBER]}

@@ -356,7 +356,6 @@ export class K4Form extends LitElement {
     const importDataLines = this.importDataField.value.split('\n');
     for (const line of importDataLines) {
       if (line.match(/^#UPPGIFT /)) {
-        //console.log(line, 'matches');
         const fieldId = parseInt(line.replace(/^#UPPGIFT ([0-9]{4}).*/, '$1'));
         const fieldValue = line.replace(/^#UPPGIFT [0-9]{4} (.*)/, '$1');
 
@@ -378,18 +377,8 @@ export class K4Form extends LitElement {
           this.recordMatrix[sectionKey][index] = {
             ...this.recordMatrix[sectionKey][index],
             [field]: value,
-          }; //
-          // [field] =
-          /*
-            assetRecordProps[field].control === 'number'
-              ? parseInt(fieldValue)
-              : fieldValue;
-              */
-          //console.log('value', this.recordMatrix[sectionKey][index][field]);
-          // = value;
+          };
         }
-
-        //console.log(fieldId, fieldValue);
       }
     }
     this.requestUpdate();

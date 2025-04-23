@@ -101,6 +101,7 @@ export class PersonInfo extends LitElement {
           @input-changed=${this.handleNameChanged}
         ></ss-input>
       </div>
+
       <div class="person-number">
         <ss-input
           value=${this[PersonInfoProp.PERSON_NUMBER]}
@@ -108,6 +109,7 @@ export class PersonInfo extends LitElement {
           @input-changed=${this.handlePersonNumberChanged}
         ></ss-input>
       </div>
+
       <div class="city">
         <ss-input
           value=${this[PersonInfoProp.CITY]}
@@ -115,6 +117,7 @@ export class PersonInfo extends LitElement {
           @input-changed=${this.handleCityChanged}
         ></ss-input>
       </div>
+
       <div class="post-code">
         <ss-input
           value=${this[PersonInfoProp.POST_CODE]}

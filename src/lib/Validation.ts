@@ -12,7 +12,6 @@ import {
   MetaInfoField,
 } from '@/models/K4';
 import { translate } from './Localization';
-import { SectionSummary } from '@/components/section-summary/section-summary';
 
 export class Validation {
   static validate(data: K4Data): ValidationResult {
@@ -48,16 +47,6 @@ export class Validation {
     if (invalidSummaryErrors.length > 0) {
       errors.push(...invalidSummaryErrors);
     }
-
-    /*
-        if (!this.allFieldsUseCorrectFormat()) {
-          validationResult.isValid = false;
-        }
-    
-        if (!this.allRequiredFieldsAreFilled()) {
-          validationResult.isValid = false;
-        }
-          */
 
     return {
       isValid: errors.length === 0,
@@ -126,28 +115,9 @@ export class Validation {
     return errors;
   }
 
-  allRequiredFieldsAreFilled(): boolean {
-    return false;
-  }
-
-  allFieldsUseCorrectFormat(): boolean {
-    return false;
-  }
-
   static validatePersonNumber(personNumber: string): boolean {
     return Personnummer.valid(personNumber);
   }
-
-  /*
-  static sectionRowFieldIsRequired(
-    data: K4Data,
-    sectionType: SectionType,
-    field: string,
-    row: number,
-  ): boolean {
-    
-  }
-  */
 
   static sectionRowHasData(
     data: K4Data,
