@@ -7,8 +7,11 @@ import {
   SectionType,
   sectionConfigMap,
   AssetRecordField,
+  SectionSummaryField,
+  sectionSummaryFieldAssetFieldMap,
 } from '@/models/K4';
 import { translate } from './Localization';
+import { SectionSummary } from '@/components/section-summary/section-summary';
 
 export class Validation {
   static validate(data: K4Data): ValidationResult {
@@ -37,6 +40,12 @@ export class Validation {
         field: PersonInfoField.POST_CODE,
         message: translate('field.validationError.personInfo.postCode'),
       });
+    }
+
+    const invalidSummaryErrors =
+      Validation.getInconsistentSectionSummaryErrors(data);
+    if (invalidSummaryErrors.length > 0) {
+      errors.push(...invalidSummaryErrors);
     }
 
     /*
@@ -94,7 +103,9 @@ export class Validation {
               }
               errors.push({
                 field: field as AssetRecordField,
-                message: translate(`missingFieldError.${sectionType}.${field}`),
+                message: translate(
+                  `missingFieldError.${sectionType}.summary.${field}`,
+                ),
               });
             }
           });
@@ -147,5 +158,78 @@ export class Validation {
     return [...new Array(sectionConfigMap[sectionType].numRecords)]
       .map((_, index) => index)
       .some(index => Validation.sectionRowHasData(data, sectionType, index));
+  }
+
+  static getSectionSummaryFieldSum(
+    data: K4Data,
+    sectionType: SectionType,
+    field: AssetRecordField,
+  ): number {
+    if (field === AssetRecordField.ASSET) {
+      return 0;
+    }
+    const sectionConfig = sectionConfigMap[sectionType];
+    const numRecords = sectionConfig.numRecords;
+
+    let sum = 0;
+
+    for (let i = 0; i < numRecords; i++) {
+      if (Validation.sectionRowHasData(data, sectionType, i)) {
+        sum += data.recordMatrix[sectionType][i][field];
+      }
+    }
+
+    return sum;
+  }
+
+  static getInconsistentSectionSummaryErrors(data: K4Data): ValidationError[] {
+    const errors: ValidationError[] = [];
+    Object.values(SectionType).forEach(sectionType => {
+      if (Validation.sectionSummaryIsRequired(data, sectionType)) {
+        Object.values(SectionSummaryField).forEach(field => {
+          const sectionFieldSum = Validation.getSectionSummaryFieldSum(
+            data,
+            sectionType,
+            Validation.getRecordFieldFromSummaryField(field),
+          );
+
+          if (sectionFieldSum !== data.summaryMatrix[sectionType][field]) {
+            errors.push({
+              field: sectionType,
+              message: translate(`inconsistentTotalError.${sectionType}.`),
+            });
+          }
+        });
+      }
+    });
+    return errors;
+  }
+
+  static getRecordFieldFromSummaryField(
+    field: SectionSummaryField,
+  ): AssetRecordField {
+    const relation = sectionSummaryFieldAssetFieldMap.find(
+      relation => relation.summaryField === field,
+    );
+
+    if (relation) {
+      return relation.recordField;
+    } else {
+      throw new Error(`No record field found for summary field: ${field}`);
+    }
+  }
+
+  static getSummaryFieldFromRecordField(
+    field: AssetRecordField,
+  ): SectionSummaryField {
+    const relation = sectionSummaryFieldAssetFieldMap.find(
+      relation => relation.recordField === field,
+    );
+
+    if (relation) {
+      return relation.summaryField;
+    } else {
+      throw new Error(`No summary field found for record field: ${field}`);
+    }
   }
 }

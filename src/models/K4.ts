@@ -105,6 +105,34 @@ export const DEFAULT_SECTION_SUMMARY: SectionSummaryMatrix = {
   },
 };
 
+export type SectionSummaryFieldAssetFieldRelation = {
+  summaryField: SectionSummaryField;
+  recordField: AssetRecordField;
+};
+
+export type SectionSummaryFieldAssetFieldMap =
+  SectionSummaryFieldAssetFieldRelation[];
+
+export const sectionSummaryFieldAssetFieldMap: SectionSummaryFieldAssetFieldMap =
+  [
+    {
+      summaryField: SectionSummaryField.TOTAL_SELL_PRICE,
+      recordField: AssetRecordField.SELL_PRICE,
+    },
+    {
+      summaryField: SectionSummaryField.TOTAL_BUY_PRICE,
+      recordField: AssetRecordField.BUY_PRICE,
+    },
+    {
+      summaryField: SectionSummaryField.TOTAL_GAIN,
+      recordField: AssetRecordField.GAIN,
+    },
+    {
+      summaryField: SectionSummaryField.TOTAL_LOSS,
+      recordField: AssetRecordField.LOSS,
+    },
+  ];
+
 export interface Section {
   type: SectionType;
   records: AssetRecord[];

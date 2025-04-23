@@ -58,6 +58,21 @@
   "missingFieldError.personInfo.city": "Stad krävs",
   "missingFieldError.personInfo.postCode": "Postnummer krävs",
 
+  "missingFieldError.A.summary.sellPrice": "Totalt försäljningspris krävs",
+  "missingFieldError.A.summary.buyPrice": "Totalt inköpspris krävs",
+  "missingFieldError.A.summary.gain": "Totalt vinst krävs",
+  "missingFieldError.A.summary.loss": "Totalt förlust krävs",
+
+  "missingFieldError.C.summary.sellPrice": "Totalt försäljningspris krävs",
+  "missingFieldError.C.summary.buyPrice": "Totalt inköpspris krävs",
+  "missingFieldError.C.summary.gain": "Totalt vinst krävs",
+  "missingFieldError.C.summary.loss": "Totalt förlust krävs",
+
+  "missingFieldError.D.summary.sellPrice": "Totalt försäljningspris krävs",
+  "missingFieldError.D.summary.buyPrice": "Totalt inköpspris krävs",
+  "missingFieldError.D.summary.gain": "Totalt vinst krävs",
+  "missingFieldError.D.summary.loss": "Totalt förlust krävs",
+
   "inconsistentTotalError.A.sellPrice": "Försäljningspriserna stämmer inte överens med det totala försäljningspriset",
   "inconsistentTotalError.A.buyPrice": "Inköpspriserna stämmer inte överens med det totala inköpspriset",
   "inconsistentTotalError.A.gain": "Vinsterna stämmer inte överens med det totala vinsten",
@@ -78,5 +93,7 @@
   "confirmResetForm": "Är du säker på att du vill återställa formuläret? All information kommer att raderas.",
   "yes": "Ja",
   "no": "Nej",
-  "fileDownloaded": "Nedladdning av fil skapad"
+  "fileDownloaded": "Nedladdning av fil skapad",
+  "import": "Importera",
+  "dataImported": "Data har importerats"
 }
