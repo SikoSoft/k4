@@ -64,13 +64,26 @@ export class Validation {
       const sectionConfig = sectionConfigMap[sectionType];
       const numRecords = sectionConfig.numRecords;
 
+      let hasData = false;
+      let hasGain = false;
+      let hasLoss = false;
       for (let i = 0; i < numRecords; i++) {
         if (Validation.sectionRowHasData(data, sectionType, i)) {
+          hasData = true;
+
           const gainIsSet =
             data.recordMatrix[sectionType][i][AssetRecordField.GAIN] !== 0;
 
+          if (gainIsSet) {
+            hasGain = true;
+          }
+
           const lossIsSet =
             data.recordMatrix[sectionType][i][AssetRecordField.LOSS] !== 0;
+
+          if (lossIsSet) {
+            hasLoss = true;
+          }
 
           Object.keys(data.recordMatrix[sectionType][i]).forEach(f => {
             const field = f as AssetRecordField;
@@ -94,6 +107,26 @@ export class Validation {
             }
           });
         }
+      }
+
+      if (hasData) {
+        Object.values(SectionSummaryField).forEach(field => {
+          if (
+            (field === SectionSummaryField.TOTAL_GAIN && !hasGain) ||
+            (field === SectionSummaryField.TOTAL_LOSS && !hasLoss)
+          ) {
+            return;
+          }
+
+          if (!data.summaryMatrix[sectionType][field]) {
+            errors.push({
+              field: field as SectionSummaryField,
+              message: translate(
+                `missingFieldError.${sectionType}.summary.${field}`,
+              ),
+            });
+          }
+        });
       }
     });
 
