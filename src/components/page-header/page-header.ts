@@ -2,6 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-button';
+import '@ss/ui/components/ss-icon';
 import {
   PageHeaderProp,
   pageHeaderProps,
@@ -23,7 +24,6 @@ export class PageHeader extends LitElement {
       width: 100vw;
       height: 10rem;
       top: 0;
-      padding-bottom: 2rem;
       border-bottom: 1px #ccc solid;
       background: linear-gradient(
         rgba(230, 240, 250, 1),
@@ -32,18 +32,28 @@ export class PageHeader extends LitElement {
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
+    header {
+      height: 100%;
+    }
+
     h1 {
       margin: 0;
     }
 
     .inner {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
+      flex-direction: column;
+      justify-content: space-evenly;
+      position: relative;
+      padding: 0rem 2rem;
+      height: 100%;
     }
 
-    .page-header {
+    .title-bar,
+    .tool-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     ss-button::part(button) {
@@ -61,6 +71,18 @@ export class PageHeader extends LitElement {
 
     .download-button::part(button) {
       font-size: 1.125rem;
+    }
+
+    .tool-bar {
+      ss-button::part(button) {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        font-weight: normal;
+        text-transform: none;
+      }
+
+      ss-icon: {
+      }
     }
   `;
 
@@ -95,24 +117,42 @@ export class PageHeader extends LitElement {
   render() {
     return html`<header class="page-header">
       <div class="inner">
-        <h1>${APP_NAME}</h1>
+        <div class="title-bar">
+          <h1>${APP_NAME}</h1>
 
-        <ss-button @click=${this.showConfirmResetPopUp}>
-          ${translate('resetForm')}
-        </ss-button>
-
-        <ss-button
-          class="download-button"
-          @click=${this.downloadBundle}
-          ?disabled=${!this.validationResult.isValid}
-          ?positive=${this.validationResult.isValid}
-          title=${ifDefined(
-            !this.validationResult.isValid
-              ? translate('cannotDownloadWhenInvalid')
-              : undefined,
-          )}
-          >${translate('download')}</ss-button
-        >
+          <ss-button
+            class="download-button"
+            @click=${this.downloadBundle}
+            ?disabled=${!this.validationResult.isValid}
+            ?positive=${this.validationResult.isValid}
+            title=${ifDefined(
+              !this.validationResult.isValid
+                ? translate('cannotDownloadWhenInvalid')
+                : undefined,
+            )}
+            >${translate('download')}</ss-button
+          >
+        </div>
+        <div class="tool-bar">
+          <ss-button @click=${this.showConfirmResetPopUp}>
+            ${translate('resetForm')}
+          </ss-button>
+          <div class="validation-status">
+            ${this.validationResult.isValid
+              ? html`${translate('formIsValid')}
+                  <ss-icon
+                    name="validCircle"
+                    size="24"
+                    color="#084"
+                  ></ss-icon> `
+              : html`${translate('formIsInvalid')}
+                  <ss-icon
+                    name="invalidCircle"
+                    size="24"
+                    color="#920"
+                  ></ss-icon> `}
+          </div>
+        </div>
       </div>
 
       <pop-up
@@ -127,9 +167,9 @@ export class PageHeader extends LitElement {
         <style>
           .pop-up-buttons {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
             margin-top: 2rem;
-            padding: 0 2rem;
+            padding: 0;
             gap: 1rem;
           }
 
