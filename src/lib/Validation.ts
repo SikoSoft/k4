@@ -237,7 +237,9 @@ export class Validation {
           if (sectionFieldSum !== data.summaryMatrix[sectionType][field]) {
             errors.push({
               field: sectionType,
-              message: translate(`inconsistentTotalError.${sectionType}.`),
+              message: translate(
+                `inconsistentTotalError.${sectionType}.${field}`,
+              ),
             });
           }
         });
