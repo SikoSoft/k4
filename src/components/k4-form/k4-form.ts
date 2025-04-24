@@ -349,6 +349,7 @@ export class K4Form extends LitElement {
     this.deferredShare = { ...DEFAULT_DEFERRED_SHARE };
     localStorage.removeItem(STORAGE_KEY);
     addNotification(translate('formHasBeenReset'), NotificationType.INFO);
+    this.validate(false);
     this.requestUpdate();
   }
 
