@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-button';
@@ -246,7 +246,11 @@ export class PageHeader extends LitElement {
         closeOnEsc
         @pop-up-closed=${this.hideImportPopUp}
       >
-        <import-modal @import-sru=${this.hideImportPopUp}></import-modal>
+        ${this.importPopUpIsOpen
+          ? html`
+              <import-modal @import-sru=${this.hideImportPopUp}></import-modal>
+            `
+          : nothing}
       </pop-up>
 
       <pop-up

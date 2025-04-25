@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-input';
@@ -26,6 +26,13 @@ export class ImportModal extends LitElement {
 
   @query('#import-data')
   private importDataField!: HTMLTextAreaElement;
+
+  protected updated(_changedProperties: PropertyValues): void {
+    super.updated(_changedProperties);
+
+    console.log('updated', _changedProperties);
+    this.importDataField.focus();
+  }
 
   import() {
     const manifest = this.importDataField.value;
