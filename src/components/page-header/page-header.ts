@@ -1,8 +1,9 @@
 import { css, html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-button';
 import '@ss/ui/components/ss-icon';
+import './import-modal/import-modal';
 import {
   PageHeaderProp,
   pageHeaderProps,
@@ -75,6 +76,10 @@ export class PageHeader extends LitElement {
     }
 
     .tool-bar {
+      ss-button {
+        display: inline-block;
+      }
+
       ss-button::part(button) {
         padding: 0.5rem 1rem;
         font-size: 1rem;
@@ -128,6 +133,9 @@ export class PageHeader extends LitElement {
   confirmResetPopUpIsOpen = false;
 
   @state()
+  importPopUpIsOpen = false;
+
+  @state()
   errorListIsOpen = false;
 
   @state()
@@ -136,6 +144,14 @@ export class PageHeader extends LitElement {
       'page-header': true,
       'errors-open': this.errorListIsOpen,
     };
+  }
+
+  showImportPopUp() {
+    this.importPopUpIsOpen = true;
+  }
+
+  hideImportPopUp() {
+    this.importPopUpIsOpen = false;
   }
 
   showConfirmResetPopUp() {
@@ -179,9 +195,15 @@ export class PageHeader extends LitElement {
           >
         </div>
         <div class="tool-bar">
-          <ss-button @click=${this.showConfirmResetPopUp}>
-            ${translate('resetForm')}
-          </ss-button>
+          <div class="buttons">
+            <ss-button @click=${this.showConfirmResetPopUp}>
+              ${translate('resetForm')}
+            </ss-button>
+            <ss-button @click=${this.showImportPopUp}
+              >${translate('import')}</ss-button
+            >
+          </div>
+
           <div class="validation-status">
             ${this.validationResult.isValid
               ? html`${translate('formIsValid')}
@@ -202,6 +224,7 @@ export class PageHeader extends LitElement {
                       color="#920"
                     ></ss-icon>
                   </span>
+
                   <div class="validation-errors">
                     <ul>
                       ${this.validationResult.errors.map(
@@ -215,6 +238,16 @@ export class PageHeader extends LitElement {
           </div>
         </div>
       </div>
+
+      <pop-up
+        ?open=${this.importPopUpIsOpen}
+        closeButton
+        closeOnOutsideClick
+        closeOnEsc
+        @pop-up-closed=${this.hideImportPopUp}
+      >
+        <import-modal @import-sru=${this.hideImportPopUp}></import-modal>
+      </pop-up>
 
       <pop-up
         ?open=${this.confirmResetPopUpIsOpen}

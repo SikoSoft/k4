@@ -51,6 +51,7 @@ import { Validation } from '@/lib/Validation';
 import { addNotification } from '@/lib/Notification';
 import { NotificationType } from '@ss/ui/components/notification-provider.models';
 import { assetRecordProps } from '../asset-record/asset-record.models';
+import { ImportSruEvent } from '../page-header/import-modal/import-modal.events';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -69,19 +70,8 @@ export class K4Form extends LitElement {
           margin-bottom: 1rem;
         }
       }
-
-      .import {
-        textarea {
-          width: 100%;
-          height: 10rem;
-          margin-bottom: 1rem;
-        }
-      }
     `,
   ];
-
-  @query('#import-data')
-  private importDataField!: HTMLTextAreaElement;
 
   @state()
   private recordMatrix: RecordMatrix = {
@@ -353,8 +343,8 @@ export class K4Form extends LitElement {
     this.requestUpdate();
   }
 
-  import() {
-    const importDataLines = this.importDataField.value.split('\n');
+  import(manifest: string, data: string) {
+    const importDataLines = data.split('\n');
     for (const line of importDataLines) {
       if (line.match(/^#UPPGIFT /)) {
         const fieldId = parseInt(line.replace(/^#UPPGIFT ([0-9]{4}).*/, '$1'));
@@ -391,6 +381,9 @@ export class K4Form extends LitElement {
       <page-header
         @form-reset=${this.reset}
         @download-bundle=${this.download}
+        @import-sru=${(e: ImportSruEvent): void => {
+          this.import(e.detail.manifest, e.detail.data);
+        }}
         .validationResult=${this.validationResult}
       ></page-header>
 
@@ -482,12 +475,6 @@ export class K4Form extends LitElement {
           </fieldset> `;
         },
       )}
-
-      <section class="import">
-        <textarea id="import-data"></textarea>
-
-        <ss-button @click=${this.import}>${translate('import')}</ss-button>
-      </section>
 
       <section>
         <file-preview>
