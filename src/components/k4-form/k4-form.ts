@@ -483,19 +483,6 @@ export class K4Form extends LitElement {
         },
       )}
 
-      <section class="validation">
-        ${this.validationResult.isValid
-          ? html`<p>${translate('formIsValid')}</p>`
-          : html`<p>${translate('formIsInvalid')}</p>
-              <ul>
-                ${repeat(
-                  this.validationResult.errors,
-                  error => error.field,
-                  error => html`<li>${error.message}</li>`,
-                )}
-              </ul>`}
-      </section>
-
       <section class="import">
         <textarea id="import-data"></textarea>
 
