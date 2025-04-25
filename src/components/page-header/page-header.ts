@@ -12,6 +12,7 @@ import { translate } from '@/lib/Localization';
 import { DownloadBundleEvent, FormResetEvent } from './page-header.events';
 import { APP_NAME } from '@/models/K4';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { classMap } from 'lit/directives/class-map.js';
 
 @customElement('page-header')
 export class PageHeader extends LitElement {
@@ -84,6 +85,39 @@ export class PageHeader extends LitElement {
       ss-icon: {
       }
     }
+
+    .validation-status {
+      position: relative;
+    }
+
+    .invalid {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .validation-errors{
+      display: none;
+      background-color: #fff;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      padding: 0.5rem 1rem;
+      width: 300px;
+      font-size: 0.8rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      ul {
+        margin: 0;
+        padding: 1rem;
+      }
+    }
+
+    .errors-open .validation-errors {
+      display: block;
+
+    }
+
+    .
   `;
 
   @property({ type: Object })
@@ -92,6 +126,17 @@ export class PageHeader extends LitElement {
 
   @state()
   confirmResetPopUpIsOpen = false;
+
+  @state()
+  errorListIsOpen = false;
+
+  @state()
+  get classes(): Record<string, boolean> {
+    return {
+      'page-header': true,
+      'errors-open': this.errorListIsOpen,
+    };
+  }
 
   showConfirmResetPopUp() {
     this.confirmResetPopUpIsOpen = true;
@@ -115,7 +160,7 @@ export class PageHeader extends LitElement {
   }
 
   render() {
-    return html`<header class="page-header">
+    return html`<header class=${classMap(this.classes)}>
       <div class="inner">
         <div class="title-bar">
           <h1>${APP_NAME}</h1>
@@ -145,12 +190,28 @@ export class PageHeader extends LitElement {
                     size="24"
                     color="#084"
                   ></ss-icon> `
-              : html`${translate('formIsInvalid')}
-                  <ss-icon
-                    name="invalidCircle"
-                    size="24"
-                    color="#920"
-                  ></ss-icon> `}
+              : html`<span
+                    class="invalid"
+                    @click=${() => {
+                      this.errorListIsOpen = !this.errorListIsOpen;
+                    }}
+                    >${translate('formIsInvalid')}
+                    <ss-icon
+                      name="invalidCircle"
+                      size="24"
+                      color="#920"
+                    ></ss-icon>
+                  </span>
+                  <div class="validation-errors">
+                    <ul>
+                      ${this.validationResult.errors.map(
+                        error =>
+                          html`<li class="validation-error">
+                            ${translate(error.message)}
+                          </li>`,
+                      )}
+                    </ul>
+                  </div> `}
           </div>
         </div>
       </div>
