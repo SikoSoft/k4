@@ -44,11 +44,6 @@ export class AssetInfo extends LitElement {
   [AssetInfoProp.SUMMARY_MATRIX]: AssetInfoProps[AssetInfoProp.SUMMARY_MATRIX] =
     assetInfoProps[AssetInfoProp.SUMMARY_MATRIX].default;
 
-  protected updated(_changedProperties: PropertyValues): void {
-    super.updated(_changedProperties);
-    console.log('updated', _changedProperties);
-  }
-
   render() {
     return html`<div class="asset-info">
       ${repeat(
