@@ -83,7 +83,9 @@ export class SectionSummary extends LitElement {
   }
 
   sendChangedEvent(fields: SectionSummaryModel) {
-    this.dispatchEvent(new SectionSummaryChangedEvent(fields));
+    this.dispatchEvent(
+      new SectionSummaryChangedEvent({ ...fields, section: this.section }),
+    );
   }
 
   fieldValue(field: SectionSummaryField): string {

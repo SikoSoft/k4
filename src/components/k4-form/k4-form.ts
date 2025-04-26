@@ -1,6 +1,5 @@
-import { css, html, LitElement, nothing } from 'lit';
-import { customElement, query, state } from 'lit/decorators.js';
-import { repeat } from 'lit/directives/repeat.js';
+import { css, html, LitElement } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -9,7 +8,7 @@ import '@ss/ui/components/pop-up';
 
 import '@/components/meta-info/meta-info';
 import '@/components/person-info/person-info';
-import '@/components/asset-record/asset-record';
+import '@/components/asset-info/asset-info';
 import '@/components/section-summary/section-summary';
 import '@/components/file-preview/file-preview';
 import '@/components/deferred-share/deferred-share';
@@ -22,7 +21,6 @@ import {
   APP_NAME,
   AssetFieldConfig,
   assetFieldMap,
-  AssetRecord,
   AssetRecordField,
   DEFAULT_DEFERRED_SHARE,
   DEFAULT_META_INFO,
@@ -34,8 +32,6 @@ import {
   MetaInfo,
   PersonInfo,
   RecordMatrix,
-  sectionConfigMap,
-  SectionSummary,
   SectionSummaryField,
   SectionSummaryMatrix,
   SectionType,
@@ -44,14 +40,15 @@ import {
   summaryFieldMap,
   ValidationResult,
 } from '@/models/K4';
-import { SectionSummaryChangedEvent } from '../section-summary/section-summary.events';
+import { SectionSummaryChangedEvent } from '@/components/section-summary/section-summary.events';
 import { translate } from '@/lib/Localization';
-import { DeferredShareChangedEvent } from '../deferred-share/deferred-share.events';
+import { DeferredShareChangedEvent } from '@/components/deferred-share/deferred-share.events';
 import { Validation } from '@/lib/Validation';
 import { addNotification } from '@/lib/Notification';
 import { NotificationType } from '@ss/ui/components/notification-provider.models';
-import { assetRecordProps } from '../asset-record/asset-record.models';
-import { ImportSruEvent } from '../page-header/import-modal/import-modal.events';
+import { assetRecordProps } from '@/components/asset-record/asset-record.models';
+import { ImportSruEvent } from '@/components/page-header/import-modal/import-modal.events';
+import { K4 } from '@/lib/K4';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -64,10 +61,6 @@ export class K4Form extends LitElement {
 
         legend {
           font-weight: bold;
-        }
-
-        asset-record {
-          margin-bottom: 1rem;
         }
       }
     `,
@@ -147,13 +140,13 @@ export class K4Form extends LitElement {
       const sectionKey = key as SectionType;
       const records = this.recordMatrix[sectionKey];
 
-      records.forEach((record, index) => {
-        if (this.sectionRowIsValid(sectionKey, index)) {
+      records.forEach((record, row) => {
+        if (this.sectionRowIsValid(sectionKey, row)) {
           Object.values(AssetRecordField).forEach(field => {
             const fieldEntry = assetFieldMap.find(
               (entry: AssetFieldConfig) =>
                 entry.location[0] === sectionKey &&
-                entry.location[1] === index &&
+                entry.location[1] === row &&
                 entry.location[2] === field,
             );
 
@@ -198,29 +191,9 @@ export class K4Form extends LitElement {
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.recordMatrix = this.prepareRecordMatrix();
+    this.recordMatrix = K4.prepareRecordMatrix();
     this.loadFromStorage();
     this.validate(false);
-  }
-
-  prepareRecordMatrix(): RecordMatrix {
-    const recordMatrix = Object.keys(sectionConfigMap).reduce((acc, key) => {
-      const sectionKey = key as SectionType;
-      const sectionConfig = sectionConfigMap[sectionKey];
-      const records = [...new Array(sectionConfig.numRecords)].map(() => {
-        return {
-          total: 0,
-          asset: '',
-          buyPrice: 0,
-          sellPrice: 0,
-          gain: 0,
-          loss: 0,
-        };
-      });
-      acc[sectionKey] = records;
-      return acc;
-    }, {} as RecordMatrix);
-    return recordMatrix;
   }
 
   updateMetaInfo(event: MetaInfoChangedEvent) {
@@ -233,13 +206,25 @@ export class K4Form extends LitElement {
     this.handleUpdate();
   }
 
-  updateSectionSummary(section: SectionType, summary: SectionSummary) {
+  updateSectionSummary(event: SectionSummaryChangedEvent) {
+    const { section, ...summary } = event.detail;
     this.summaryMatrix[section] = summary;
     this.handleUpdate();
   }
 
-  updateAssetRecord(section: SectionType, index: number, record: AssetRecord) {
-    this.recordMatrix[section][index] = record;
+  updateAssetRecord(event: AssetRecordChangedEvent) {
+    const { section, row, ...newRecord } = event.detail;
+    console.log('updateAssetRecord', section, row, newRecord);
+    //this.recordMatrix[section][row] = record;
+    this.recordMatrix = {
+      ...this.recordMatrix,
+      [section]: [
+        ...this.recordMatrix[section].map((record, index) =>
+          index === row ? newRecord : record,
+        ),
+      ],
+    };
+
     this.requestUpdate();
     this.handleUpdate();
   }
@@ -254,8 +239,8 @@ export class K4Form extends LitElement {
     this.validate(false);
   }
 
-  sectionRowIsValid(section: SectionType, index: number): boolean {
-    const record = this.recordMatrix[section][index];
+  sectionRowIsValid(section: SectionType, row: number): boolean {
+    const record = this.recordMatrix[section][row];
     return (
       record.asset !== '' &&
       record.buyPrice !== 0 &&
@@ -334,7 +319,7 @@ export class K4Form extends LitElement {
   reset() {
     this.metaInfo = { ...DEFAULT_META_INFO };
     this.personInfo = { ...DEFAULT_PERSON_INFO };
-    this.recordMatrix = this.prepareRecordMatrix();
+    this.recordMatrix = K4.prepareRecordMatrix();
     this.summaryMatrix = { ...DEFAULT_SECTION_SUMMARY };
     this.deferredShare = { ...DEFAULT_DEFERRED_SHARE };
     localStorage.removeItem(STORAGE_KEY);
@@ -405,76 +390,17 @@ export class K4Form extends LitElement {
         ></person-info>
       </section>
 
-      ${repeat(
-        Object.keys(sectionConfigMap),
-        sectionKey => sectionKey,
-        key => {
-          const sectionKey = key as SectionType;
-          const sectionConfig = sectionConfigMap[sectionKey];
-          return html`<fieldset>
-            <legend>
-              ${sectionConfig.type}.
-              ${translate(`sectionHeading.${sectionConfig.type}`)}
-            </legend>
-
-            ${sectionConfig.type === SectionType.B
-              ? html`
-                  <deferred-share
-                    @deferred-share-changed=${this.updateDeferredShare}
-                    deferredShareDesignation=${this.deferredShare
-                      .deferredShareDesignation}
-                    deferredShareAmount=${this.deferredShare
-                      .deferredShareAmount}
-                  ></deferred-share>
-                `
-              : repeat(
-                  [...new Array(sectionConfig.numRecords)].map(
-                    (_, index) => index,
-                  ),
-                  index => index,
-                  index =>
-                    html` <asset-record
-                      @asset-record-changed=${(
-                        event: AssetRecordChangedEvent,
-                      ) => {
-                        this.updateAssetRecord(
-                          sectionConfig.type,
-                          index,
-                          event.detail,
-                        );
-                      }}
-                      total=${this.recordMatrix[sectionKey][index].total}
-                      asset=${this.recordMatrix[sectionKey][index].asset}
-                      sellPrice=${this.recordMatrix[sectionKey][index]
-                        .sellPrice}
-                      buyPrice=${this.recordMatrix[sectionKey][index].buyPrice}
-                      gain=${this.recordMatrix[sectionKey][index].gain}
-                      loss=${this.recordMatrix[sectionKey][index].loss}
-                    ></asset-record>`,
-                )}
-            ${sectionConfig.numRecords > 0
-              ? html`
-                  <section-summary
-                    @section-summary-changed=${(
-                      event: SectionSummaryChangedEvent,
-                    ) => {
-                      this.updateSectionSummary(
-                        sectionConfig.type,
-                        event.detail,
-                      );
-                    }}
-                    totalSellPrice=${this.summaryMatrix[sectionKey]
-                      .totalSellPrice}
-                    totalBuyPrice=${this.summaryMatrix[sectionKey]
-                      .totalBuyPrice}
-                    totalGain=${this.summaryMatrix[sectionKey].totalGain}
-                    totalLoss=${this.summaryMatrix[sectionKey].totalLoss}
-                  ></section-summary>
-                `
-              : nothing}
-          </fieldset> `;
-        },
-      )}
+      <section>
+        <asset-info
+          @deferred-share-changed=${this.updateDeferredShare}
+          @section-summary-changed=${this.updateSectionSummary}
+          @asset-record-changed=${this.updateAssetRecord}
+          .recordMatrix=${this.recordMatrix}
+          .summaryMatrix=${this.summaryMatrix}
+          .deferredShare=${this.deferredShare}
+        >
+        </asset-info>
+      </section>
 
       <section>
         <file-preview>

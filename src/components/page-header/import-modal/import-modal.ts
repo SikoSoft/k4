@@ -30,7 +30,6 @@ export class ImportModal extends LitElement {
   protected updated(_changedProperties: PropertyValues): void {
     super.updated(_changedProperties);
 
-    console.log('updated', _changedProperties);
     this.importDataField.focus();
   }
 

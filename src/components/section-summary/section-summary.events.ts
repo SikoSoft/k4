@@ -1,8 +1,10 @@
-import { SectionSummary } from '@/models/K4';
+import { SectionSummary, SectionType } from '@/models/K4';
 
 export const sectionSummaryChangedEventName = 'section-summary-changed';
 
-export interface SectionSummaryChangedEventPayload extends SectionSummary {}
+export interface SectionSummaryChangedEventPayload extends SectionSummary {
+  section: SectionType;
+}
 
 export class SectionSummaryChangedEvent extends CustomEvent<SectionSummaryChangedEventPayload> {
   constructor(payload: SectionSummaryChangedEventPayload) {

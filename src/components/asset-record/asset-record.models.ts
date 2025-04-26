@@ -9,9 +9,11 @@ export enum AssetRecordProp {
   GAIN = AssetRecordField.GAIN,
   LOSS = AssetRecordField.LOSS,
   SECTION = 'section',
+  ROW = 'row',
 }
 export interface AssetRecordProps extends AssetRecord {
   [AssetRecordProp.SECTION]: SectionType;
+  [AssetRecordProp.ROW]: number;
 }
 
 export const assetRecordProps: PropConfigMap<AssetRecordProps> = {
@@ -49,5 +51,10 @@ export const assetRecordProps: PropConfigMap<AssetRecordProps> = {
     default: SectionType.A,
     control: 'text',
     description: 'Section of the asset',
+  },
+  [AssetRecordProp.ROW]: {
+    default: 0,
+    control: 'number',
+    description: 'Row number of the section',
   },
 };
