@@ -320,20 +320,25 @@ export class K4Form extends LitElement {
     this.requestUpdate();
   }
 
-  reset() {
+  reset(activeReset = true) {
     this.metaInfo = { ...DEFAULT_META_INFO };
     this.personInfo = { ...DEFAULT_PERSON_INFO };
     this.recordMatrix = K4.prepareRecordMatrix();
     this.summaryMatrix = { ...DEFAULT_SECTION_SUMMARY };
     this.deferredShare = { ...DEFAULT_DEFERRED_SHARE };
     localStorage.removeItem(STORAGE_KEY);
-    addNotification(translate('formHasBeenReset'), NotificationType.INFO);
+    if (activeReset) {
+      addNotification(translate('formHasBeenReset'), NotificationType.INFO);
+    }
     this.validate(false);
     this.requestUpdate();
   }
 
   import(manifest: string, data: string) {
-    console.log('import', manifest, data);
+    console.log('import');
+    console.log('manifest', manifest);
+    console.log('data', data);
+    this.reset(false);
     const importDataLines = data.split('\n');
     for (const line of importDataLines) {
       if (line.match(/^#UPPGIFT /)) {
