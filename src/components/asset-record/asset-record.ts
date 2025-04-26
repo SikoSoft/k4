@@ -86,6 +86,14 @@ export class AssetRecord extends LitElement {
       return this[field].toString();
     }
 
+    if (
+      field === AssetRecordField.BUY_PRICE &&
+      this[AssetRecordField.BUY_PRICE] === 0 &&
+      this.rowHasData
+    ) {
+      return this[field].toString();
+    }
+
     return this[field] === 0 ? '' : this[field].toString();
   }
 

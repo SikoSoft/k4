@@ -88,7 +88,10 @@ export class Validation {
           Object.keys(data.recordMatrix[sectionType][i]).forEach(f => {
             const field = f as AssetRecordField;
             const fieldValue = data.recordMatrix[sectionType][i][field];
-            if (field === AssetRecordField.TOTAL) {
+            if (
+              field === AssetRecordField.TOTAL ||
+              field === AssetRecordField.BUY_PRICE
+            ) {
               return;
             }
             if (!fieldValue) {
