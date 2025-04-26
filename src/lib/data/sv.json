@@ -124,5 +124,7 @@
   "no": "Nej",
   "fileDownloaded": "Nedladdning av fil skapad",
   "import": "Importera",
-  "dataImported": "Data har importerats"
+  "dataImported": "Data har importerats",
+  "manifestDetected": "Manifest har upptäckts",
+  "dataDetected": "Data har upptäckts"
 }

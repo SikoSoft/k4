@@ -20,4 +20,16 @@ export class K4 {
     }, {} as RecordMatrix);
     return recordMatrix;
   }
+
+  static isContentManifest(content: string): boolean {
+    const lines = content.split('\n');
+    const firstLine = lines[0].trim();
+    return firstLine === '#DATABESKRIVNING_START';
+  }
+
+  static isContentData(content: string): boolean {
+    const lines = content.split('\n');
+    const firstLine = lines[0].trim();
+    return !!firstLine.match(/^#BLANKETT/);
+  }
 }
