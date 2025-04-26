@@ -9,7 +9,10 @@ import {
   K4Data,
   RecordMatrix,
   sectionConfigMap,
+  sectionSummaryFieldAssetFieldMap,
   SectionType,
+  SummaryFieldConfig,
+  summaryFieldMap,
 } from '@/models/K4';
 
 export class K4 {
@@ -64,6 +67,7 @@ export class K4 {
         const fieldEntry = assetFieldMap.find(
           (entry: AssetFieldConfig) => entry.id === fieldId,
         );
+
         if (fieldEntry) {
           const sectionKey = fieldEntry.location[0];
           const index = fieldEntry.location[1];
@@ -76,13 +80,25 @@ export class K4 {
                 ? 0
                 : parseInt(fieldValue || '0');
 
-          k4Data.recordMatrix = {
-            ...k4Data.recordMatrix,
-            [sectionKey]: [
-              ...k4Data.recordMatrix[sectionKey].map((record, i) =>
-                i === index ? { ...record, [field]: value } : record,
-              ),
-            ],
+          k4Data.recordMatrix[sectionKey][index] = {
+            ...k4Data.recordMatrix[sectionKey][index],
+            [field]: value,
+          };
+        }
+
+        const summaryFieldEntry = summaryFieldMap.find(
+          (entry: SummaryFieldConfig) => entry.id === fieldId,
+        );
+
+        if (summaryFieldEntry) {
+          const sectionKey = summaryFieldEntry.location[0];
+          const field = summaryFieldEntry.location[1];
+
+          const value = parseInt(fieldValue || '0');
+
+          k4Data.summaryMatrix[sectionKey] = {
+            ...k4Data.summaryMatrix[sectionKey],
+            [field]: value,
           };
         }
       }
