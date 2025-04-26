@@ -10,6 +10,7 @@ import {
 import { ImportSruEvent, ImportSruEventPayload } from './import-modal.events';
 import { translate } from '@/lib/Localization';
 import { K4 } from '@/lib/K4';
+import JSZip from 'jszip';
 
 @customElement('import-modal')
 export class ImportModal extends LitElement {
@@ -57,6 +58,66 @@ export class ImportModal extends LitElement {
     );
   }
 
+  async handleZipFile(file: File) {
+    try {
+      // Use JSZip to read the zip file
+      const zip = new JSZip();
+      const zipContents = await zip.loadAsync(file);
+
+      // Process each file in the zip
+      const filePromises: Promise<void>[] = [];
+
+      zipContents.forEach((relativePath, zipEntry) => {
+        // Skip directories
+        if (zipEntry.dir) return;
+
+        // Process only text files
+        const filePromise = zipEntry.async('string').then(content => {
+          const filename = zipEntry.name.toLowerCase();
+
+          // Check file content and assign to appropriate state variables
+          if (
+            filename.includes('databeskrivning') ||
+            filename.endsWith('.manifest.sru')
+          ) {
+            console.log(`Found manifest file: ${filename}`);
+            this.manifest = content;
+          } else if (
+            filename.includes('blankett') ||
+            filename.endsWith('.data.sru')
+          ) {
+            console.log(`Found data file: ${filename}`);
+            this.data = content;
+          } else {
+            // Try to detect content type if filename doesn't provide clues
+            if (K4.isContentData(content)) {
+              console.log(`Detected data content in: ${filename}`);
+              this.data = content;
+            } else if (K4.isContentManifest(content)) {
+              console.log(`Detected manifest content in: ${filename}`);
+              this.manifest = content;
+            }
+          }
+        });
+
+        filePromises.push(filePromise);
+      });
+
+      // Wait for all files to be processed
+      await Promise.all(filePromises);
+
+      // Request update after processing all files
+      this.requestUpdate();
+
+      // Give feedback to user about what was found
+      if (!this.manifest && !this.data) {
+        console.warn('No valid files found in ZIP');
+      }
+    } catch (error) {
+      console.error('Error processing ZIP file:', error);
+    }
+  }
+
   handleFileSelected(event: Event) {
     const fileInput = event.target as HTMLInputElement;
     const file = fileInput.files?.[0];
@@ -68,6 +129,12 @@ export class ImportModal extends LitElement {
       const reader = new FileReader();
       reader.onload = () => {
         const content = reader.result as string;
+
+        if (this.fileName.endsWith('.zip')) {
+          console.log('ZIP file detected');
+          this.handleZipFile(file);
+          return;
+        }
 
         if (K4.isContentData(content)) {
           console.log('Data content detected');
@@ -111,7 +178,7 @@ export class ImportModal extends LitElement {
         : nothing}
       ${this.data ? html`<div>${translate('dataDetected')}</div>` : nothing}
 
-      <input type="file" id="file-upload" accept=".sru" />
+      <input type="file" id="file-upload" accept=".sru,.zip" />
 
       <ss-button @click=${this.import}>${translate('import')}</ss-button>
     </div> `;
