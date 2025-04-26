@@ -1,12 +1,7 @@
 import { css, html, LitElement, nothing, PropertyValues } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-input';
-import {
-  ImportModalProp,
-  importModalProps,
-  ImportModalProps,
-} from './import-modal.models';
 import { ImportSruEvent, ImportSruEventPayload } from './import-modal.events';
 import { translate } from '@/lib/Localization';
 import { K4 } from '@/lib/K4';
@@ -17,6 +12,11 @@ export class ImportModal extends LitElement {
   static styles = css`
     :host {
       display: block;
+    }
+
+    .file {
+      text-align: center;
+      padding: 1rem;
     }
 
     textarea {
@@ -46,12 +46,9 @@ export class ImportModal extends LitElement {
 
   protected updated(_changedProperties: PropertyValues): void {
     super.updated(_changedProperties);
-
-    //this.importDataField.focus();
   }
 
   protected firstUpdated(): void {
-    // Add event listener for file selection
     this.fileUpload.addEventListener(
       'change',
       this.handleFileSelected.bind(this),
@@ -159,26 +156,26 @@ export class ImportModal extends LitElement {
   }
 
   import() {
-    console.log('import');
-    const manifest = this.manifest; //importDataField.value;
-    const data = this.data; //importDataField.value;
+    const manifest = this.manifest;
+    const data = this.data;
     this.sendChangedEvent({ manifest, data });
-    //this.importDataField.value = '';
   }
 
   sendChangedEvent(payload: ImportSruEventPayload) {
-    console.log('sendChangedEvent', payload);
     this.dispatchEvent(new ImportSruEvent(payload));
   }
 
   render() {
-    return html`<div class="person-info">
+    return html`<div class="import-modal">
+      <p>${translate('fileImportInfo')}</p>
       ${this.manifest
         ? html`<div>${translate('manifestDetected')}</div>`
         : nothing}
       ${this.data ? html`<div>${translate('dataDetected')}</div>` : nothing}
 
-      <input type="file" id="file-upload" accept=".sru,.zip" />
+      <div class="file">
+        <input type="file" id="file-upload" accept=".sru,.zip" />
+      </div>
 
       <ss-button @click=${this.import}>${translate('import')}</ss-button>
     </div> `;

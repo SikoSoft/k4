@@ -126,5 +126,6 @@
   "import": "Importera",
   "dataImported": "Data har importerats",
   "manifestDetected": "Manifest har upptäckts",
-  "dataDetected": "Data har upptäckts"
+  "dataDetected": "Data har upptäckts",
+  "fileImportInfo": "Vänligen ge info.sru och blanketter.sru en i taget som SRU-filer eller som en zip-fil."
 }

@@ -152,7 +152,11 @@ export class K4Form extends LitElement {
 
             if (fieldEntry) {
               const fieldValue = record[field];
-              if (fieldValue !== 0 || field === AssetRecordField.TOTAL) {
+              if (
+                fieldValue !== 0 ||
+                field === AssetRecordField.TOTAL ||
+                field === AssetRecordField.BUY_PRICE
+              ) {
                 data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
               }
             }
@@ -247,7 +251,6 @@ export class K4Form extends LitElement {
     const record = this.recordMatrix[section][row];
     return (
       record.asset !== '' &&
-      record.buyPrice !== 0 &&
       record.sellPrice !== 0 &&
       (record.gain > 0 || record.loss > 0)
     );

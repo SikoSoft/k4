@@ -58,6 +58,22 @@ export class PageHeader extends LitElement {
       align-items: center;
     }
 
+    h1 {
+      font-weight:normal;
+    }
+
+    .title-ss {
+      color: rgba(0,0,0,0.4);
+    }
+
+    .title-o {
+      color: rgba(0,0,0,0.1);
+    }
+    .title-sok4 {
+      color: rgba(0,0,0,1);
+      font-weight:bold;
+    }
+
     ss-button::part(button) {
       padding: 1rem 2rem;
       display: inline-block;
@@ -179,7 +195,10 @@ export class PageHeader extends LitElement {
     return html`<header class=${classMap(this.classes)}>
       <div class="inner">
         <div class="title-bar">
-          <h1>${APP_NAME}</h1>
+          <h1>
+            <span class="title-ss">SS</span><span class="title-o">O</span
+            ><span class="title-k4">K4</span>
+          </h1>
 
           <ss-button
             class="download-button"
