@@ -1,4 +1,4 @@
-export const APP_NAME = 'ss-k4-form';
+export const APP_NAME = 'SSOK4';
 export const STORAGE_KEY = 'k4-data';
 
 export enum MetaInfoField {
