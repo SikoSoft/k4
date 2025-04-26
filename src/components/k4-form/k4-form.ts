@@ -208,8 +208,6 @@ export class K4Form extends LitElement {
 
   updateSectionSummary(event: SectionSummaryChangedEvent) {
     const { section, ...summary } = event.detail;
-    console.log('updateSectionSummary', section, summary);
-    //this.summaryMatrix[section] = summary;
     this.summaryMatrix = {
       ...this.summaryMatrix,
       [section]: {
@@ -222,8 +220,6 @@ export class K4Form extends LitElement {
 
   updateAssetRecord(event: AssetRecordChangedEvent) {
     const { section, row, ...newRecord } = event.detail;
-    console.log('updateAssetRecord', section, row, newRecord);
-    //this.recordMatrix[section][row] = record;
     this.recordMatrix = {
       ...this.recordMatrix,
       [section]: [
@@ -337,6 +333,7 @@ export class K4Form extends LitElement {
   }
 
   import(manifest: string, data: string) {
+    console.log('import', manifest, data);
     const importDataLines = data.split('\n');
     for (const line of importDataLines) {
       if (line.match(/^#UPPGIFT /)) {
@@ -358,14 +355,19 @@ export class K4Form extends LitElement {
                 ? 0
                 : parseInt(fieldValue || '0');
 
-          this.recordMatrix[sectionKey][index] = {
-            ...this.recordMatrix[sectionKey][index],
-            [field]: value,
+          this.recordMatrix = {
+            ...this.recordMatrix,
+            [sectionKey]: [
+              ...this.recordMatrix[sectionKey].map((record, i) =>
+                i === index ? { ...record, [field]: value } : record,
+              ),
+            ],
           };
         }
       }
     }
     this.requestUpdate();
+    this.handleUpdate();
     addNotification(translate('dataImported'), NotificationType.INFO);
   }
 
