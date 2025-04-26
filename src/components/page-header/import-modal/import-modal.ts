@@ -177,7 +177,9 @@ export class ImportModal extends LitElement {
         <input type="file" id="file-upload" accept=".sru,.zip" />
       </div>
 
-      <ss-button @click=${this.import}>${translate('import')}</ss-button>
+      <ss-button @click=${this.import} ?disabled=${!this.manifest || !this.data}
+        >${translate('import')}</ss-button
+      >
     </div> `;
   }
 }
