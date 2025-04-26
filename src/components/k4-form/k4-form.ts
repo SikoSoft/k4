@@ -339,38 +339,14 @@ export class K4Form extends LitElement {
     console.log('manifest', manifest);
     console.log('data', data);
     this.reset(false);
-    const importDataLines = data.split('\n');
-    for (const line of importDataLines) {
-      if (line.match(/^#UPPGIFT /)) {
-        const fieldId = parseInt(line.replace(/^#UPPGIFT ([0-9]{4}).*/, '$1'));
-        const fieldValue = line.replace(/^#UPPGIFT [0-9]{4} (.*)/, '$1');
 
-        const fieldEntry = assetFieldMap.find(
-          (entry: AssetFieldConfig) => entry.id === fieldId,
-        );
-        if (fieldEntry) {
-          const sectionKey = fieldEntry.location[0];
-          const index = fieldEntry.location[1];
-          const field = fieldEntry.location[2];
+    const k4Data = K4.import(manifest, data);
+    this.metaInfo = k4Data.metaInfo;
+    this.personInfo = k4Data.personInfo;
+    this.recordMatrix = k4Data.recordMatrix;
+    this.summaryMatrix = k4Data.summaryMatrix;
+    this.deferredShare = k4Data.deferredShare;
 
-          const value =
-            assetRecordProps[field].control === 'text'
-              ? fieldValue
-              : isNaN(parseInt(fieldValue || '0'))
-                ? 0
-                : parseInt(fieldValue || '0');
-
-          this.recordMatrix = {
-            ...this.recordMatrix,
-            [sectionKey]: [
-              ...this.recordMatrix[sectionKey].map((record, i) =>
-                i === index ? { ...record, [field]: value } : record,
-              ),
-            ],
-          };
-        }
-      }
-    }
     this.requestUpdate();
     this.handleUpdate();
     addNotification(translate('dataImported'), NotificationType.INFO);
