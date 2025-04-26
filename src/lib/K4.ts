@@ -57,6 +57,35 @@ export class K4 {
       deferredShare: { ...DEFAULT_DEFERRED_SHARE },
     };
 
+    const importManifestLines = manifest.split('\n');
+    for (const line of importManifestLines) {
+      if (line.match(/^#([A-Z]+) /)) {
+        //console.log('line', line);
+        const fieldId = line.replace(/^#([A-Z]+) .*/, '$1').trim();
+        console.log(`fieldId (${fieldId})`);
+
+        const fieldValue = line.replace(/^#[A-Z]+ (.*)/, '$1').trim();
+        //console.log('fieldValue', fieldValue);
+        switch (fieldId) {
+          case 'ORGNR':
+            k4Data.personInfo.personNumber = fieldValue;
+            break;
+          case 'NAMN':
+            console.log('#################set name', fieldValue);
+            k4Data.personInfo.name = fieldValue;
+            break;
+          case 'POSTORT':
+            k4Data.personInfo.city = fieldValue;
+            break;
+          case 'POSTNR':
+            k4Data.personInfo.postCode = fieldValue;
+            break;
+          default:
+            console.log('#######WTF');
+        }
+      }
+    }
+
     const importDataLines = data.split('\n');
 
     for (const line of importDataLines) {

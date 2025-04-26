@@ -335,12 +335,13 @@ export class K4Form extends LitElement {
   }
 
   import(manifest: string, data: string) {
-    console.log('import');
-    console.log('manifest', manifest);
-    console.log('data', data);
+    //console.log('import');
+    //console.log('manifest', manifest);
+    //console.log('data', data);
     this.reset(false);
 
     const k4Data = K4.import(manifest, data);
+    console.log('k4Data', k4Data);
     this.metaInfo = k4Data.metaInfo;
     this.personInfo = k4Data.personInfo;
     this.recordMatrix = k4Data.recordMatrix;
