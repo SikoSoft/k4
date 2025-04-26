@@ -208,7 +208,15 @@ export class K4Form extends LitElement {
 
   updateSectionSummary(event: SectionSummaryChangedEvent) {
     const { section, ...summary } = event.detail;
-    this.summaryMatrix[section] = summary;
+    console.log('updateSectionSummary', section, summary);
+    //this.summaryMatrix[section] = summary;
+    this.summaryMatrix = {
+      ...this.summaryMatrix,
+      [section]: {
+        ...this.summaryMatrix[section],
+        ...summary,
+      },
+    };
     this.handleUpdate();
   }
 

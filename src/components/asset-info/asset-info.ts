@@ -93,6 +93,7 @@ export class AssetInfo extends LitElement {
             ${sectionConfig.numRecords > 0
               ? html`
                   <section-summary
+                    section=${sectionConfig.type}
                     totalSellPrice=${this.summaryMatrix[sectionKey]
                       .totalSellPrice}
                     totalBuyPrice=${this.summaryMatrix[sectionKey]
