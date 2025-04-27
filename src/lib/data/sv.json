@@ -125,7 +125,9 @@
   "fileDownloaded": "Nedladdning av fil skapad",
   "import": "Importera",
   "dataImported": "Data har importerats",
-  "manifestDetected": "Manifest har upptäckts",
-  "dataDetected": "Data har upptäckts",
-  "fileImportInfo": "Vänligen ge info.sru och blanketter.sru en i taget som SRU-filer eller som en zip-fil."
+  "manifestDetected": "{manifest} har upptäckts",
+  "manifestNotDetected": "{manifest} har inte upptäckts",
+  "dataDetected": "{data} har upptäckts",
+  "dataNotDetected": "{data} har inte upptäckts",
+  "fileImportInfo": "Vänligen ge {manifest} och {data} en i taget som SRU-filer eller som en zip-fil."
 }
