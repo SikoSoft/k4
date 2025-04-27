@@ -3,7 +3,7 @@ export enum Language {
   SV = 'sv',
 }
 
-export const defaultLanguage = Language.SV;
+export const DEFAULT_LANGUAGE = Language.SV;
 
 export type LocalizationStringMap = Record<string, string>;
 

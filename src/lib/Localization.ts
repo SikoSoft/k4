@@ -1,19 +1,20 @@
 import {
-  defaultLanguage,
+  DEFAULT_LANGUAGE,
   Language,
   LocalizationStringMap,
 } from '@/models/Localization';
 import svStrings from '@/lib/data/sv.json';
+import enStrings from '@/lib/data/en.json';
 
 export class Localization {
   private language: Language;
   private languageMap: Record<Language, LocalizationStringMap> = {
-    [Language.EN]: {},
+    [Language.EN]: enStrings,
     [Language.SV]: svStrings,
   };
 
   constructor() {
-    this.language = defaultLanguage;
+    this.language = DEFAULT_LANGUAGE;
   }
 
   setLanguage(language: Language) {
@@ -37,4 +38,7 @@ export class Localization {
 }
 
 export const localization = new Localization();
+export const setLanguage = (language: Language) => {
+  localization.setLanguage(language);
+};
 export const translate = localization.translate.bind(localization);

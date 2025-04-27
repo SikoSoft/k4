@@ -4,6 +4,7 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import '@ss/ui/components/ss-button';
 import '@ss/ui/components/ss-icon';
 import './import-modal/import-modal';
+import './settings-modal/settings-modal';
 import {
   PageHeaderProp,
   pageHeaderProps,
@@ -11,7 +12,6 @@ import {
 } from './page-header.models';
 import { translate } from '@/lib/Localization';
 import { DownloadBundleEvent, FormResetEvent } from './page-header.events';
-import { APP_NAME } from '@/models/K4';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { classMap } from 'lit/directives/class-map.js';
 
@@ -145,11 +145,18 @@ export class PageHeader extends LitElement {
   [PageHeaderProp.VALIDATION_RESULT]: PageHeaderProps[PageHeaderProp.VALIDATION_RESULT] =
     pageHeaderProps[PageHeaderProp.VALIDATION_RESULT].default;
 
+  @property({ type: Object })
+  [PageHeaderProp.SETTINGS]: PageHeaderProps[PageHeaderProp.SETTINGS] =
+    pageHeaderProps[PageHeaderProp.SETTINGS].default;
+
   @state()
   confirmResetPopUpIsOpen = false;
 
   @state()
   importPopUpIsOpen = false;
+
+  @state()
+  settingsPopUpIsOpen = false;
 
   @state()
   errorListIsOpen = false;
@@ -176,6 +183,14 @@ export class PageHeader extends LitElement {
 
   hideConfirmResetPopUp() {
     this.confirmResetPopUpIsOpen = false;
+  }
+
+  showSettingsPopUp() {
+    this.settingsPopUpIsOpen = true;
+  }
+
+  hideSettingsPopUp() {
+    this.settingsPopUpIsOpen = false;
   }
 
   resetForm() {
@@ -218,8 +233,13 @@ export class PageHeader extends LitElement {
             <ss-button @click=${this.showConfirmResetPopUp}>
               ${translate('resetForm')}
             </ss-button>
+
             <ss-button @click=${this.showImportPopUp}
               >${translate('import')}</ss-button
+            >
+
+            <ss-button @click=${this.showSettingsPopUp}
+              >${translate('settings')}</ss-button
             >
           </div>
 
@@ -257,6 +277,16 @@ export class PageHeader extends LitElement {
           </div>
         </div>
       </div>
+
+      <pop-up
+        ?open=${this.settingsPopUpIsOpen}
+        closeButton
+        closeOnOutsideClick
+        closeOnEsc
+        @pop-up-closed=${this.hideSettingsPopUp}
+      >
+        <settings-modal .settings=${this.settings}></settings-modal>
+      </pop-up>
 
       <pop-up
         ?open=${this.importPopUpIsOpen}

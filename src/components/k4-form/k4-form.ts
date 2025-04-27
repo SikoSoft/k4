@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, nothing } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
@@ -41,14 +41,15 @@ import {
   ValidationResult,
 } from '@/models/K4';
 import { SectionSummaryChangedEvent } from '@/components/section-summary/section-summary.events';
-import { translate } from '@/lib/Localization';
+import { localization, translate } from '@/lib/Localization';
 import { DeferredShareChangedEvent } from '@/components/deferred-share/deferred-share.events';
 import { Validation } from '@/lib/Validation';
 import { addNotification } from '@/lib/Notification';
 import { NotificationType } from '@ss/ui/components/notification-provider.models';
-import { assetRecordProps } from '@/components/asset-record/asset-record.models';
 import { ImportSruEvent } from '@/components/page-header/import-modal/import-modal.events';
 import { K4 } from '@/lib/K4';
+import { DEFAULT_SETTINGS, Settings } from '@/models/Settings';
+import { SettingsChangedEvent } from '@/components/page-header/settings-modal/settings-modal.events';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -85,6 +86,9 @@ export class K4Form extends LitElement {
 
   @state()
   personInfo: PersonInfo = { ...DEFAULT_PERSON_INFO };
+
+  @state()
+  settings: Settings = { ...DEFAULT_SETTINGS };
 
   @state()
   validationResult: ValidationResult = {
@@ -242,6 +246,13 @@ export class K4Form extends LitElement {
     this.handleUpdate();
   }
 
+  updateSettings(event: SettingsChangedEvent) {
+    console.log('updateSettings', event.detail);
+    this.settings = event.detail;
+    localization.setLanguage(this.settings.language);
+    this.handleUpdate();
+  }
+
   handleUpdate() {
     this.saveToStorage();
     this.validate(false);
@@ -364,6 +375,7 @@ export class K4Form extends LitElement {
         @import-sru=${(e: ImportSruEvent): void => {
           this.import(e.detail.manifest, e.detail.data);
         }}
+        @settings-changed=${this.updateSettings}
         .validationResult=${this.validationResult}
       ></page-header>
 
@@ -397,12 +409,14 @@ export class K4Form extends LitElement {
         </asset-info>
       </section>
 
-      <section>
-        <file-preview>
-          <div slot="info">${this.info}</div>
-          <div slot="blanketter">${this.blanketter}</div>
-        </file-preview>
-      </section>
+      ${this.settings.showPreview
+        ? html`<section>
+            <file-preview>
+              <div slot="info">${this.info}</div>
+              <div slot="blanketter">${this.blanketter}</div>
+            </file-preview>
+          </section>`
+        : nothing}
     </div>`;
   }
 }

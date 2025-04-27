@@ -129,5 +129,9 @@
   "manifestNotDetected": "{manifest} har inte upptäckts",
   "dataDetected": "{data} har upptäckts",
   "dataNotDetected": "{data} har inte upptäckts",
-  "fileImportInfo": "Vänligen ge {manifest} och {data} en i taget som SRU-filer eller som en zip-fil."
+  "fileImportInfo": "Vänligen ge {manifest} och {data} en i taget som SRU-filer eller som en zip-fil.",
+  "settings": "Inställningar",
+  "language": "Språk",
+  "language.en": "Engelska",
+  "language.sv": "Svenska"
 }
