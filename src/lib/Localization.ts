@@ -20,12 +20,19 @@ export class Localization {
     this.language = language;
   }
 
-  translate(key: string): string {
+  translate(key: string, replacement: Record<string, string> = {}): string {
+    let returnString = key;
     if (this.languageMap[this.language][key]) {
-      return this.languageMap[this.language][key];
+      returnString = this.languageMap[this.language][key];
     }
 
-    return key;
+    if (replacement) {
+      Object.keys(replacement).forEach(key => {
+        returnString = returnString.replace(`{${key}}`, replacement[key]);
+      });
+    }
+
+    return returnString;
   }
 }
 
