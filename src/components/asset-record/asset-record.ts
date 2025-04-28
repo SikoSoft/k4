@@ -18,7 +18,8 @@ import {
   AssetRecordChangedEventPayload,
 } from './asset-record.events';
 import { AssetRecordField } from '@/models/K4';
-import { translate } from '@/lib/Localization';
+import { getLanguage, translate } from '@/lib/Localization';
+import { Language } from '@/models/Localization';
 
 @customElement('asset-record')
 export class AssetRecord extends LitElement {
@@ -71,6 +72,12 @@ export class AssetRecord extends LitElement {
   [AssetRecordProp.ROW]: AssetRecordProps[AssetRecordProp.ROW] =
     assetRecordProps[AssetRecordProp.ROW].default;
 
+  @state()
+  get language(): Language {
+    console.log('get language');
+    return getLanguage();
+  }
+
   get rowHasData(): boolean {
     return Object.values(AssetRecordField).some(
       field => this[field] !== 0 && this[field] !== '',
@@ -120,7 +127,7 @@ export class AssetRecord extends LitElement {
   }
 
   render() {
-    return html`<div class="asset-record">
+    return html`<div class="asset-record" data-language=${this.language}>
       ${repeat(
         Object.values(AssetRecordField),
         field => field,

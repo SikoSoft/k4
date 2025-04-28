@@ -1,5 +1,5 @@
 import { css, html, LitElement, nothing } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -50,6 +50,7 @@ import { ImportSruEvent } from '@/components/page-header/import-modal/import-mod
 import { K4 } from '@/lib/K4';
 import { DEFAULT_SETTINGS, Settings } from '@/models/Settings';
 import { SettingsChangedEvent } from '@/components/page-header/settings-modal/settings-modal.events';
+import { K4FormProp, K4FormProps, k4FormProps } from './k4-form.models';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -66,6 +67,10 @@ export class K4Form extends LitElement {
       }
     `,
   ];
+
+  @property({ reflect: true })
+  [K4FormProp.LANGUAGE]: K4FormProps[K4FormProp.LANGUAGE] =
+    k4FormProps[K4FormProp.LANGUAGE].default;
 
   @state()
   private recordMatrix: RecordMatrix = {
@@ -250,6 +255,7 @@ export class K4Form extends LitElement {
     console.log('updateSettings', event.detail);
     this.settings = event.detail;
     localization.setLanguage(this.settings.language);
+    this.language = this.settings.language;
     this.handleUpdate();
   }
 

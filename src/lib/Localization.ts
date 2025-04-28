@@ -7,7 +7,7 @@ import svStrings from '@/lib/data/sv.json';
 import enStrings from '@/lib/data/en.json';
 
 export class Localization {
-  private language: Language;
+  public language: Language;
   private languageMap: Record<Language, LocalizationStringMap> = {
     [Language.EN]: enStrings,
     [Language.SV]: svStrings,
@@ -19,6 +19,10 @@ export class Localization {
 
   setLanguage(language: Language) {
     this.language = language;
+  }
+
+  getLanguage(): Language {
+    return this.language;
   }
 
   translate(key: string, replacement: Record<string, string> = {}): string {
@@ -40,5 +44,8 @@ export class Localization {
 export const localization = new Localization();
 export const setLanguage = (language: Language) => {
   localization.setLanguage(language);
+};
+export const getLanguage = () => {
+  return localization.getLanguage();
 };
 export const translate = localization.translate.bind(localization);
