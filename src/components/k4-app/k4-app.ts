@@ -91,6 +91,7 @@ export class K4App extends LitElement {
     this.validate(false);
   }
 
+  @state()
   get data(): K4Data {
     return {
       metaInfo: this.metaInfo,
@@ -200,22 +201,18 @@ export class K4App extends LitElement {
   }
 
   updatePersonInfo(event: PersonInfoChangedEvent) {
+    console.log('updatePersonInfo', event.detail);
     this.personInfo = event.detail;
     this.handleUpdate();
   }
 
   updateSectionSummary(event: SectionSummaryChangedEvent) {
     const { section, page, ...summary } = event.detail;
-    const pages: K4Page[] = [...this.pages];
-    pages[page].summaryMatrix = {
-      ...pages[page].summaryMatrix,
-      [section]: {
-        ...pages[page].summaryMatrix[section],
-        ...summary,
-      },
-    };
+    const pages = produce(this.pages, draft => {
+      draft[page].summaryMatrix[section] = summary;
+    });
     this.pages = pages;
-    this.requestUpdate();
+    //this.requestUpdate();
     this.handleUpdate();
   }
 
@@ -225,13 +222,17 @@ export class K4App extends LitElement {
       draft[page].recordMatrix[section][row] = newRecord;
     });
     this.pages = pages;
-    this.requestUpdate();
+    //this.requestUpdate();
     this.handleUpdate();
   }
 
   updateDeferredShare(event: DeferredShareChangedEvent) {
     const { page, ...newDeferredShare } = event.detail;
-    this.pages[page].deferredShare = newDeferredShare;
+    const pages: K4Page[] = produce(this.pages, draft => {
+      draft[page].deferredShare = newDeferredShare;
+    });
+    this.pages = pages;
+    //this.requestUpdate();
     this.handleUpdate();
   }
 
@@ -357,7 +358,7 @@ export class K4App extends LitElement {
       ${[...new Array(this.numPages)].map((_, index) => {
         return html` <k4-form
           page=${index}
-          .formData=${this.pages[index]}
+          .formData=${this.data}
           @meta-info-changed=${this.updateMetaInfo}
           @person-info-changed=${this.updatePersonInfo}
           @deferred-share-changed=${this.updateDeferredShare}

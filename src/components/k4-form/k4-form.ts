@@ -79,27 +79,29 @@ export class K4Form extends LitElement {
     k4FormProps[K4FormProp.PAGE].default;
 
   @state()
-  metaInfo: MetaInfo = { ...DEFAULT_META_INFO };
+  get metaInfo(): MetaInfo {
+    return this.formData.metaInfo;
+  }
 
   @state()
-  personInfo: PersonInfo = { ...DEFAULT_PERSON_INFO };
+  get personInfo(): PersonInfo {
+    return this.formData.personInfo;
+  }
 
-  /*
   @state()
   get recordMatrix(): RecordMatrix {
-    return this.formData.recordMatrix;
+    return this.formData.pages[this.page].recordMatrix;
   }
 
   @state()
   get summaryMatrix(): SectionSummaryMatrix {
-    return this.formData.summaryMatrix;
+    return this.formData.pages[this.page].summaryMatrix;
   }
 
   @state()
   get deferredShare(): DeferredShare {
-    return this.formData.deferredShare;
+    return this.formData.pages[this.page].deferredShare;
   }
-    */
 
   protected updated(_changedProperties: PropertyValues): void {
     console.log('K4Form updated', _changedProperties);
@@ -126,9 +128,9 @@ export class K4Form extends LitElement {
       <section>
         <asset-info
           page=${this.page}
-          .recordMatrix=${this.formData.recordMatrix}
-          .summaryMatrix=${this.formData.summaryMatrix}
-          .deferredShare=${this.formData.deferredShare}
+          .recordMatrix=${this.recordMatrix}
+          .summaryMatrix=${this.summaryMatrix}
+          .deferredShare=${this.deferredShare}
         >
         </asset-info>
       </section>
