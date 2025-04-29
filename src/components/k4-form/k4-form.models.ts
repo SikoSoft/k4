@@ -6,11 +6,13 @@ import { PropConfigMap, PropTypes } from '@/models/Prop';
 export enum K4FormProp {
   LANGUAGE = 'language',
   FORM_DATA = 'formData',
+  PAGE = 'page',
 }
 
 export interface K4FormProps extends PropTypes {
   [K4FormProp.LANGUAGE]: Language;
   [K4FormProp.FORM_DATA]: K4Page;
+  [K4FormProp.PAGE]: number;
 }
 
 export const k4FormProps: PropConfigMap<K4FormProps> = {
@@ -23,5 +25,10 @@ export const k4FormProps: PropConfigMap<K4FormProps> = {
     default: K4.getDefaultK4PageData(),
     control: 'text',
     description: 'Form data',
+  },
+  [K4FormProp.PAGE]: {
+    default: 1,
+    control: 'number',
+    description: 'Page number of the form',
   },
 };

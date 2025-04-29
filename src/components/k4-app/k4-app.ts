@@ -38,6 +38,7 @@ import { DeferredShareChangedEvent } from '@/components/deferred-share/deferred-
 import { SettingsChangedEvent } from '@/components/page-header/settings-modal/settings-modal.events';
 import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
 import { SectionSummaryChangedEvent } from '@/components/section-summary/section-summary.events';
+import { produce } from 'immer';
 
 @customElement('k4-app')
 export class K4App extends LitElement {
@@ -112,28 +113,27 @@ export class K4App extends LitElement {
   @state()
   get info(): string {
     return `#DATABESKRIVNING_START
-  #PRODUKT SRU
-  #SKAPAD ${this.createdDate}
-  #PROGRAM ${APP_NAME}
-  #FILNAMN BLANKETTER.SRU
-  #DATABESKRIVNING_SLUT
-  #MEDIELEV_START
-  #ORGNR ${this.personInfo.personNumber}
-  #NAMN ${this.personInfo.name}
-  #POSTNR ${this.personInfo.postCode}
-  #POSTORT ${this.personInfo.city}
-  #MEDIELEV_SLUT`;
+#PRODUKT SRU
+#SKAPAD ${this.createdDate}
+#PROGRAM ${APP_NAME}
+#FILNAMN BLANKETTER.SRU
+#DATABESKRIVNING_SLUT
+#MEDIELEV_START
+#ORGNR ${this.personInfo.personNumber}
+#NAMN ${this.personInfo.name}
+#POSTNR ${this.personInfo.postCode}
+#POSTORT ${this.personInfo.city}
+#MEDIELEV_SLUT`;
   }
 
   @state()
   get blanketter(): string {
     let data = '';
-    console.log('blanketter', this.pages);
     for (let page = 0; page < this.numPages; page++) {
       data += `#BLANKETT K4-2024P4
-  #IDENTITET ${this.personInfo.personNumber} ${this.createdDate}
-  #NAMN ${this.personInfo.name}
-  #SYSTEMINFO klarmarkerad u. a.
+#IDENTITET ${this.personInfo.personNumber} ${this.createdDate}
+#NAMN ${this.personInfo.name}
+#SYSTEMINFO klarmarkerad u. a.
   `;
       Object.keys(this.pages[page].recordMatrix).forEach(key => {
         const sectionKey = key as SectionType;
@@ -206,27 +206,25 @@ export class K4App extends LitElement {
 
   updateSectionSummary(event: SectionSummaryChangedEvent) {
     const { section, page, ...summary } = event.detail;
-    this.pages[page].summaryMatrix = {
-      ...this.pages[page].summaryMatrix,
+    const pages: K4Page[] = [...this.pages];
+    pages[page].summaryMatrix = {
+      ...pages[page].summaryMatrix,
       [section]: {
-        ...this.pages[page].summaryMatrix[section],
+        ...pages[page].summaryMatrix[section],
         ...summary,
       },
     };
+    this.pages = pages;
+    this.requestUpdate();
     this.handleUpdate();
   }
 
   updateAssetRecord(event: AssetRecordChangedEvent) {
     const { section, row, page, ...newRecord } = event.detail;
-    this.pages[page].recordMatrix = {
-      ...this.pages[page].recordMatrix,
-      [section]: [
-        ...this.pages[page].recordMatrix[section].map((record, index) =>
-          index === row ? newRecord : record,
-        ),
-      ],
-    };
-
+    const pages: K4Page[] = produce(this.pages, draft => {
+      draft[page].recordMatrix[section][row] = newRecord;
+    });
+    this.pages = pages;
     this.requestUpdate();
     this.handleUpdate();
   }
@@ -334,13 +332,8 @@ export class K4App extends LitElement {
   }
 
   import(manifest: string, data: string) {
-    //console.log('import');
-    //console.log('manifest', manifest);
-    //console.log('data', data);
     this.reset(false);
-
     const k4Data = K4.import(manifest, data);
-    console.log('k4Data', k4Data);
     this.metaInfo = k4Data.metaInfo;
     this.personInfo = k4Data.personInfo;
     this.pages = k4Data.pages;
@@ -362,7 +355,7 @@ export class K4App extends LitElement {
       ></page-header>
 
       ${[...new Array(this.numPages)].map((_, index) => {
-        return html`<k4-form
+        return html` <k4-form
           page=${index}
           .formData=${this.pages[index]}
           @meta-info-changed=${this.updateMetaInfo}

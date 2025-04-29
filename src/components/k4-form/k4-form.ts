@@ -1,4 +1,4 @@
-import { css, html, LitElement, nothing } from 'lit';
+import { css, html, LitElement, nothing, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-button';
@@ -74,12 +74,17 @@ export class K4Form extends LitElement {
   [K4FormProp.FORM_DATA]: K4FormProps[K4FormProp.FORM_DATA] =
     k4FormProps[K4FormProp.FORM_DATA].default;
 
+  @property({ type: Number })
+  [K4FormProp.PAGE]: K4FormProps[K4FormProp.PAGE] =
+    k4FormProps[K4FormProp.PAGE].default;
+
   @state()
   metaInfo: MetaInfo = { ...DEFAULT_META_INFO };
 
   @state()
   personInfo: PersonInfo = { ...DEFAULT_PERSON_INFO };
 
+  /*
   @state()
   get recordMatrix(): RecordMatrix {
     return this.formData.recordMatrix;
@@ -93,6 +98,11 @@ export class K4Form extends LitElement {
   @state()
   get deferredShare(): DeferredShare {
     return this.formData.deferredShare;
+  }
+    */
+
+  protected updated(_changedProperties: PropertyValues): void {
+    console.log('K4Form updated', _changedProperties);
   }
 
   render() {
@@ -115,9 +125,10 @@ export class K4Form extends LitElement {
 
       <section>
         <asset-info
-          .recordMatrix=${this.recordMatrix}
-          .summaryMatrix=${this.summaryMatrix}
-          .deferredShare=${this.deferredShare}
+          page=${this.page}
+          .recordMatrix=${this.formData.recordMatrix}
+          .summaryMatrix=${this.formData.summaryMatrix}
+          .deferredShare=${this.formData.deferredShare}
         >
         </asset-info>
       </section>

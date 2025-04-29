@@ -13,6 +13,7 @@
   "dependencies": {
     "@ss/ui": "github:SikoSoft/ui#1.20.5",
     "file-saver": "^2.0.5",
+    "immer": "^10.1.1",
     "jszip": "^3.10.1",
     "lit": "~3.3.0",
     "personnummer": "^3.2.1",
