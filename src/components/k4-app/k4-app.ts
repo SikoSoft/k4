@@ -69,7 +69,7 @@ export class K4App extends LitElement {
   numPages = 1;
 
   @state()
-  pages: K4Page[] = [];
+  pages: K4Page[] = [K4.getDefaultK4PageData()];
 
   @state()
   metaInfo: MetaInfo = { ...DEFAULT_META_INFO };
@@ -128,6 +128,7 @@ export class K4App extends LitElement {
   @state()
   get blanketter(): string {
     let data = '';
+    console.log('blanketter', this.pages);
     for (let page = 0; page < this.numPages; page++) {
       data += `#BLANKETT K4-2024P4
   #IDENTITET ${this.personInfo.personNumber} ${this.createdDate}

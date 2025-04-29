@@ -70,25 +70,30 @@ export class K4Form extends LitElement {
   [K4FormProp.LANGUAGE]: K4FormProps[K4FormProp.LANGUAGE] =
     k4FormProps[K4FormProp.LANGUAGE].default;
 
-  @state()
-  private recordMatrix: RecordMatrix = {
-    [SectionType.A]: [],
-    [SectionType.B]: [],
-    [SectionType.C]: [],
-    [SectionType.D]: [],
-  };
-
-  @state()
-  private summaryMatrix: SectionSummaryMatrix = { ...DEFAULT_SECTION_SUMMARY };
-
-  @state()
-  deferredShare: DeferredShare = { ...DEFAULT_DEFERRED_SHARE };
+  @property({ type: Object })
+  [K4FormProp.FORM_DATA]: K4FormProps[K4FormProp.FORM_DATA] =
+    k4FormProps[K4FormProp.FORM_DATA].default;
 
   @state()
   metaInfo: MetaInfo = { ...DEFAULT_META_INFO };
 
   @state()
   personInfo: PersonInfo = { ...DEFAULT_PERSON_INFO };
+
+  @state()
+  get recordMatrix(): RecordMatrix {
+    return this.formData.recordMatrix;
+  }
+
+  @state()
+  get summaryMatrix(): SectionSummaryMatrix {
+    return this.formData.summaryMatrix;
+  }
+
+  @state()
+  get deferredShare(): DeferredShare {
+    return this.formData.deferredShare;
+  }
 
   render() {
     return html`<div class="k4-form">
