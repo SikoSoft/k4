@@ -134,8 +134,7 @@ export class K4App extends LitElement {
       data += `#BLANKETT K4-2024P4
 #IDENTITET ${this.personInfo.personNumber} ${this.createdDate}
 #NAMN ${this.personInfo.name}
-#SYSTEMINFO klarmarkerad u. a.
-  `;
+#SYSTEMINFO klarmarkerad u. a.\n`;
       Object.keys(this.pages[page].recordMatrix).forEach(key => {
         const sectionKey = key as SectionType;
         const records = this.pages[page].recordMatrix[sectionKey];
@@ -201,7 +200,6 @@ export class K4App extends LitElement {
   }
 
   updatePersonInfo(event: PersonInfoChangedEvent) {
-    console.log('updatePersonInfo', event.detail);
     this.personInfo = event.detail;
     this.handleUpdate();
   }
@@ -212,7 +210,6 @@ export class K4App extends LitElement {
       draft[page].summaryMatrix[section] = summary;
     });
     this.pages = pages;
-    //this.requestUpdate();
     this.handleUpdate();
   }
 
@@ -222,7 +219,6 @@ export class K4App extends LitElement {
       draft[page].recordMatrix[section][row] = newRecord;
     });
     this.pages = pages;
-    //this.requestUpdate();
     this.handleUpdate();
   }
 
@@ -232,7 +228,6 @@ export class K4App extends LitElement {
       draft[page].deferredShare = newDeferredShare;
     });
     this.pages = pages;
-    //this.requestUpdate();
     this.handleUpdate();
   }
 
