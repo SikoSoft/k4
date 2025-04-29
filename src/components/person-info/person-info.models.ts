@@ -1,9 +1,17 @@
 import { PropConfigMap } from '@/models/Prop';
-import { PersonInfo, PersonInfoField as PersonInfoProp } from '@/models/K4';
+import { PersonInfo, PersonInfoField } from '@/models/K4';
 
-export { PersonInfoProp };
+export enum PersonInfoProp {
+  NAME = PersonInfoField.NAME,
+  PERSON_NUMBER = PersonInfoField.PERSON_NUMBER,
+  CITY = PersonInfoField.CITY,
+  POST_CODE = PersonInfoField.POST_CODE,
+  PAGE = 'page',
+}
 
-export interface PersonInfoProps extends PersonInfo {}
+export interface PersonInfoProps extends PersonInfo {
+  [PersonInfoProp.PAGE]: number;
+}
 
 export const personInfoProps: PropConfigMap<PersonInfoProps> = {
   [PersonInfoProp.NAME]: {
@@ -25,5 +33,10 @@ export const personInfoProps: PropConfigMap<PersonInfoProps> = {
     default: '',
     control: 'text',
     description: 'Post code of the person',
+  },
+  [PersonInfoProp.PAGE]: {
+    default: 1,
+    control: 'number',
+    description: 'Page number of the form',
   },
 };

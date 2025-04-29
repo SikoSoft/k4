@@ -7,9 +7,11 @@ export enum SectionSummaryProp {
   TOTAL_GAIN = SectionSummaryField.TOTAL_GAIN,
   TOTAL_LOSS = SectionSummaryField.TOTAL_LOSS,
   SECTION = 'section',
+  PAGE = 'page',
 }
 export interface SectionSummaryProps extends SectionSummary {
   [SectionSummaryProp.SECTION]: SectionType;
+  [SectionSummaryProp.PAGE]: number;
 }
 
 export const sectionSummaryProps: PropConfigMap<SectionSummaryProps> = {
@@ -37,5 +39,10 @@ export const sectionSummaryProps: PropConfigMap<SectionSummaryProps> = {
     default: SectionType.A,
     control: 'text',
     description: 'Section of the summary',
+  },
+  [SectionSummaryProp.PAGE]: {
+    default: 1,
+    control: 'number',
+    description: 'Page number of the form',
   },
 };

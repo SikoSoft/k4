@@ -44,6 +44,10 @@ export class AssetInfo extends LitElement {
   [AssetInfoProp.SUMMARY_MATRIX]: AssetInfoProps[AssetInfoProp.SUMMARY_MATRIX] =
     assetInfoProps[AssetInfoProp.SUMMARY_MATRIX].default;
 
+  @property({ type: Number })
+  [AssetInfoProp.PAGE]: AssetInfoProps[AssetInfoProp.PAGE] =
+    assetInfoProps[AssetInfoProp.PAGE].default;
+
   render() {
     return html`<div class="asset-info">
       ${repeat(
@@ -61,6 +65,7 @@ export class AssetInfo extends LitElement {
             ${sectionConfig.type === SectionType.B
               ? html`
                   <deferred-share
+                    page=${this.page}
                     deferredShareDesignation=${this.deferredShare
                       .deferredShareDesignation}
                     deferredShareAmount=${this.deferredShare
@@ -74,6 +79,7 @@ export class AssetInfo extends LitElement {
                   index => index,
                   index =>
                     html` <asset-record
+                      page=${this.page}
                       section=${sectionConfig.type}
                       row=${index}
                       total=${this.recordMatrix[sectionKey][index].total}
@@ -88,6 +94,7 @@ export class AssetInfo extends LitElement {
             ${sectionConfig.numRecords > 0
               ? html`
                   <section-summary
+                    page=${this.page}
                     section=${sectionConfig.type}
                     totalSellPrice=${this.summaryMatrix[sectionKey]
                       .totalSellPrice}

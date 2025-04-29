@@ -11,12 +11,14 @@ export enum AssetInfoProp {
   DEFERRED_SHARE = 'deferredShare',
   RECORD_MATRIX = 'recordMatrix',
   SUMMARY_MATRIX = 'summaryMatrix',
+  PAGE = 'page',
 }
 
 export interface AssetInfoProps extends PropTypes {
   [AssetInfoProp.DEFERRED_SHARE]: DeferredShare;
   [AssetInfoProp.RECORD_MATRIX]: RecordMatrix;
   [AssetInfoProp.SUMMARY_MATRIX]: SectionSummaryMatrix;
+  [AssetInfoProp.PAGE]: number;
 }
 
 export const assetInfoProps: PropConfigMap<AssetInfoProps> = {
@@ -34,5 +36,10 @@ export const assetInfoProps: PropConfigMap<AssetInfoProps> = {
     default: DEFAULT_SECTION_SUMMARY,
     control: 'text',
     description: 'Matrix of asset summaries',
+  },
+  [AssetInfoProp.PAGE]: {
+    default: 1,
+    control: 'number',
+    description: 'Page number of the form',
   },
 };

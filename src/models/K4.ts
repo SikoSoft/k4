@@ -384,6 +384,10 @@ export type ValidationResult = {
 export interface K4Data {
   metaInfo: MetaInfo;
   personInfo: PersonInfo;
+  pages: K4Page[];
+}
+
+export interface K4Page {
   recordMatrix: RecordMatrix;
   summaryMatrix: SectionSummaryMatrix;
   deferredShare: DeferredShare;

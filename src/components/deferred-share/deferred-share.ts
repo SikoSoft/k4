@@ -15,15 +15,9 @@ import {
 import { translate } from '@/lib/Localization';
 import { repeat } from 'lit/directives/repeat.js';
 import {
-  MetaInfoChangedEventPayload,
-  MetaInfoChangedEvent,
-} from '../meta-info/meta-info.events';
-import {
-  MetaInfoProp,
-  MetaInfoProps,
-  metaInfoProps,
-} from '../meta-info/meta-info.models';
-import { DeferredShareField } from '@/models/K4';
+  DeferredShareField,
+  DeferredShare as DeferredShareModel,
+} from '@/models/K4';
 
 @customElement('deferred-share')
 export class DeferredShare extends LitElement {
@@ -60,7 +54,11 @@ export class DeferredShare extends LitElement {
   [DeferredShareProp.DEFERRED_SHARE_AMOUNT]: DeferredShareProps[DeferredShareProp.DEFERRED_SHARE_AMOUNT] =
     deferredShareProps[DeferredShareProp.DEFERRED_SHARE_AMOUNT].default;
 
-  get fields(): DeferredShareProps {
+  @property({ type: Number })
+  [DeferredShareProp.PAGE]: DeferredShareProps[DeferredShareProp.PAGE] =
+    deferredShareProps[DeferredShareProp.PAGE].default;
+
+  get fields(): DeferredShareModel {
     return {
       [DeferredShareProp.DEFERRED_SHARE_DESIGNATION]:
         this[DeferredShareProp.DEFERRED_SHARE_DESIGNATION],
@@ -69,7 +67,7 @@ export class DeferredShare extends LitElement {
     };
   }
 
-  handleFieldChanged(field: DeferredShareProp, event: InputChangedEvent) {
+  handleFieldChanged(field: DeferredShareField, event: InputChangedEvent) {
     const value: string | number =
       deferredShareProps[field].control === 'text'
         ? event.detail.value
@@ -80,10 +78,11 @@ export class DeferredShare extends LitElement {
     this.sendChangedEvent({
       ...this.fields,
       [field]: value,
+      page: this.page,
     });
   }
 
-  sendChangedEvent(fields: DeferredShareProps) {
+  sendChangedEvent(fields: DeferredShareChangedEventPayload) {
     this.dispatchEvent(new DeferredShareChangedEvent(fields));
   }
 
@@ -93,7 +92,7 @@ export class DeferredShare extends LitElement {
   render() {
     return html`<div class="deferred-share">
       ${repeat(
-        Object.values(DeferredShareProp),
+        Object.values(DeferredShareField),
         field => field,
         field => html`
           <ss-input

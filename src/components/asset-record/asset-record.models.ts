@@ -10,10 +10,12 @@ export enum AssetRecordProp {
   LOSS = AssetRecordField.LOSS,
   SECTION = 'section',
   ROW = 'row',
+  PAGE = 'page',
 }
 export interface AssetRecordProps extends AssetRecord {
   [AssetRecordProp.SECTION]: SectionType;
   [AssetRecordProp.ROW]: number;
+  [AssetRecordProp.PAGE]: number;
 }
 
 export const assetRecordProps: PropConfigMap<AssetRecordProps> = {
@@ -56,5 +58,10 @@ export const assetRecordProps: PropConfigMap<AssetRecordProps> = {
     default: 0,
     control: 'number',
     description: 'Row number of the section',
+  },
+  [AssetRecordProp.PAGE]: {
+    default: 1,
+    control: 'number',
+    description: 'Page number of the form',
   },
 };

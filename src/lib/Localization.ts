@@ -22,6 +22,7 @@ export class Localization {
   }
 
   getLanguage(): Language {
+    console.log('GETTTT LANGUAGE', this.language);
     return this.language;
   }
 

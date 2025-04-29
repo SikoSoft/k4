@@ -60,78 +60,87 @@ export class Validation {
       }
     });
 
-    Object.values(SectionType).forEach(sectionType => {
-      const sectionConfig = sectionConfigMap[sectionType];
-      const numRecords = sectionConfig.numRecords;
+    for (let page = 0; page < data.pages.length; page++) {
+      Object.values(SectionType).forEach(sectionType => {
+        const sectionConfig = sectionConfigMap[sectionType];
+        const numRecords = sectionConfig.numRecords;
 
-      let hasData = false;
-      let hasGain = false;
-      let hasLoss = false;
-      for (let i = 0; i < numRecords; i++) {
-        if (Validation.sectionRowHasData(data, sectionType, i)) {
-          hasData = true;
+        let hasData = false;
+        let hasGain = false;
+        let hasLoss = false;
+        for (let i = 0; i < numRecords; i++) {
+          if (Validation.sectionRowHasData(data, page, sectionType, i)) {
+            hasData = true;
 
-          const gainIsSet =
-            data.recordMatrix[sectionType][i][AssetRecordField.GAIN] !== 0;
+            const gainIsSet =
+              data.pages[page].recordMatrix[sectionType][i][
+                AssetRecordField.GAIN
+              ] !== 0;
 
-          if (gainIsSet) {
-            hasGain = true;
+            if (gainIsSet) {
+              hasGain = true;
+            }
+
+            const lossIsSet =
+              data.pages[page].recordMatrix[sectionType][i][
+                AssetRecordField.LOSS
+              ] !== 0;
+
+            if (lossIsSet) {
+              hasLoss = true;
+            }
+
+            Object.keys(data.pages[page].recordMatrix[sectionType][i]).forEach(
+              f => {
+                const field = f as AssetRecordField;
+                const fieldValue =
+                  data.pages[page].recordMatrix[sectionType][i][field];
+                if (
+                  field === AssetRecordField.TOTAL ||
+                  field === AssetRecordField.BUY_PRICE
+                ) {
+                  return;
+                }
+                if (!fieldValue) {
+                  if (
+                    (field === AssetRecordField.GAIN && lossIsSet) ||
+                    (field === AssetRecordField.LOSS && gainIsSet)
+                  ) {
+                    return;
+                  }
+                  errors.push({
+                    field: field as AssetRecordField,
+                    message: translate(
+                      `missingFieldError.${sectionType}.record.${field}`,
+                    ),
+                  });
+                }
+              },
+            );
           }
+        }
 
-          const lossIsSet =
-            data.recordMatrix[sectionType][i][AssetRecordField.LOSS] !== 0;
-
-          if (lossIsSet) {
-            hasLoss = true;
-          }
-
-          Object.keys(data.recordMatrix[sectionType][i]).forEach(f => {
-            const field = f as AssetRecordField;
-            const fieldValue = data.recordMatrix[sectionType][i][field];
+        if (hasData) {
+          Object.values(SectionSummaryField).forEach(field => {
             if (
-              field === AssetRecordField.TOTAL ||
-              field === AssetRecordField.BUY_PRICE
+              (field === SectionSummaryField.TOTAL_GAIN && !hasGain) ||
+              (field === SectionSummaryField.TOTAL_LOSS && !hasLoss)
             ) {
               return;
             }
-            if (!fieldValue) {
-              if (
-                (field === AssetRecordField.GAIN && lossIsSet) ||
-                (field === AssetRecordField.LOSS && gainIsSet)
-              ) {
-                return;
-              }
+
+            if (!data.pages[page].summaryMatrix[sectionType][field]) {
               errors.push({
-                field: field as AssetRecordField,
+                field: field as SectionSummaryField,
                 message: translate(
-                  `missingFieldError.${sectionType}.record.${field}`,
+                  `missingFieldError.${sectionType}.summary.${field}`,
                 ),
               });
             }
           });
         }
-      }
-
-      if (hasData) {
-        Object.values(SectionSummaryField).forEach(field => {
-          if (
-            (field === SectionSummaryField.TOTAL_GAIN && !hasGain) ||
-            (field === SectionSummaryField.TOTAL_LOSS && !hasLoss)
-          ) {
-            return;
-          }
-
-          if (!data.summaryMatrix[sectionType][field]) {
-            errors.push({
-              field: field as SectionSummaryField,
-              message: translate(
-                `missingFieldError.${sectionType}.summary.${field}`,
-              ),
-            });
-          }
-        });
-      }
-    });
+      });
+    }
 
     return errors;
   }
@@ -185,27 +194,36 @@ export class Validation {
 
   static sectionRowHasData(
     data: K4Data,
+    page: number,
     sectionType: SectionType,
     row: number,
   ): boolean {
-    return Object.keys(data.recordMatrix[sectionType][row]).some(field => {
-      const fieldValue =
-        data.recordMatrix[sectionType][row][field as AssetRecordField];
-      return fieldValue !== 0 && fieldValue !== '';
-    });
+    return Object.keys(data.pages[page].recordMatrix[sectionType][row]).some(
+      field => {
+        const fieldValue =
+          data.pages[page].recordMatrix[sectionType][row][
+            field as AssetRecordField
+          ];
+        return fieldValue !== 0 && fieldValue !== '';
+      },
+    );
   }
 
   static sectionSummaryIsRequired(
     data: K4Data,
+    page: number,
     sectionType: SectionType,
   ): boolean {
     return [...new Array(sectionConfigMap[sectionType].numRecords)]
       .map((_, index) => index)
-      .some(index => Validation.sectionRowHasData(data, sectionType, index));
+      .some(index =>
+        Validation.sectionRowHasData(data, page, sectionType, index),
+      );
   }
 
   static getSectionSummaryFieldSum(
     data: K4Data,
+    page: number,
     sectionType: SectionType,
     field: AssetRecordField,
   ): number {
@@ -218,8 +236,8 @@ export class Validation {
     let sum = 0;
 
     for (let i = 0; i < numRecords; i++) {
-      if (Validation.sectionRowHasData(data, sectionType, i)) {
-        sum += data.recordMatrix[sectionType][i][field];
+      if (Validation.sectionRowHasData(data, page, sectionType, i)) {
+        sum += data.pages[page].recordMatrix[sectionType][i][field];
       }
     }
 
@@ -228,26 +246,33 @@ export class Validation {
 
   static getInconsistentSectionSummaryErrors(data: K4Data): ValidationError[] {
     const errors: ValidationError[] = [];
-    Object.values(SectionType).forEach(sectionType => {
-      if (Validation.sectionSummaryIsRequired(data, sectionType)) {
-        Object.values(SectionSummaryField).forEach(field => {
-          const sectionFieldSum = Validation.getSectionSummaryFieldSum(
-            data,
-            sectionType,
-            Validation.getRecordFieldFromSummaryField(field),
-          );
 
-          if (sectionFieldSum !== data.summaryMatrix[sectionType][field]) {
-            errors.push({
-              field: sectionType,
-              message: translate(
-                `inconsistentTotalError.${sectionType}.${field}`,
-              ),
-            });
-          }
-        });
-      }
-    });
+    for (let page = 0; page < data.pages.length; page++) {
+      Object.values(SectionType).forEach(sectionType => {
+        if (Validation.sectionSummaryIsRequired(data, page, sectionType)) {
+          Object.values(SectionSummaryField).forEach(field => {
+            const sectionFieldSum = Validation.getSectionSummaryFieldSum(
+              data,
+              page,
+              sectionType,
+              Validation.getRecordFieldFromSummaryField(field),
+            );
+
+            if (
+              sectionFieldSum !==
+              data.pages[page].summaryMatrix[sectionType][field]
+            ) {
+              errors.push({
+                field: sectionType,
+                message: translate(
+                  `inconsistentTotalError.${sectionType}.${field}`,
+                ),
+              });
+            }
+          });
+        }
+      });
+    }
     return errors;
   }
 

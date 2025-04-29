@@ -7,6 +7,7 @@ import {
   DEFAULT_PERSON_INFO,
   DEFAULT_SECTION_SUMMARY,
   K4Data,
+  K4Page,
   RecordMatrix,
   sectionConfigMap,
   SectionType,
@@ -15,6 +16,22 @@ import {
 } from '@/models/K4';
 
 export class K4 {
+  static getDefaultK4Data(): K4Data {
+    return {
+      metaInfo: { ...DEFAULT_META_INFO },
+      personInfo: { ...DEFAULT_PERSON_INFO },
+      pages: [K4.getDefaultK4PageData()],
+    };
+  }
+
+  static getDefaultK4PageData(): K4Page {
+    return {
+      recordMatrix: K4.prepareRecordMatrix(),
+      summaryMatrix: { ...DEFAULT_SECTION_SUMMARY },
+      deferredShare: { ...DEFAULT_DEFERRED_SHARE },
+    };
+  }
+
   static prepareRecordMatrix(): RecordMatrix {
     const recordMatrix = Object.keys(sectionConfigMap).reduce((acc, key) => {
       const sectionKey = key as SectionType;
@@ -51,9 +68,7 @@ export class K4 {
     const k4Data: K4Data = {
       metaInfo: { ...DEFAULT_META_INFO },
       personInfo: { ...DEFAULT_PERSON_INFO },
-      recordMatrix: this.prepareRecordMatrix(),
-      summaryMatrix: { ...DEFAULT_SECTION_SUMMARY },
-      deferredShare: { ...DEFAULT_DEFERRED_SHARE },
+      pages: [K4.getDefaultK4PageData()],
     };
 
     const importManifestLines = manifest.split('\n');
@@ -80,7 +95,13 @@ export class K4 {
 
     const importDataLines = data.split('\n');
 
+    let page = -1;
+
     for (const line of importDataLines) {
+      if (line.match(/^#BLANKETT/)) {
+        page = parseInt(line.replace(/^#BLANKETT ([0-9]{4}).*/, '$1'));
+      }
+
       if (line.match(/^#UPPGIFT /)) {
         const fieldId = parseInt(line.replace(/^#UPPGIFT ([0-9]{4}).*/, '$1'));
         const fieldValue = line.replace(/^#UPPGIFT [0-9]{4} (.*)/, '$1');
@@ -101,8 +122,8 @@ export class K4 {
                 ? 0
                 : parseInt(fieldValue || '0');
 
-          k4Data.recordMatrix[sectionKey][index] = {
-            ...k4Data.recordMatrix[sectionKey][index],
+          k4Data.pages[page].recordMatrix[sectionKey][index] = {
+            ...k4Data.pages[page].recordMatrix[sectionKey][index],
             [field]: value,
           };
         }
@@ -117,8 +138,8 @@ export class K4 {
 
           const value = parseInt(fieldValue || '0');
 
-          k4Data.summaryMatrix[sectionKey] = {
-            ...k4Data.summaryMatrix[sectionKey],
+          k4Data.pages[page].summaryMatrix[sectionKey] = {
+            ...k4Data.pages[page].summaryMatrix[sectionKey],
             [field]: value,
           };
         }

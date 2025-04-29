@@ -52,12 +52,17 @@ export class PersonInfo extends LitElement {
   [PersonInfoProp.POST_CODE]: PersonInfoProps[PersonInfoProp.POST_CODE] =
     personInfoProps[PersonInfoProp.POST_CODE].default;
 
+  @property({ type: Number })
+  [PersonInfoProp.PAGE]: PersonInfoProps[PersonInfoProp.PAGE] =
+    personInfoProps[PersonInfoProp.PAGE].default;
+
   handleNameChanged(event: InputChangedEvent) {
     this.sendChangedEvent({
       name: event.detail.value,
       personNumber: this[PersonInfoProp.PERSON_NUMBER],
       city: this[PersonInfoProp.CITY],
       postCode: this[PersonInfoProp.POST_CODE],
+      page: this[PersonInfoProp.PAGE],
     });
   }
 
@@ -67,6 +72,7 @@ export class PersonInfo extends LitElement {
       personNumber: event.detail.value,
       city: this[PersonInfoProp.CITY],
       postCode: this[PersonInfoProp.POST_CODE],
+      page: this[PersonInfoProp.PAGE],
     });
   }
 
@@ -76,6 +82,7 @@ export class PersonInfo extends LitElement {
       personNumber: this[PersonInfoProp.PERSON_NUMBER],
       city: event.detail.value,
       postCode: this[PersonInfoProp.POST_CODE],
+      page: this[PersonInfoProp.PAGE],
     });
   }
 
@@ -85,6 +92,7 @@ export class PersonInfo extends LitElement {
       personNumber: this[PersonInfoProp.PERSON_NUMBER],
       city: this[PersonInfoProp.CITY],
       postCode: event.detail.value,
+      page: this[PersonInfoProp.PAGE],
     });
   }
 

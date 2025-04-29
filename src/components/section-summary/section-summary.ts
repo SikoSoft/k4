@@ -10,7 +10,10 @@ import {
   sectionSummaryProps,
   SectionSummaryProps,
 } from './section-summary.models';
-import { SectionSummaryChangedEvent } from './section-summary.events';
+import {
+  SectionSummaryChangedEvent,
+  SectionSummaryChangedEventPayload,
+} from './section-summary.events';
 import {
   SectionSummaryField,
   SectionSummary as SectionSummaryModel,
@@ -60,6 +63,10 @@ export class SectionSummary extends LitElement {
   [SectionSummaryProp.SECTION]: SectionSummaryProps[SectionSummaryProp.SECTION] =
     sectionSummaryProps[SectionSummaryProp.SECTION].default;
 
+  @property({ type: Number })
+  [SectionSummaryProp.PAGE]: SectionSummaryProps[SectionSummaryProp.PAGE] =
+    sectionSummaryProps[SectionSummaryProp.PAGE].default;
+
   get fields(): SectionSummaryModel {
     return {
       [SectionSummaryProp.TOTAL_SELL_PRICE]:
@@ -79,13 +86,13 @@ export class SectionSummary extends LitElement {
     this.sendChangedEvent({
       ...this.fields,
       [field]: value,
+      section: this.section,
+      page: this.page,
     });
   }
 
-  sendChangedEvent(fields: SectionSummaryModel) {
-    this.dispatchEvent(
-      new SectionSummaryChangedEvent({ ...fields, section: this.section }),
-    );
+  sendChangedEvent(payload: SectionSummaryChangedEventPayload) {
+    this.dispatchEvent(new SectionSummaryChangedEvent(payload));
   }
 
   fieldValue(field: SectionSummaryField): string {

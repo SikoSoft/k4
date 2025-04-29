@@ -1,7 +1,5 @@
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
 
 import '@ss/ui/components/ss-button';
 import '@ss/ui/components/pop-up';
@@ -92,302 +90,10 @@ export class K4Form extends LitElement {
   @state()
   personInfo: PersonInfo = { ...DEFAULT_PERSON_INFO };
 
-  @state()
-  settings: Settings = { ...DEFAULT_SETTINGS };
-
-  @state()
-  validationResult: ValidationResult = {
-    isValid: false,
-    errors: [],
-  };
-
-  get data(): K4Data {
-    return {
-      metaInfo: this.metaInfo,
-      personInfo: this.personInfo,
-      recordMatrix: this.recordMatrix,
-      summaryMatrix: this.summaryMatrix,
-      deferredShare: this.deferredShare,
-    };
-  }
-
-  get createdDate(): string {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const hour = date.getHours().toString().padStart(2, '0');
-    const minute = date.getMinutes().toString().padStart(2, '0');
-    const second = date.getSeconds().toString().padStart(2, '0');
-    return `${year}${month}${day} ${hour}${minute}${second}`;
-  }
-
-  @state()
-  get info(): string {
-    return `#DATABESKRIVNING_START
-#PRODUKT SRU
-#SKAPAD ${this.createdDate}
-#PROGRAM ${APP_NAME}
-#FILNAMN BLANKETTER.SRU
-#DATABESKRIVNING_SLUT
-#MEDIELEV_START
-#ORGNR ${this.personInfo.personNumber}
-#NAMN ${this.personInfo.name}
-#POSTNR ${this.personInfo.postCode}
-#POSTORT ${this.personInfo.city}
-#MEDIELEV_SLUT`;
-  }
-
-  @state()
-  get blanketter(): string {
-    let data = `#BLANKETT K4-2024P4
-#IDENTITET ${this.personInfo.personNumber} ${this.createdDate}
-#NAMN ${this.personInfo.name}
-#SYSTEMINFO klarmarkerad u. a.
-`;
-    Object.keys(this.recordMatrix).forEach(key => {
-      const sectionKey = key as SectionType;
-      const records = this.recordMatrix[sectionKey];
-
-      records.forEach((record, row) => {
-        if (this.sectionRowIsValid(sectionKey, row)) {
-          Object.values(AssetRecordField).forEach(field => {
-            const fieldEntry = assetFieldMap.find(
-              (entry: AssetFieldConfig) =>
-                entry.location[0] === sectionKey &&
-                entry.location[1] === row &&
-                entry.location[2] === field,
-            );
-
-            if (fieldEntry) {
-              const fieldValue = record[field];
-              if (
-                fieldValue !== 0 ||
-                field === AssetRecordField.TOTAL ||
-                field === AssetRecordField.BUY_PRICE
-              ) {
-                data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
-              }
-            }
-          });
-        }
-      });
-
-      if (this.sectionSummaryIsValid(sectionKey)) {
-        Object.values(SectionSummaryField).forEach(field => {
-          const fieldEntry = summaryFieldMap.find(
-            (entry: SummaryFieldConfig) =>
-              entry.location[0] === sectionKey && entry.location[1] === field,
-          );
-
-          if (fieldEntry) {
-            const fieldValue = this.summaryMatrix[sectionKey][field];
-            if (
-              fieldValue !== 0 ||
-              [
-                SectionSummaryField.TOTAL_SELL_PRICE,
-                SectionSummaryField.TOTAL_BUY_PRICE,
-              ].includes(field)
-            ) {
-              data += `#UPPGIFT ${fieldEntry.id} ${fieldValue}\n`;
-            }
-          }
-        });
-      }
-    });
-
-    data += `#BLANKETTSLUT
-#FIL_SLUT`;
-
-    return data;
-  }
-
-  connectedCallback(): void {
-    super.connectedCallback();
-    this.recordMatrix = K4.prepareRecordMatrix();
-    this.loadFromStorage();
-    this.validate(false);
-  }
-
-  updateMetaInfo(event: MetaInfoChangedEvent) {
-    this.metaInfo = event.detail;
-    this.handleUpdate();
-  }
-
-  updatePersonInfo(event: PersonInfoChangedEvent) {
-    this.personInfo = event.detail;
-    this.handleUpdate();
-  }
-
-  updateSectionSummary(event: SectionSummaryChangedEvent) {
-    const { section, ...summary } = event.detail;
-    this.summaryMatrix = {
-      ...this.summaryMatrix,
-      [section]: {
-        ...this.summaryMatrix[section],
-        ...summary,
-      },
-    };
-    this.handleUpdate();
-  }
-
-  updateAssetRecord(event: AssetRecordChangedEvent) {
-    const { section, row, ...newRecord } = event.detail;
-    this.recordMatrix = {
-      ...this.recordMatrix,
-      [section]: [
-        ...this.recordMatrix[section].map((record, index) =>
-          index === row ? newRecord : record,
-        ),
-      ],
-    };
-
-    this.requestUpdate();
-    this.handleUpdate();
-  }
-
-  updateDeferredShare(event: DeferredShareChangedEvent) {
-    this.deferredShare = event.detail;
-    this.handleUpdate();
-  }
-
-  updateSettings(event: SettingsChangedEvent) {
-    console.log('updateSettings', event.detail);
-    this.settings = event.detail;
-    localization.setLanguage(this.settings.language);
-    this.language = this.settings.language;
-    this.handleUpdate();
-  }
-
-  handleUpdate() {
-    this.saveToStorage();
-    this.validate(false);
-  }
-
-  sectionRowIsValid(section: SectionType, row: number): boolean {
-    const record = this.recordMatrix[section][row];
-    return (
-      record.asset !== '' &&
-      record.sellPrice !== 0 &&
-      (record.gain > 0 || record.loss > 0)
-    );
-  }
-
-  sectionSummaryIsValid(section: SectionType): boolean {
-    const summary = this.summaryMatrix[section];
-    return (
-      summary.totalSellPrice !== 0 &&
-      summary.totalBuyPrice !== 0 &&
-      (summary.totalGain > 0 || summary.totalLoss > 0)
-    );
-  }
-
-  validate(showNotification = true): ValidationResult {
-    this.validationResult = Validation.validate(this.data);
-    if (showNotification) {
-      if (this.validationResult.isValid) {
-        addNotification(translate('formIsValid'), NotificationType.SUCCESS);
-      } else {
-        addNotification(translate('formIsInvalid'), NotificationType.ERROR);
-      }
-    }
-    return this.validationResult;
-  }
-
-  async download(): Promise<void> {
-    try {
-      const zip = new JSZip();
-
-      zip.file(FileName.DATA, this.blanketter);
-      zip.file(FileName.MANIFEST, this.info);
-
-      const content = await zip.generateAsync({
-        type: 'blob',
-        compression: 'DEFLATE',
-        compressionOptions: {
-          level: 9,
-        },
-      });
-
-      saveAs(content, `${this.personInfo.name}-K4-${this.metaInfo.year}.zip`);
-      addNotification(translate('fileDownloaded'), NotificationType.SUCCESS);
-    } catch (error) {
-      console.error('Error creating ZIP file:', error);
-    }
-  }
-
-  saveToStorage() {
-    const data: K4Data = {
-      metaInfo: this.metaInfo,
-      personInfo: this.personInfo,
-      recordMatrix: this.recordMatrix,
-      summaryMatrix: this.summaryMatrix,
-      deferredShare: this.deferredShare,
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  }
-
-  loadFromStorage() {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (data) {
-      const parsedData = JSON.parse(data) as K4Data;
-      this.metaInfo = parsedData.metaInfo;
-      this.personInfo = parsedData.personInfo;
-      this.recordMatrix = parsedData.recordMatrix;
-      this.summaryMatrix = parsedData.summaryMatrix;
-      this.deferredShare = parsedData.deferredShare;
-    }
-    this.requestUpdate();
-  }
-
-  reset(activeReset = true) {
-    this.metaInfo = { ...DEFAULT_META_INFO };
-    this.personInfo = { ...DEFAULT_PERSON_INFO };
-    this.recordMatrix = K4.prepareRecordMatrix();
-    this.summaryMatrix = { ...DEFAULT_SECTION_SUMMARY };
-    this.deferredShare = { ...DEFAULT_DEFERRED_SHARE };
-    localStorage.removeItem(STORAGE_KEY);
-    if (activeReset) {
-      addNotification(translate('formHasBeenReset'), NotificationType.INFO);
-    }
-    this.validate(false);
-    this.requestUpdate();
-  }
-
-  import(manifest: string, data: string) {
-    //console.log('import');
-    //console.log('manifest', manifest);
-    //console.log('data', data);
-    this.reset(false);
-
-    const k4Data = K4.import(manifest, data);
-    console.log('k4Data', k4Data);
-    this.metaInfo = k4Data.metaInfo;
-    this.personInfo = k4Data.personInfo;
-    this.recordMatrix = k4Data.recordMatrix;
-    this.summaryMatrix = k4Data.summaryMatrix;
-    this.deferredShare = k4Data.deferredShare;
-
-    this.requestUpdate();
-    this.handleUpdate();
-    addNotification(translate('dataImported'), NotificationType.INFO);
-  }
-
   render() {
-    return html`<div class="k4">
-      <page-header
-        @form-reset=${this.reset}
-        @download-bundle=${this.download}
-        @import-sru=${(e: ImportSruEvent): void => {
-          this.import(e.detail.manifest, e.detail.data);
-        }}
-        @settings-changed=${this.updateSettings}
-        .validationResult=${this.validationResult}
-      ></page-header>
-
+    return html`<div class="k4-form">
       <section>
         <meta-info
-          @meta-info-changed=${this.updateMetaInfo}
           year=${this.metaInfo.year}
           pageNumber=${this.metaInfo.pageNumber}
         ></meta-info>
@@ -395,7 +101,6 @@ export class K4Form extends LitElement {
 
       <section>
         <person-info
-          @person-info-changed=${this.updatePersonInfo}
           name=${this.personInfo.name}
           personNumber=${this.personInfo.personNumber}
           city=${this.personInfo.city}
@@ -405,24 +110,12 @@ export class K4Form extends LitElement {
 
       <section>
         <asset-info
-          @deferred-share-changed=${this.updateDeferredShare}
-          @section-summary-changed=${this.updateSectionSummary}
-          @asset-record-changed=${this.updateAssetRecord}
           .recordMatrix=${this.recordMatrix}
           .summaryMatrix=${this.summaryMatrix}
           .deferredShare=${this.deferredShare}
         >
         </asset-info>
       </section>
-
-      ${this.settings.showPreview
-        ? html`<section>
-            <file-preview>
-              <div slot="info">${this.info}</div>
-              <div slot="blanketter">${this.blanketter}</div>
-            </file-preview>
-          </section>`
-        : nothing}
     </div>`;
   }
 }

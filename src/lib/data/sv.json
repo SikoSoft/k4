@@ -104,18 +104,18 @@
 
   "inconsistentTotalError.A.totalSellPrice": "Försäljningspriserna stämmer inte överens med det totala försäljningspriset",
   "inconsistentTotalError.A.totalBuyPrice": "Inköpspriserna stämmer inte överens med det totala inköpspriset",
-  "inconsistentTotalError.A.totalGain": "Vinsterna stämmer inte överens med det totala vinsten",
-  "inconsistentTotalError.A.totalLoss": "Förlusterna stämmer inte överens med det totala förlusten",
+  "inconsistentTotalError.A.totalGain": "Vinsterna stämmer inte överens med den totala vinsten",
+  "inconsistentTotalError.A.totalLoss": "Förlusterna stämmer inte överens med den totala förlusten",
 
   "inconsistentTotalError.C.totalSellPrice": "Försäljningspriserna stämmer inte överens med det totala försäljningspriset",
   "inconsistentTotalError.C.totalBuyPrice": "Inköpspriserna stämmer inte överens med det totala inköpspriset",
-  "inconsistentTotalError.C.totalGain": "Vinsterna stämmer inte överens med det totala vinsten",
-  "inconsistentTotalError.C.totalLoss": "Förlusterna stämmer inte överens med det totala förlusten",
+  "inconsistentTotalError.C.totalGain": "Vinsterna stämmer inte överens med den totala vinsten",
+  "inconsistentTotalError.C.totalLoss": "Förlusterna stämmer inte överens med den totala förlusten",
 
   "inconsistentTotalError.D.totalSellPrice": "Försäljningspriserna stämmer inte överens med det totala försäljningspriset",
   "inconsistentTotalError.D.totalBuyPrice": "Inköpspriserna stämmer inte överens med det totala inköpspriset",
-  "inconsistentTotalError.D.totalGain": "Vinsterna stämmer inte överens med det totala vinsten",
-  "inconsistentTotalError.D.totalLoss": "Förlusterna stämmer inte överens med det totala förlusten",
+  "inconsistentTotalError.D.totalGain": "Vinsterna stämmer inte överens med den totala vinsten",
+  "inconsistentTotalError.D.totalLoss": "Förlusterna stämmer inte överens med den totala förlusten",
 
   "resetForm": "Återställ formulär",
   "formHasBeenReset": "Formuläret har återställts",

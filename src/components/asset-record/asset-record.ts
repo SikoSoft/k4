@@ -72,11 +72,18 @@ export class AssetRecord extends LitElement {
   [AssetRecordProp.ROW]: AssetRecordProps[AssetRecordProp.ROW] =
     assetRecordProps[AssetRecordProp.ROW].default;
 
+  @property({ type: Number })
+  [AssetRecordProp.PAGE]: AssetRecordProps[AssetRecordProp.PAGE] =
+    assetRecordProps[AssetRecordProp.PAGE].default;
+
   @state()
+  language: Language = getLanguage();
+  /*
   get language(): Language {
     console.log('get language');
     return getLanguage();
   }
+    */
 
   get rowHasData(): boolean {
     return Object.values(AssetRecordField).some(
@@ -119,6 +126,7 @@ export class AssetRecord extends LitElement {
       [field]: value,
       section: this.section,
       row: this.row,
+      page: this.page,
     });
   }
 

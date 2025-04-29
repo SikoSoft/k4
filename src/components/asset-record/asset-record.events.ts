@@ -5,6 +5,7 @@ export const assetRecordChangedEventName = 'asset-record-changed';
 export interface AssetRecordChangedEventPayload extends AssetRecord {
   section: SectionType;
   row: number;
+  page: number;
 }
 
 export class AssetRecordChangedEvent extends CustomEvent<AssetRecordChangedEventPayload> {
