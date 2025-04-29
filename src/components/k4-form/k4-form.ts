@@ -1,4 +1,4 @@
-import { css, html, LitElement, nothing, PropertyValues } from 'lit';
+import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-button';
@@ -12,42 +12,13 @@ import '@/components/file-preview/file-preview';
 import '@/components/deferred-share/deferred-share';
 import '@/components/page-header/page-header';
 
-import { AssetRecordChangedEvent } from '@/components/asset-record/asset-record.events';
-import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
-import { MetaInfoChangedEvent } from '@/components/meta-info/meta-info.events';
 import {
-  APP_NAME,
-  AssetFieldConfig,
-  assetFieldMap,
-  AssetRecordField,
-  DEFAULT_DEFERRED_SHARE,
-  DEFAULT_META_INFO,
-  DEFAULT_PERSON_INFO,
-  DEFAULT_SECTION_SUMMARY,
   DeferredShare,
-  FileName,
-  K4Data,
   MetaInfo,
   PersonInfo,
   RecordMatrix,
-  SectionSummaryField,
   SectionSummaryMatrix,
-  SectionType,
-  STORAGE_KEY,
-  SummaryFieldConfig,
-  summaryFieldMap,
-  ValidationResult,
 } from '@/models/K4';
-import { SectionSummaryChangedEvent } from '@/components/section-summary/section-summary.events';
-import { localization, translate } from '@/lib/Localization';
-import { DeferredShareChangedEvent } from '@/components/deferred-share/deferred-share.events';
-import { Validation } from '@/lib/Validation';
-import { addNotification } from '@/lib/Notification';
-import { NotificationType } from '@ss/ui/components/notification-provider.models';
-import { ImportSruEvent } from '@/components/page-header/import-modal/import-modal.events';
-import { K4 } from '@/lib/K4';
-import { DEFAULT_SETTINGS, Settings } from '@/models/Settings';
-import { SettingsChangedEvent } from '@/components/page-header/settings-modal/settings-modal.events';
 import { K4FormProp, K4FormProps, k4FormProps } from './k4-form.models';
 
 @customElement('k4-form')
