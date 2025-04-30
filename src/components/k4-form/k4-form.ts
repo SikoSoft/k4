@@ -90,10 +90,6 @@ export class K4Form extends LitElement {
     return this.formData.pages[this.page].deferredShare;
   }
 
-  protected updated(_changedProperties: PropertyValues): void {
-    console.log('K4Form updated', _changedProperties);
-  }
-
   showDeletePopUp() {
     this.deletePopUpIsOpen = true;
   }
@@ -125,18 +121,19 @@ export class K4Form extends LitElement {
               ></person-info>
             </section> `
         : nothing}
-
-      <div class="page">
-        ${translate('pageX', { page: this.page + 1 })}
-        ${this.page > 0
-          ? html`<ss-icon
-              size="24"
-              class="delete-icon"
-              name="delete"
-              @click=${this.showDeletePopUp}
-            ></ss-icon>`
-          : nothing}
-      </div>
+      ${this.formData.pages.length > 1
+        ? html`<div class="page">
+            ${translate('pageX', { page: this.page + 1 })}
+            ${this.page > 0
+              ? html`<ss-icon
+                  size="24"
+                  class="delete-icon"
+                  name="delete"
+                  @click=${this.showDeletePopUp}
+                ></ss-icon>`
+              : nothing}
+          </div>`
+        : nothing}
 
       <section>
         <asset-info

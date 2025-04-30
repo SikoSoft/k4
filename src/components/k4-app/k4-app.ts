@@ -228,7 +228,6 @@ export class K4App extends LitElement {
   }
 
   updateSettings(event: SettingsChangedEvent) {
-    console.log('updateSettings', event.detail);
     this.settings = event.detail;
     localization.setLanguage(this.settings.language);
     this.handleUpdate();

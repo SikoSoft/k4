@@ -78,12 +78,6 @@ export class AssetRecord extends LitElement {
 
   @state()
   language: Language = getLanguage();
-  /*
-  get language(): Language {
-    console.log('get language');
-    return getLanguage();
-  }
-    */
 
   get rowHasData(): boolean {
     return Object.values(AssetRecordField).some(
