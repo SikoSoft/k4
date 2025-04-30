@@ -287,6 +287,7 @@ export class K4App extends LitElement {
       this.metaInfo = parsedData.metaInfo;
       this.personInfo = parsedData.personInfo;
       this.pages = parsedData.pages;
+      this.numPages = parsedData.pages.length;
     }
     this.requestUpdate();
   }
