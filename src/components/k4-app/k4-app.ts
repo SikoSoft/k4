@@ -66,9 +66,6 @@ export class K4App extends LitElement {
   settings: Settings = { ...DEFAULT_SETTINGS };
 
   @state()
-  numPages = 1;
-
-  @state()
   pages: K4Page[] = [K4.getDefaultK4PageData()];
 
   @state()
@@ -129,7 +126,7 @@ export class K4App extends LitElement {
   @state()
   get blanketter(): string {
     let data = '';
-    for (let page = 0; page < this.numPages; page++) {
+    for (let page = 0; page < this.pages.length; page++) {
       data += `#BLANKETT K4-2024P4
 #IDENTITET ${this.personInfo.personNumber} ${this.createdDate}
 #NAMN ${this.personInfo.name}
@@ -243,9 +240,7 @@ export class K4App extends LitElement {
     this.pages = produce(this.pages, draft => {
       draft = draft.filter((_, index) => index !== page);
     });
-    this.numPages--;
 
-    //this.requestUpdate();
     this.handleUpdate();
   }
 
@@ -273,7 +268,6 @@ export class K4App extends LitElement {
   }
 
   addPage() {
-    this.numPages++;
     this.pages = [...this.pages, K4.getDefaultK4PageData()];
   }
 
@@ -300,7 +294,6 @@ export class K4App extends LitElement {
       this.metaInfo = parsedData.metaInfo;
       this.personInfo = parsedData.personInfo;
       this.pages = parsedData.pages;
-      this.numPages = parsedData.pages.length;
     }
     this.requestUpdate();
   }
@@ -362,7 +355,7 @@ export class K4App extends LitElement {
         .validationResult=${this.validationResult}
       ></page-header>
 
-      ${[...new Array(this.numPages)].map((_, index) => {
+      ${[...new Array(this.pages.length)].map((_, index) => {
         return html` <k4-form
           page=${index}
           .formData=${this.data}
