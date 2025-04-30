@@ -60,6 +60,14 @@ export class K4App extends LitElement {
         flex-grow: 1;
       }
     }
+
+    .add-page {
+      ss-button::part(button) {
+        background-color: #fff;
+        cursor: pointer;
+        margin-bottom: 3rem;
+      }
+    }
   `;
 
   @state()
