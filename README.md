@@ -1,4 +1,6 @@
-# K4
+# SSOK4
+
+(SikoSoft Open K4)
 
 A free and open-source web form for generating K4 documents, for filing taxes within Sweden. This tool creates the proprietary .sru files which Skatteverket requires when submitting documents digitally.
 
