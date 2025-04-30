@@ -68,7 +68,7 @@ export class K4 {
     const k4Data: K4Data = {
       metaInfo: { ...DEFAULT_META_INFO },
       personInfo: { ...DEFAULT_PERSON_INFO },
-      pages: [K4.getDefaultK4PageData()],
+      pages: [],
     };
 
     const importManifestLines = manifest.split('\n');
@@ -98,8 +98,9 @@ export class K4 {
     let page = -1;
 
     for (const line of importDataLines) {
-      if (line.match(/^#BLANKETT/)) {
-        page = parseInt(line.replace(/^#BLANKETT ([0-9]{4}).*/, '$1'));
+      if (line.match(/^#BLANKETT /)) {
+        page++;
+        k4Data.pages.push(K4.getDefaultK4PageData());
       }
 
       if (line.match(/^#UPPGIFT /)) {
