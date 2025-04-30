@@ -37,6 +37,7 @@ import { SettingsChangedEvent } from '@/components/page-header/settings-modal/se
 import { PersonInfoChangedEvent } from '@/components/person-info/person-info.events';
 import { SectionSummaryChangedEvent } from '@/components/section-summary/section-summary.events';
 import { produce } from 'immer';
+import { DeletePageEvent } from '../k4-form/k4-form.events';
 
 @customElement('k4-app')
 export class K4App extends LitElement {
@@ -236,6 +237,18 @@ export class K4App extends LitElement {
     this.handleUpdate();
   }
 
+  handleDeletePage(event: DeletePageEvent) {
+    const page = event.detail.page;
+
+    this.pages = produce(this.pages, draft => {
+      draft = draft.filter((_, index) => index !== page);
+    });
+    this.numPages--;
+
+    //this.requestUpdate();
+    this.handleUpdate();
+  }
+
   sectionRowIsValid(page: number, section: SectionType, row: number): boolean {
     const record = this.pages[page].recordMatrix[section][row];
     return (
@@ -353,6 +366,7 @@ export class K4App extends LitElement {
         return html` <k4-form
           page=${index}
           .formData=${this.data}
+          @delete-page=${this.handleDeletePage}
           @meta-info-changed=${this.updateMetaInfo}
           @person-info-changed=${this.updatePersonInfo}
           @deferred-share-changed=${this.updateDeferredShare}
@@ -362,7 +376,7 @@ export class K4App extends LitElement {
       })}
 
       <div class="add-page">
-        <button @click=${this.addPage}>${translate('addPage')}</button>
+        <ss-button @click=${this.addPage}>${translate('addPage')}</ss-button>
       </div>
 
       ${this.settings.showPreview

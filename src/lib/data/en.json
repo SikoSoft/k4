@@ -136,5 +136,9 @@
   "settings": "Settings",
   "language": "Language",
   "language.en": "English",
-  "language.sv": "Svenska"
+  "language.sv": "Svenska",
+  "confirmDeletePage": "Are you sure you want to remove this page? All data contained within it will be lost.",
+  "pageDeleted": "The page has been deleted",
+  "pageX": "Page {page}",
+  "addPage": "Add page"
 }

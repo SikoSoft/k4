@@ -1,4 +1,4 @@
-import { css, html, LitElement, PropertyValues } from 'lit';
+import { css, html, LitElement, nothing, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-button';
@@ -20,6 +20,8 @@ import {
   SectionSummaryMatrix,
 } from '@/models/K4';
 import { K4FormProp, K4FormProps, k4FormProps } from './k4-form.models';
+import { translate } from '@/lib/Localization';
+import { DeletePageEvent } from './k4-form.events';
 
 @customElement('k4-form')
 export class K4Form extends LitElement {
@@ -33,6 +35,17 @@ export class K4Form extends LitElement {
         legend {
           font-weight: bold;
         }
+      }
+
+      .page {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+      }
+
+      .delete-icon {
+        cursor: pointer;
+        vertical-align: text-top;
       }
     `,
   ];
@@ -48,6 +61,9 @@ export class K4Form extends LitElement {
   @property({ type: Number })
   [K4FormProp.PAGE]: K4FormProps[K4FormProp.PAGE] =
     k4FormProps[K4FormProp.PAGE].default;
+
+  @state()
+  deletePopUpIsOpen = false;
 
   @state()
   get metaInfo(): MetaInfo {
@@ -78,23 +94,49 @@ export class K4Form extends LitElement {
     console.log('K4Form updated', _changedProperties);
   }
 
+  showDeletePopUp() {
+    this.deletePopUpIsOpen = true;
+  }
+  hideDeletePopUp() {
+    this.deletePopUpIsOpen = false;
+  }
+
+  deletePage() {
+    this.dispatchEvent(new DeletePageEvent({ page: this.page }));
+    this.hideDeletePopUp();
+  }
+
   render() {
     return html`<div class="k4-form">
-      <section>
-        <meta-info
-          year=${this.metaInfo.year}
-          pageNumber=${this.metaInfo.pageNumber}
-        ></meta-info>
-      </section>
+      ${this.page === 0
+        ? html`<section>
+              <meta-info
+                year=${this.metaInfo.year}
+                pageNumber=${this.metaInfo.pageNumber}
+              ></meta-info>
+            </section>
 
-      <section>
-        <person-info
-          name=${this.personInfo.name}
-          personNumber=${this.personInfo.personNumber}
-          city=${this.personInfo.city}
-          postCode=${this.personInfo.postCode}
-        ></person-info>
-      </section>
+            <section>
+              <person-info
+                name=${this.personInfo.name}
+                personNumber=${this.personInfo.personNumber}
+                city=${this.personInfo.city}
+                postCode=${this.personInfo.postCode}
+              ></person-info>
+            </section> `
+        : nothing}
+
+      <div class="page">
+        ${translate('pageX', { page: this.page + 1 })}
+        ${this.page > 0
+          ? html`<ss-icon
+              size="24"
+              class="delete-icon"
+              name="delete"
+              @click=${this.showDeletePopUp}
+            ></ss-icon>`
+          : nothing}
+      </div>
 
       <section>
         <asset-info
@@ -105,6 +147,42 @@ export class K4Form extends LitElement {
         >
         </asset-info>
       </section>
+
+      <pop-up
+        ?open=${this.deletePopUpIsOpen}
+        closeButton
+        closeOnOutsideClick
+        closeOnEsc
+        @pop-up-closed=${this.hideDeletePopUp}
+      >
+        ${translate('confirmResetForm')}
+
+        <style>
+          .pop-up-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            padding: 0;
+            gap: 1rem;
+          }
+
+          ss-button {
+          }
+
+          ss-button::part(button) {
+            padding: 0.5rem 2rem;
+            display: inline-block;
+          }
+        </style>
+
+        <div class="pop-up-buttons">
+          <ss-button @click=${this.deletePage}>${translate('yes')}</ss-button>
+
+          <ss-button @click=${this.hideDeletePopUp}>
+            ${translate('no')}
+          </ss-button>
+        </div>
+      </pop-up>
     </div>`;
   }
 }

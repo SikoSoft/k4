@@ -25,7 +25,10 @@ export class Localization {
     return this.language;
   }
 
-  translate(key: string, replacement: Record<string, string> = {}): string {
+  translate(
+    key: string,
+    replacement: Record<string, string | number> = {},
+  ): string {
     let returnString = key;
     if (this.languageMap[this.language][key]) {
       returnString = this.languageMap[this.language][key];
@@ -33,7 +36,7 @@ export class Localization {
 
     if (replacement) {
       Object.keys(replacement).forEach(key => {
-        returnString = returnString.replace(`{${key}}`, replacement[key]);
+        returnString = returnString.replace(`{${key}}`, `${replacement[key]}`);
       });
     }
 
