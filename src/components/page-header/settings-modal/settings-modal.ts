@@ -3,6 +3,7 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-input';
 import '@ss/ui/components/ss-icon';
+import '@ss/ui/components/ss-toggle';
 import {
   SettingsChangedEvent,
   SettingsChangedEventPayload,
@@ -20,6 +21,16 @@ export class SettingsModal extends LitElement {
   static styles = css`
     :host {
       display: block;
+    }
+
+    .setting {
+      margin-bottom: 3rem;
+    }
+
+    label {
+      margin-bottom: 0.5rem;
+      display: block;
+      font-size: 1.2rem;
     }
 
     select {
@@ -63,6 +74,21 @@ export class SettingsModal extends LitElement {
               </option>`,
           )}
         </select>
+      </div>
+
+      <div class="setting">
+        <label for="language">${translate('showSruPreview')}</label>
+        <div>
+          <ss-toggle
+            ?on=${this.settings.showPreview}
+            @toggle-changed=${() => {
+              this.sendChangedEvent({
+                ...this.settings,
+                showPreview: !this.settings.showPreview,
+              });
+            }}
+          ></ss-toggle>
+        </div>
       </div>
     </div> `;
   }

@@ -140,5 +140,6 @@
   "confirmDeletePage": "Are you sure you want to remove this page? All data contained within it will be lost.",
   "pageDeleted": "The page has been deleted",
   "pageX": "Page {page}",
-  "addPage": "Add page"
+  "addPage": "Add page",
+  "showSruPreview": "Show SRU preview"
 }

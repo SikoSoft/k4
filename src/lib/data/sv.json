@@ -137,5 +137,6 @@
   "confirmDeletePage": "Är du säker på att du vill ta bort denna sida? All data kommer att gå förlorad.",
   "pageDeleted": "Sidan har tagits bort",
   "pageX": "Sida {page}",
-  "addPage": "Lägg till sida"
+  "addPage": "Lägg till sida",
+  "showSruPreview": "Visa SRU-granskning"
 }

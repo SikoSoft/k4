@@ -236,7 +236,8 @@ export class K4App extends LitElement {
   }
 
   updateSettings(event: SettingsChangedEvent) {
-    this.settings = event.detail;
+    this.settings = produce(event.detail, draft => draft);
+    console.log('Settings updated:', this.settings);
     localization.setLanguage(this.settings.language);
     this.handleUpdate();
   }
@@ -360,6 +361,7 @@ export class K4App extends LitElement {
         }}
         @settings-changed=${this.updateSettings}
         .validationResult=${this.validationResult}
+        .settings=${this.settings}
       ></page-header>
 
       ${[...new Array(this.pages.length)].map((_, index) => {
