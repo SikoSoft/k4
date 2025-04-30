@@ -10,10 +10,8 @@ import {
   AssetFieldConfig,
   assetFieldMap,
   AssetRecordField,
-  DEFAULT_DEFERRED_SHARE,
   DEFAULT_META_INFO,
   DEFAULT_PERSON_INFO,
-  DEFAULT_SECTION_SUMMARY,
   FileName,
   K4Data,
   K4Page,
@@ -189,7 +187,7 @@ export class K4App extends LitElement {
 
       data += `#BLANKETTSLUT\n`;
     }
-    data + `#FIL_SLUT`;
+    data += `#FIL_SLUT`;
 
     return data;
   }
