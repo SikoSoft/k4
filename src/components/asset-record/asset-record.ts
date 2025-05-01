@@ -2,11 +2,10 @@ import { html, css, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 
+import { LanguageController } from '@/components/language-controller/language-controller';
+
 import '@ss/ui/components/ss-input';
-import {
-  InputChangedEvent,
-  InputChangedEventPayload,
-} from '@ss/ui/events/input-changed';
+import { InputChangedEvent } from '@ss/ui/events/input-changed';
 
 import {
   AssetRecordProp,
@@ -18,11 +17,13 @@ import {
   AssetRecordChangedEventPayload,
 } from './asset-record.events';
 import { AssetRecordField } from '@/models/K4';
-import { getLanguage, translate } from '@/lib/Localization';
+import { translate } from '@/lib/Localization';
 import { Language } from '@/models/Localization';
 
 @customElement('asset-record')
 export class AssetRecord extends LitElement {
+  private languageController = new LanguageController(this);
+
   static styles = css`
     :host {
       display: block;
@@ -76,13 +77,14 @@ export class AssetRecord extends LitElement {
   [AssetRecordProp.PAGE]: AssetRecordProps[AssetRecordProp.PAGE] =
     assetRecordProps[AssetRecordProp.PAGE].default;
 
-  @state()
-  language: Language = getLanguage();
-
   get rowHasData(): boolean {
     return Object.values(AssetRecordField).some(
       field => this[field] !== 0 && this[field] !== '',
     );
+  }
+
+  get language(): Language {
+    return this.languageController.language;
   }
 
   fieldValue(field: AssetRecordField): string {

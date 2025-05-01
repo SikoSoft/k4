@@ -38,6 +38,8 @@ import { PersonInfoChangedEvent } from '@/components/person-info/person-info.eve
 import { SectionSummaryChangedEvent } from '@/components/section-summary/section-summary.events';
 import { produce } from 'immer';
 import { DeletePageEvent } from '../k4-form/k4-form.events';
+import { Language } from '@/models/Localization';
+import { LanguageChangedEvent } from './k4-app.events';
 
 @customElement('k4-app')
 export class K4App extends LitElement {
@@ -236,8 +238,14 @@ export class K4App extends LitElement {
   }
 
   updateSettings(event: SettingsChangedEvent) {
+    if (this.settings.language !== event.detail.language) {
+      this.dispatchEvent(
+        new LanguageChangedEvent({
+          language: event.detail.language as Language,
+        }),
+      );
+    }
     this.settings = produce(event.detail, draft => draft);
-    console.log('Settings updated:', this.settings);
     localization.setLanguage(this.settings.language);
     this.handleUpdate();
   }
