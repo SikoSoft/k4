@@ -9,9 +9,13 @@ import {
   MetaInfoChangedEventPayload,
 } from './meta-info.events';
 import { translate } from '@/lib/Localization';
+import { Language } from '@/models/Localization';
+import { LanguageController } from '@/components/language-controller/language-controller';
 
 @customElement('meta-info')
 export class MetaInfo extends LitElement {
+  private languageController = new LanguageController(this);
+
   static styles = css`
     :host {
       display: block;
@@ -40,6 +44,10 @@ export class MetaInfo extends LitElement {
   @property()
   [MetaInfoProp.PAGE_NUMBER]: MetaInfoProps[MetaInfoProp.PAGE_NUMBER] =
     metaInfoProps[MetaInfoProp.PAGE_NUMBER].default;
+
+  get language(): Language {
+    return this.languageController.language;
+  }
 
   handleYearChanged(event: InputChangedEvent) {
     this.sendChangedEvent({

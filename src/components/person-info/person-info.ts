@@ -13,9 +13,13 @@ import {
   PersonInfoChangedEventPayload,
 } from './person-info.events';
 import { translate } from '@/lib/Localization';
+import { Language } from '@/models/Localization';
+import { LanguageController } from '@/components/language-controller/language-controller';
 
 @customElement('person-info')
 export class PersonInfo extends LitElement {
+  private languageController = new LanguageController(this);
+
   static styles = css`
     :host {
       display: block;
@@ -55,6 +59,10 @@ export class PersonInfo extends LitElement {
   @property({ type: Number })
   [PersonInfoProp.PAGE]: PersonInfoProps[PersonInfoProp.PAGE] =
     personInfoProps[PersonInfoProp.PAGE].default;
+
+  get language(): Language {
+    return this.languageController.language;
+  }
 
   handleNameChanged(event: InputChangedEvent) {
     this.sendChangedEvent({

@@ -19,9 +19,12 @@ import {
   SectionSummary as SectionSummaryModel,
 } from '@/models/K4';
 import { translate } from '@/lib/Localization';
+import { Language } from '@/models/Localization';
+import { LanguageController } from '@/components/language-controller/language-controller';
 
 @customElement('section-summary')
 export class SectionSummary extends LitElement {
+  private languageController = new LanguageController(this);
   static styles = css`
     :host {
       display: block;
@@ -66,6 +69,10 @@ export class SectionSummary extends LitElement {
   @property({ type: Number })
   [SectionSummaryProp.PAGE]: SectionSummaryProps[SectionSummaryProp.PAGE] =
     sectionSummaryProps[SectionSummaryProp.PAGE].default;
+
+  get language(): Language {
+    return this.languageController.language;
+  }
 
   get fields(): SectionSummaryModel {
     return {

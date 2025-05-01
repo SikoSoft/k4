@@ -18,9 +18,13 @@ import {
   DeferredShareField,
   DeferredShare as DeferredShareModel,
 } from '@/models/K4';
+import { Language } from '@/models/Localization';
+import { LanguageController } from '@/components/language-controller/language-controller';
 
 @customElement('deferred-share')
 export class DeferredShare extends LitElement {
+  private languageController = new LanguageController(this);
+
   static styles = css`
     :host {
       display: block;
@@ -57,6 +61,10 @@ export class DeferredShare extends LitElement {
   @property({ type: Number })
   [DeferredShareProp.PAGE]: DeferredShareProps[DeferredShareProp.PAGE] =
     deferredShareProps[DeferredShareProp.PAGE].default;
+
+  get language(): Language {
+    return this.languageController.language;
+  }
 
   get fields(): DeferredShareModel {
     return {

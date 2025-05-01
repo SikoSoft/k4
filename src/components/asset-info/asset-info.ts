@@ -13,9 +13,13 @@ import {
 import { translate } from '@/lib/Localization';
 import { repeat } from 'lit/directives/repeat.js';
 import { sectionConfigMap, SectionType } from '@/models/K4';
+import { LanguageController } from '@/components/language-controller/language-controller';
+import { Language } from '@/models/Localization';
 
 @customElement('asset-info')
 export class AssetInfo extends LitElement {
+  private languageController = new LanguageController(this);
+
   static styles = css`
     :host {
       display: block;
@@ -47,6 +51,10 @@ export class AssetInfo extends LitElement {
   @property({ type: Number })
   [AssetInfoProp.PAGE]: AssetInfoProps[AssetInfoProp.PAGE] =
     assetInfoProps[AssetInfoProp.PAGE].default;
+
+  get language(): Language {
+    return this.languageController.language;
+  }
 
   render() {
     return html`<div class="asset-info">
