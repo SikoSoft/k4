@@ -285,6 +285,7 @@ export class K4App extends LitElement {
 
   addPage() {
     this.pages = [...this.pages, K4.getDefaultK4PageData()];
+    this.handleUpdate();
   }
 
   validate(showNotification = true): ValidationResult {
