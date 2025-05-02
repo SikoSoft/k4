@@ -252,11 +252,9 @@ export class K4App extends LitElement {
 
   handleDeletePage(event: DeletePageEvent) {
     const page = event.detail.page;
-
     this.pages = produce(this.pages, draft => {
-      draft = draft.filter((_, index) => index !== page);
+      draft.splice(page, 1);
     });
-
     this.handleUpdate();
   }
 

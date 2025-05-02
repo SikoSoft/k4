@@ -152,7 +152,7 @@ export class K4Form extends LitElement {
         closeOnEsc
         @pop-up-closed=${this.hideDeletePopUp}
       >
-        ${translate('confirmResetForm')}
+        ${translate('confirmDeletePage')}
 
         <style>
           .pop-up-buttons {
