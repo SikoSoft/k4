@@ -83,20 +83,16 @@ export class ImportModal extends LitElement {
             filename.includes('databeskrivning') ||
             filename.endsWith('.manifest.sru')
           ) {
-            console.log(`Found manifest file: ${filename}`);
             this.manifest = content;
           } else if (
             filename.includes('blankett') ||
             filename.endsWith('.data.sru')
           ) {
-            console.log(`Found data file: ${filename}`);
             this.data = content;
           } else {
             if (K4.isContentData(content)) {
-              console.log(`Detected data content in: ${filename}`);
               this.data = content;
             } else if (K4.isContentManifest(content)) {
-              console.log(`Detected manifest content in: ${filename}`);
               this.manifest = content;
             }
           }
