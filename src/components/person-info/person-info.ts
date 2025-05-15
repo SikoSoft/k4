@@ -15,6 +15,8 @@ import {
 import { translate } from '@/lib/Localization';
 import { Language } from '@/models/Localization';
 import { LanguageController } from '@/components/language-controller/language-controller';
+import { PersonInfoField, PersonInfo as PersonInfoModel } from '@/models/K4';
+import { repeat } from 'lit/directives/repeat.js';
 
 @customElement('person-info')
 export class PersonInfo extends LitElement {
@@ -34,7 +36,7 @@ export class PersonInfo extends LitElement {
         flex-grow: 4;
       }
 
-      .person-number {
+      .personNumber {
         flex-grow: 1;
       }
     }
@@ -64,42 +66,21 @@ export class PersonInfo extends LitElement {
     return this.languageController.language;
   }
 
-  handleNameChanged(event: InputChangedEvent) {
-    this.sendChangedEvent({
-      name: event.detail.value,
-      personNumber: this[PersonInfoProp.PERSON_NUMBER],
-      city: this[PersonInfoProp.CITY],
-      postCode: this[PersonInfoProp.POST_CODE],
-      page: this[PersonInfoProp.PAGE],
-    });
+  get fields(): PersonInfoModel {
+    return {
+      [PersonInfoProp.NAME]: this[PersonInfoProp.NAME],
+      [PersonInfoProp.PERSON_NUMBER]: this[PersonInfoProp.PERSON_NUMBER],
+      [PersonInfoProp.CITY]: this[PersonInfoProp.CITY],
+      [PersonInfoProp.POST_CODE]: this[PersonInfoProp.POST_CODE],
+    };
   }
 
-  handlePersonNumberChanged(event: InputChangedEvent) {
-    this.sendChangedEvent({
-      name: this[PersonInfoProp.NAME],
-      personNumber: event.detail.value,
-      city: this[PersonInfoProp.CITY],
-      postCode: this[PersonInfoProp.POST_CODE],
-      page: this[PersonInfoProp.PAGE],
-    });
-  }
+  handleFieldChanged(field: PersonInfoField, event: InputChangedEvent) {
+    const value = event.detail.value;
 
-  handleCityChanged(event: InputChangedEvent) {
     this.sendChangedEvent({
-      name: this[PersonInfoProp.NAME],
-      personNumber: this[PersonInfoProp.PERSON_NUMBER],
-      city: event.detail.value,
-      postCode: this[PersonInfoProp.POST_CODE],
-      page: this[PersonInfoProp.PAGE],
-    });
-  }
-
-  handlePostCodeChanged(event: InputChangedEvent) {
-    this.sendChangedEvent({
-      name: this[PersonInfoProp.NAME],
-      personNumber: this[PersonInfoProp.PERSON_NUMBER],
-      city: this[PersonInfoProp.CITY],
-      postCode: event.detail.value,
+      ...this.fields,
+      [field]: value,
       page: this[PersonInfoProp.PAGE],
     });
   }
@@ -110,37 +91,20 @@ export class PersonInfo extends LitElement {
 
   render() {
     return html`<div class="person-info">
-      <div class="name">
-        <ss-input
-          value=${this[PersonInfoProp.NAME]}
-          placeholder=${translate('fieldPlaceholder.personInfo.name')}
-          @input-changed=${this.handleNameChanged}
-        ></ss-input>
-      </div>
-
-      <div class="person-number">
-        <ss-input
-          value=${this[PersonInfoProp.PERSON_NUMBER]}
-          placeholder=${translate('fieldPlaceholder.personInfo.personNumber')}
-          @input-changed=${this.handlePersonNumberChanged}
-        ></ss-input>
-      </div>
-
-      <div class="city">
-        <ss-input
-          value=${this[PersonInfoProp.CITY]}
-          placeholder=${translate('fieldPlaceholder.personInfo.city')}
-          @input-changed=${this.handleCityChanged}
-        ></ss-input>
-      </div>
-
-      <div class="post-code">
-        <ss-input
-          value=${this[PersonInfoProp.POST_CODE]}
-          placeholder=${translate('fieldPlaceholder.personInfo.postCode')}
-          @input-changed=${this.handlePostCodeChanged}
-        ></ss-input>
-      </div>
+      ${repeat(
+        Object.values(PersonInfoField),
+        field => field,
+        field =>
+          html` <div class=${field}>
+            <ss-input
+              value=${this[field]}
+              placeholder=${translate(`fieldPlaceholder.personInfo.${field}`)}
+              @input-changed=${(event: InputChangedEvent) => {
+                this.handleFieldChanged(field, event);
+              }}
+            ></ss-input>
+          </div>`,
+      )}
     </div> `;
   }
 }
