@@ -4,6 +4,7 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 import '@/components/k4-form/k4-form';
+import '@/components/credit-bar/credit-bar';
 import { K4 } from '@/lib/K4';
 import {
   APP_NAME,
@@ -360,6 +361,8 @@ export class K4App extends LitElement {
 
   render() {
     return html`<div class="k4-app">
+      <credit-bar></credit-bar>
+
       <page-header
         @form-reset=${this.reset}
         @download-bundle=${this.download}
