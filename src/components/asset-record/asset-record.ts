@@ -5,7 +5,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { LanguageController } from '@/components/language-controller/language-controller';
 
 import '@ss/ui/components/ss-input';
-import { InputChangedEvent } from '@ss/ui/events/input-changed';
+import { InputChangedEvent } from '@ss/ui/components/ss-input.events';
 
 import {
   AssetRecordProp,

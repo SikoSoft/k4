@@ -7,7 +7,7 @@ import {
   personInfoProps,
   PersonInfoProps,
 } from './person-info.models';
-import { InputChangedEvent } from '@ss/ui/events/input-changed';
+import { InputChangedEvent } from '@ss/ui/components/ss-input.events';
 import {
   PersonInfoChangedEvent,
   PersonInfoChangedEventPayload,

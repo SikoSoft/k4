@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 
 import '@ss/ui/components/ss-input';
 import { MetaInfoProp, metaInfoProps, MetaInfoProps } from './meta-info.models';
-import { InputChangedEvent } from '@ss/ui/events/input-changed';
+import { InputChangedEvent } from '@ss/ui/components/ss-input.events';
 import {
   MetaInfoChangedEvent,
   MetaInfoChangedEventPayload,
