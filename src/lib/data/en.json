@@ -141,5 +141,7 @@
   "pageDeleted": "The page has been deleted",
   "pageX": "Page {page}",
   "addPage": "Add page",
-  "showSruPreview": "Show SRU preview"
+  "showSruPreview": "Show SRU preview",
+  "donate": "Donate",
+  "donateMessage": "If you find this tool useful, please consider donating to support its development and maintenance. Your contribution helps ensure that SSOK4 remains free and continues to improve."
 }
