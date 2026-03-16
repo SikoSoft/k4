@@ -1,6 +1,6 @@
 {
   "name": "k4",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Web-based interface for filling out Swedish tax form K4",
   "main": "index.js",
   "type": "module",
