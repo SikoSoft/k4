@@ -12,7 +12,7 @@ export interface MetaInfo {
 }
 
 export const DEFAULT_META_INFO: MetaInfo = {
-  [MetaInfoField.YEAR]: '2024',
+  [MetaInfoField.YEAR]: (new Date().getFullYear() - 1).toString(),
   [MetaInfoField.PAGE_NUMBER]: '1',
 };
 
