@@ -138,7 +138,7 @@ export class K4App extends LitElement {
   get blanketter(): string {
     let data = '';
     for (let page = 0; page < this.pages.length; page++) {
-      data += `#BLANKETT K4-2024P4
+      data += `#BLANKETT K4-${this.metaInfo.year}P4
 #IDENTITET ${this.personInfo.personNumber} ${this.createdDate}
 #NAMN ${this.personInfo.name}
 #SYSTEMINFO klarmarkerad u. a.\n`;
